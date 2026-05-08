@@ -17,13 +17,30 @@
       background-size: 32px 32px;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       padding: 1rem;
       font-family: 'Segoe UI', 'Roboto', system-ui, 'Helvetica Neue', sans-serif;
     }
 
-    /* desktop-sized container — forces zoom on phone */
+    /* site title outside the frame */
+    .site-title {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .site-title h1 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: #eaf2ff;
+      text-shadow: 0 2px 0 #0a101c;
+    }
+    .site-title h1 span {
+      color: #5d9eff;
+    }
+
+    /* main frame */
     .game-shell {
       width: 900px;
       max-width: 100%;
@@ -32,7 +49,6 @@
       box-shadow: 8px 8px 0 #050a12;
     }
 
-    /* all text smaller */
     .game-shell {
       font-size: 11px;
     }
@@ -42,20 +58,9 @@
       padding: 8px 14px;
       border-bottom: 2px solid #3e6a97;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: baseline;
       flex-wrap: wrap;
-    }
-
-    .logo {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.2px;
-      color: #eaf2ff;
-    }
-
-    .logo span {
-      color: #5d9eff;
     }
 
     .badge {
@@ -89,7 +94,6 @@
       padding-bottom: 2px;
     }
 
-    /* tiny info cards */
     .info-strip {
       display: flex;
       flex-wrap: wrap;
@@ -119,29 +123,6 @@
       color: #cce2ff;
     }
 
-    /* old terminal-style list */
-    .changelog {
-      background: #0a0f18;
-      border: 1px solid #222f48;
-      padding: 12px 16px;
-      margin: 20px 0;
-    }
-
-    .changelog p {
-      font-size: 10px;
-      font-family: 'Courier New', monospace;
-      color: #b8ceff;
-      line-height: 1.45;
-    }
-
-    .changelog hr {
-      margin: 8px 0;
-      border: none;
-      height: 1px;
-      background: #232f48;
-    }
-
-    /* tiny rectangular buttons */
     .action-row {
       display: flex;
       flex-wrap: wrap;
@@ -179,16 +160,14 @@
       color: #61759e;
     }
 
-    /* no rounded corners anywhere — sharp PC style */
+    /* no rounded corners */
     .game-shell,
     .header,
     .tiny-card,
-    .changelog,
     .tiny-btn {
       border-radius: 0px;
     }
 
-    /* keep everything compact */
     @media (max-width: 700px) {
       body {
         padding: 0.5rem;
@@ -196,8 +175,8 @@
       .content {
         padding: 12px 14px;
       }
-      .logo {
-        font-size: 16px;
+      .site-title h1 {
+        font-size: 20px;
       }
       .coming h2 {
         font-size: 18px;
@@ -206,15 +185,20 @@
   </style>
 </head>
 <body>
+
+<!-- Site name outside the frame -->
+<div class="site-title">
+  <h1>MiniBOSS<span>X</span></h1>
+</div>
+
 <div class="game-shell">
   <div class="header">
-    <div class="logo">MiniBOSS<span>X</span></div>
     <div class="badge">// new server</div>
   </div>
   <div class="content">
     <div class="coming">
       <h2>forums coming soon</h2>
-      <div class="sub">calculators + stats removed</div>
+      <div class="sub">old tools removed</div>
     </div>
 
     <div class="info-strip">
@@ -232,14 +216,6 @@
       </div>
     </div>
 
-    <div class="changelog">
-      <p>✘ gold.html / bullet.html — <span style="color:#e08484;">removed</span></p>
-      <p>✘ stats.html — <span style="color:#e08484;">deleted</span></p>
-      <hr>
-      <p>✔ fresh forum coming · taunts · trash talk · leaderboards</p>
-      <p>✔ sharp ui · tiny texts · zoom to click like old pc games</p>
-    </div>
-
     <div class="action-row">
       <span class="tiny-btn">⚔️ forum prep</span>
       <span class="tiny-btn">🖥️ server info</span>
@@ -247,9 +223,33 @@
     </div>
 
     <div class="footer-note">
-      MiniBOSSX · domain will point to dedicated server soon
+      domain will point to dedicated server soon
     </div>
   </div>
 </div>
+
+<!-- StatCounter tracking script – REPLACE with your actual StatCounter code -->
+<!--
+  Default StatCounter code for MiniBOSSX
+  Go to https://statcounter.com/ to get your own code.
+  Replace "your_project_id" and "your_security_code" with your actual values.
+-->
+<script>
+  // <![CDATA[
+  var sc_project = "13224045";
+  var sc_invisible = 1;
+  var sc_security = "d02faac4";
+  var sc_https = 1;
+  var sc_remove_link = 1;
+  // ]]>
+</script>
+<script src="https://www.statcounter.com/counter/counter.js" async></script>
+<noscript>
+  <div class="statcounter">
+    <img class="statcounter" src="https://c.statcounter.com/your_project_id/0/your_security_code/1/" alt="Web Analytics">
+  </div>
+</noscript>
+<!-- End of StatCounter Code -->
+
 </body>
 </html>
