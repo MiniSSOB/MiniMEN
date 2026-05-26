@@ -13,18 +13,32 @@
         .menu-group { background-color: #1e293b; border: 2px solid #334155; border-radius: 0 0 4px 4px; margin-bottom: 15px; overflow: hidden; }
         .menu-item { display: block; color: #94a3b8; text-decoration: none; padding: 10px 14px; font-size: 0.9rem; border-bottom: 1px solid #334155; }
         .menu-item.active { background-color: #0f172a; color: #ef4444; border-left: 4px solid #ef4444; font-weight: bold; }
+        
         .main-panel { flex-grow: 1; background-color: #1e293b; border: 2px solid #334155; border-radius: 4px; overflow: hidden; }
         .panel-header { background-color: #1e293b; border-bottom: 2px solid #334155; padding: 15px; font-size: 1.2rem; font-weight: bold; color: #ef4444; }
         .panel-body { padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .battle-table { width: 100%; max-width: 850px; border-collapse: collapse; margin-bottom: 15px; background-color: #0f172a; border: 1px solid #334155; }
+        
+        /* Table Configurations */
+        .battle-table { width: 100%; max-width: 900px; border-collapse: collapse; margin-bottom: 15px; background-color: #0f172a; border: 1px solid #334155; }
         .battle-table th { background-color: #1e293b; color: #ef4444; padding: 10px; font-size: 0.85rem; text-transform: uppercase; text-align: left; border-bottom: 2px solid #334155; }
-        .battle-table td { padding: 10px; border-bottom: 1px solid #334155; font-size: 0.9rem; }
+        .battle-table td { padding: 10px; border-bottom: 1px solid #1e293b; font-size: 0.9rem; }
+        
+        /* Action Hyperlinks */
+        .recon-link { color: #3b82f6; font-weight: bold; text-decoration: none; cursor: pointer; margin-right: 15px; }
+        .recon-link:hover { text-decoration: underline; }
         .attack-link { color: #ef4444; font-weight: bold; text-decoration: none; cursor: pointer; }
         .attack-link:hover { text-decoration: underline; }
-        .pagination { display: flex; gap: 10px; margin-bottom: 15px; }
-        .page-btn { background-color: #0f172a; border: 1px solid #334155; color: #94a3b8; padding: 6px 12px; cursor: pointer; font-family: inherit; border-radius: 4px; }
-        .page-btn.active { background-color: #ef4444; color: white; border-color: #dc2626; }
-        .alert-feed { font-size: 0.85rem; padding: 10px; border-radius: 4px; margin-bottom: 15px; width: 100%; max-width: 850px; text-align: center; display: none; color: #22c55e; background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; font-weight: bold; }
+        
+        /* Next/Back Pagination Bar */
+        .pagination-bar { display: flex; justify-content: space-between; width: 100%; max-width: 900px; margin-bottom: 15px; background-color: #0f172a; border: 1px solid #334155; padding: 8px 15px; border-radius: 4px; align-items: center; }
+        .nav-btn { background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; padding: 6px 16px; cursor: pointer; font-family: inherit; font-weight: bold; text-transform: uppercase; border-radius: 4px; }
+        .nav-btn:hover:not(:disabled) { background-color: #ef4444; border-color: #dc2626; }
+        .nav-btn:disabled { color: #475569; cursor: not-allowed; }
+        .page-indicator { font-size: 0.9rem; color: #94a3b8; font-weight: bold; }
+
+        /* Report Log Panel overlays */
+        .intel-report { width: 100%; max-width: 900px; background-color: #0f172a; border: 1px solid #3b82f6; padding: 15px; border-radius: 4px; margin-bottom: 20px; display: none; }
+        .battle-report { width: 100%; max-width: 900px; background-color: #0f172a; border: 1px solid #ef4444; padding: 15px; border-radius: 4px; margin-bottom: 20px; display: none; }
     </style>
 </head>
 <body>
@@ -40,76 +54,167 @@
             </nav>
         </aside>
         <main class="main-panel">
-            <header class="panel-header">Sectors Grid (60 Targets Connected)</header>
+            <header class="panel-header">Galactic Sector Battlefield</header>
             <div class="panel-body">
-                <div id="battle-alert" class="alert-feed"></div>
-                <div class="pagination" id="pager-zone"></div>
+                
+                <div id="intel-zone" class="intel-report"></div>
+
+                <div id="battle-zone" class="battle-report"></div>
+
+                <div class="pagination-bar">
+                    <button id="back-btn" class="nav-btn" onclick="changePage(-1)">[<< Back 20]</button>
+                    <div id="page-text" class="page-indicator">Viewing Targets 1 - 20</div>
+                    <button id="next-btn" class="nav-btn" onclick="changePage(1)">[Next 20 >>]</button>
+                </div>
+
                 <table class="battle-table">
-                    <thead><tr><th>Target Name</th><th>Classification</th><th>Soldier Force</th><th>Vault Protection</th><th>Incursion</th></tr></thead>
+                    <thead>
+                        <tr>
+                            <th>Target Commander</th>
+                            <th>Classification</th>
+                            <th>Army Size</th>
+                            <th>Action Operations</th>
+                        </tr>
+                    </thead>
                     <tbody id="targets-list"></tbody>
                 </table>
-                <div style="color: #94a3b8; font-size:0.9rem;">Wallet Assets: <span id="gold-display" style="color:#eab308; font-weight:bold;">0 Gold</span></div>
+                <div style="color: #94a3b8; font-size:0.9rem; margin-top: 10px;">Available Liquid Wealth: <span id="gold-display" style="color:#eab308; font-weight:bold;">0 Gold</span></div>
             </div>
         </main>
     </div>
+
     <script src="game-engine.js"></script>
     <script>
-        let currentPage = 1;
+        let currentOffsetPage = 1;
         const targetsPerPage = 20;
-        
-        function drawBattlefield() {
+
+        // Helper function to calculate player's total current Attack Power based on weapon inventory
+        function calculateMyAttackPower() {
+            if (!window.player) return 0;
+            window.player.weapons = window.player.weapons || {};
+            // Power rankings matching our Armory setup
+            const weaponPowers = { att_1: 2, att_2: 64, att_3: 600, att_4: 1000 };
+            let totalAttack = 0;
+            Object.keys(weaponPowers).forEach(id => {
+                totalAttack += (window.player.weapons[id] || 0) * weaponPowers[id];
+            });
+            return totalAttack;
+        }
+
+        function generateTargets() {
             const list = document.getElementById('targets-list');
-            const pager = document.getElementById('pager-zone');
             list.innerHTML = '';
-            pager.innerHTML = '';
 
-            // Render Page Index Triggers (1-3)
-            for (let i = 1; i <= 3; i++) {
-                let btn = document.createElement('button');
-                btn.className = `page-btn ${currentPage === i ? 'active' : ''}`;
-                btn.innerText = `Sector Block ${i}`;
-                btn.onclick = () => { currentPage = i; drawBattlefield(); };
-                pager.appendChild(btn);
-            }
+            const startIdx = (currentOffsetPage - 1) * targetsPerPage + 1;
+            const endIdx = currentOffsetPage * targetsPerPage;
 
-            const startIdx = (currentPage - 1) * targetsPerPage + 1;
-            const endIdx = currentPage * targetsPerPage;
+            // Update header pagination tracking text labels
+            document.getElementById('page-text').innerText = `Viewing Targets ${startIdx.toLocaleString()} - ${endIdx.toLocaleString()}`;
+            document.getElementById('back-btn').disabled = currentOffsetPage === 1;
 
             for (let i = startIdx; i <= endIdx; i++) {
                 let tr = document.createElement('tr');
-                // Seed custom, randomized sector attributes
-                let sCount = Math.floor(Math.sin(i) * 30) + 45;
-                let vGold = Math.floor(Math.cos(i) * 4000) + 6000;
                 
+                // Seed distinct, algorithmic stats matching target ID indexes
+                let totalSoldiers = Math.floor(Math.sin(i) * 200) + 250; 
+                let targetDefenseRating = Math.floor(Math.cos(i) * 450) + 500; // Algorithmic raw defense score
+                let targetGoldHoldings = Math.floor(Math.sin(i * i) * 15000) + 20000;
+                if (targetGoldHoldings < 0) targetGoldHoldings = 5000;
+
                 tr.innerHTML = `
-                    <td>Commander_Clone_${i * 14}</td>
-                    <td style="color:#64748b;">G1-T${i}</td>
-                    <td>${sCount} Troops</td>
-                    <td style="color: #22c55e;">${vGold.toLocaleString()} G</td>
-                    <td><span class="attack-link" onclick="triggerIncursion(${i}, ${vGold})">[LAUNCH RAID]</span></td>
+                    <td>Commander_Unit_${i * 3}</td>
+                    <td style="color:#64748b;">G1-Sector_${i}</td>
+                    <td>${totalSoldiers.toLocaleString()} Troops</td>
+                    <td>
+                        <span class="recon-link" onclick="runIntelligenceRecon(${i}, ${targetDefenseRating}, ${targetGoldHoldings})">[RECON]</span>
+                        <span class="attack-link" onclick="launchIncursion(${i}, ${targetDefenseRating}, ${targetGoldHoldings})">[LAUNCH RAID]</span>
+                    </td>
                 `;
                 list.appendChild(tr);
             }
-            if(player) document.getElementById('gold-display').innerText = `${player.gold.toLocaleString()} Gold`;
+            if(window.player) document.getElementById('gold-display').innerText = `${window.player.gold.toLocaleString()} Gold`;
         }
 
-        function triggerIncursion(id, baseGold) {
-            const alertBox = document.getElementById('battle-alert');
+        function changePage(direction) {
+            currentOffsetPage += direction;
+            if (currentOffsetPage < 1) currentOffsetPage = 1;
             
-            // Execute Random Drop Generator Logic: Loots roughly 10% - 30% of target holdings
-            let lootModifier = (Math.random() * 0.20) + 0.10;
-            let goldStolen = Math.floor(baseGold * lootModifier);
+            // Hide previous reports when pagination moves
+            document.getElementById('intel-zone').style.display = "none";
+            document.getElementById('battle-zone').style.display = "none";
             
-            player.gold += goldStolen;
-            saveData();
-            
-            alertBox.innerText = `RAID SUCCESSFUL ON CLONE ${id}! SEIZED ${goldStolen.toLocaleString()} GOLD ASSETS.`;
-            alertBox.style.display = "block";
-            
-            drawBattlefield();
-            setTimeout(() => { alertBox.style.display = "none"; }, 4000);
+            generateTargets();
         }
-        drawBattlefield();
+
+        // INTELLIGENCE MODULE: Reveals hidden database values
+        function runIntelligenceRecon(targetId, defenseRating, cashHoldings) {
+            const intelZone = document.getElementById('intel-zone');
+            document.getElementById('battle-zone').style.display = "none"; // Clear combat panel view
+
+            let myAttack = calculateMyAttackPower();
+            let strategyAdvice = "";
+            
+            if (myAttack > defenseRating) {
+                strategyAdvice = `<span style="color: #22c55e;">VICTORY PREDICTED: Your Attack Power (${myAttack.toLocaleString()}) bypasses their fortifications.</span>`;
+            } else {
+                strategyAdvice = `<span style="color: #ef4444;">WARNING — DEFEAT PREDICTED: Target Defense (${defenseRating.toLocaleString()}) outmatches your active Attack Power (${myAttack.toLocaleString()}). Acquire more Armory weapons first!</span>`;
+            }
+
+            intelZone.innerHTML = `
+                <h3 style="color: #3b82f6; text-transform: uppercase; font-size: 0.95rem; margin-bottom: 8px;">Spy Reconnaissance: Commander_Unit_${targetId}</h3>
+                <p style="font-size: 0.9rem; line-height: 1.6; color: #94a3b8;">
+                    • Measured Defensive Efficiency: <strong style="color: #f8fafc;">${defenseRating.toLocaleString()} Defense Power</strong><br>
+                    • Discovered Unprotected Capital: <strong style="color: #eab308;">${cashHoldings.toLocaleString()} Gold Cash</strong><br>
+                    • Intelligence Projection: ${strategyAdvice}
+                </p>
+            `;
+            intelZone.style.display = "block";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // COMBAT SYSTEM ENGINE
+        function launchIncursion(targetId, defenseRating, cashHoldings) {
+            const battleZone = document.getElementById('battle-zone');
+            document.getElementById('intel-zone').style.display = "none"; // Clear spy panel view
+
+            let myAttack = calculateMyAttackPower();
+
+            if (myAttack > defenseRating) {
+                // Win Condition: Steal a percentage chunk of their money pool
+                let plunderFactor = (Math.random() * 0.15) + 0.15; // Plunders 15% - 30%
+                let goldStolen = Math.floor(cashHoldings * plunderFactor);
+                
+                window.player.gold += goldStolen;
+                window.saveData();
+
+                battleZone.innerHTML = `
+                    <h3 style="color: #22c55e; text-transform: uppercase; font-size: 0.95rem; margin-bottom: 8px;">Incursion Victory!</h3>
+                    <p style="font-size: 0.9rem; color: #94a3b8;">
+                        Your assault task force breached the parameters of <strong style="color: #f8fafc;">Commander_Unit_${targetId}</strong>.<br>
+                        Your Attack Rating of <strong style="color: #22c55e;">${myAttack.toLocaleString()}</strong> overwhelmed their defenses (${defenseRating.toLocaleString()}).<br>
+                        <span style="color: #eab308; font-weight: bold;">Plundered Loot Secured: +${goldStolen.toLocaleString()} Gold Assets!</span>
+                    </p>
+                `;
+                battleZone.style.borderColor = "#22c55e";
+            } else {
+                // Lose Condition: Assault repelled by superior defensive equipment stats
+                battleZone.innerHTML = `
+                    <h3 style="color: #ef4444; text-transform: uppercase; font-size: 0.95rem; margin-bottom: 8px;">Incursion Defeated!</h3>
+                    <p style="font-size: 0.9rem; color: #94a3b8;">
+                        Your forces launched an assault on <strong style="color: #f8fafc;">Commander_Unit_${targetId}</strong> but were entirely repelled.<br>
+                        Your Attack Rating of <strong style="color: #ef4444;">${myAttack.toLocaleString()}</strong> failed to break through their fortified shields (${defenseRating.toLocaleString()}).<br>
+                        <span style="color: #ef4444;">Operation Status: Zero assets stolen. Upgrade your armaments in the Armory tab.</span>
+                    </p>
+                `;
+                battleZone.style.borderColor = "#ef4444";
+            }
+            
+            battleZone.style.display = "block";
+            document.getElementById('gold-display').innerText = `${window.player.gold.toLocaleString()} Gold`;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        generateTargets();
     </script>
 </body>
 </html>
