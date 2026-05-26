@@ -7,41 +7,54 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: #12141c; color: #e2e8f0; font-family: 'Courier New', Courier, monospace; padding: 20px; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
-        .game-container { display: flex; gap: 20px; width: 100%; max-width: 1200px; margin-top: 20px; }
+        
+        /* Fixed Unified Game Layout Container */
+        .game-container { display: flex; gap: 20px; width: 100%; max-width: 1300px; margin-top: 20px; }
+        
+        /* Master Left Sidebar Box */
         .sidebar { width: 220px; flex-shrink: 0; }
-        .menu-header { background: linear-gradient(90deg, #ef4444, #991b1b); color: #ffffff; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; padding: 8px 12px; border: 2px solid #dc2626; border-bottom: none; border-radius: 4px 4px 0 0; }
+        .menu-header { background: linear-gradient(90deg, #ef4444, #991b1b); color: #ffffff; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; padding: 8px 12px; border: 2px solid #dc2626; border-bottom: none; border-radius: 4px 4px 0 0; letter-spacing: 1px; }
         .menu-group { background-color: #1e293b; border: 2px solid #334155; border-radius: 0 0 4px 4px; margin-bottom: 15px; overflow: hidden; }
         .menu-item { display: block; color: #94a3b8; text-decoration: none; padding: 10px 14px; font-size: 0.9rem; border-bottom: 1px solid #334155; }
         .menu-item.active { background-color: #0f172a; color: #ef4444; border-left: 4px solid #ef4444; font-weight: bold; }
-        
+
+        /* Left Side Mini Financial Stats Hub Overlay Box */
+        .status-box { background-color: #1e293b; border: 2px solid #334155; padding: 12px; border-radius: 4px; font-size: 0.85rem; line-height: 1.6; }
+        .status-title { font-weight: bold; color: #ef4444; border-bottom: 1px solid #334155; padding-bottom: 4px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* Right Content Panel Workspaces */
         .main-panel { flex-grow: 1; background-color: #1e293b; border: 2px solid #334155; border-radius: 4px; overflow: hidden; }
         .panel-header { background-color: #1e293b; border-bottom: 2px solid #334155; padding: 15px; font-size: 1.2rem; font-weight: bold; color: #ef4444; }
         .panel-body { padding: 20px; display: flex; flex-direction: column; align-items: center; }
         
-        /* Table Configurations */
-        .battle-table { width: 100%; max-width: 900px; border-collapse: collapse; margin-bottom: 15px; background-color: #0f172a; border: 1px solid #334155; }
-        .battle-table th { background-color: #1e293b; color: #ef4444; padding: 10px; font-size: 0.85rem; text-transform: uppercase; text-align: left; border-bottom: 2px solid #334155; }
+        /* Rebuilt Kings of Chaos Column Table Matrix */
+        .battle-table { width: 100%; max-width: 1000px; border-collapse: collapse; margin-bottom: 15px; background-color: #0f172a; border: 1px solid #334155; }
+        .battle-table th { background-color: #1e293b; color: #ef4444; padding: 10px; font-size: 0.8rem; text-transform: uppercase; text-align: left; border-bottom: 2px solid #334155; }
         .battle-table td { padding: 10px; border-bottom: 1px solid #1e293b; font-size: 0.9rem; }
         
+        /* Direct Spy Matrix Row Color Configurations */
+        .row-reveal { color: #f8fafc; background-color: #0f172a; } /* White Text Row */
+        .row-hidden { color: #22c55e; background-color: rgba(34, 197, 94, 0.03); } /* Green Text Row */
+        
         /* Action Hyperlinks */
-        .recon-link { color: #3b82f6; font-weight: bold; text-decoration: none; cursor: pointer; margin-right: 15px; }
+        .recon-link { color: #3b82f6; font-weight: bold; text-decoration: none; cursor: pointer; margin-right: 12px; }
         .recon-link:hover { text-decoration: underline; }
         .attack-link { color: #ef4444; font-weight: bold; text-decoration: none; cursor: pointer; }
         .attack-link:hover { text-decoration: underline; }
         
-        /* Next/Back Pagination Bar */
-        .pagination-bar { display: flex; justify-content: space-between; width: 100%; max-width: 900px; margin-bottom: 15px; background-color: #0f172a; border: 1px solid #334155; padding: 8px 15px; border-radius: 4px; align-items: center; }
+        /* Pagination Bar */
+        .pagination-bar { display: flex; justify-content: space-between; width: 100%; max-width: 1000px; margin-bottom: 15px; background-color: #0f172a; border: 1px solid #334155; padding: 8px 15px; border-radius: 4px; align-items: center; }
         .nav-btn { background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; padding: 6px 16px; cursor: pointer; font-family: inherit; font-weight: bold; text-transform: uppercase; border-radius: 4px; }
         .nav-btn:hover:not(:disabled) { background-color: #ef4444; border-color: #dc2626; }
         .nav-btn:disabled { color: #475569; cursor: not-allowed; }
-        .page-indicator { font-size: 0.9rem; color: #94a3b8; font-weight: bold; }
 
-        /* Report Log Panel overlays */
-        .intel-report { width: 100%; max-width: 900px; background-color: #0f172a; border: 1px solid #3b82f6; padding: 15px; border-radius: 4px; margin-bottom: 20px; display: none; }
-        .battle-report { width: 100%; max-width: 900px; background-color: #0f172a; border: 1px solid #ef4444; padding: 15px; border-radius: 4px; margin-bottom: 20px; display: none; }
+        /* Report Log Display Panels */
+        .intel-report { width: 100%; max-width: 1000px; background-color: #0f172a; border: 1px solid #3b82f6; padding: 15px; border-radius: 4px; margin-bottom: 20px; display: none; }
+        .battle-report { width: 100%; max-width: 1000px; background-color: #0f172a; border: 1px solid #ef4444; padding: 15px; border-radius: 4px; margin-bottom: 20px; display: none; }
     </style>
 </head>
 <body>
+
     <div class="game-container">
         <aside class="sidebar">
             <div class="menu-header">Galaxy 1</div>
@@ -51,34 +64,42 @@
                 <a href="armory.html" class="menu-item">Armory</a>
                 <a href="upgrades.html" class="menu-item">Upgrades</a>
                 <a href="training.html" class="menu-item">Training</a>
+                <a href="attack-log.html" class="menu-item">Attack Log</a>
             </nav>
+            
+            <div class="status-box">
+                <div class="status-title">Sector Assets</div>
+                <div>Gold: <span id="box-gold" style="color:#eab308; font-weight:bold;">0</span></div>
+                <div>Turns: <span id="box-turns" style="color:#f8fafc; font-weight:bold;">0</span></div>
+            </div>
         </aside>
+
         <main class="main-panel">
             <header class="panel-header">Galactic Sector Battlefield</header>
             <div class="panel-body">
                 
                 <div id="intel-zone" class="intel-report"></div>
-
                 <div id="battle-zone" class="battle-report"></div>
 
                 <div class="pagination-bar">
                     <button id="back-btn" class="nav-btn" onclick="changePage(-1)">[<< Back 20]</button>
-                    <div id="page-text" class="page-indicator">Viewing Targets 1 - 20</div>
+                    <div id="page-text" style="font-size: 0.9rem; color: #94a3b8; font-weight: bold;">Viewing Targets 1 - 20</div>
                     <button id="next-btn" class="nav-btn" onclick="changePage(1)">[Next 20 >>]</button>
                 </div>
 
                 <table class="battle-table">
                     <thead>
                         <tr>
-                            <th>Target Commander</th>
-                            <th>Classification</th>
+                            <th>Alliance</th>
+                            <th>Commander Name</th>
                             <th>Army Size</th>
-                            <th>Action Operations</th>
+                            <th>Treasury</th>
+                            <th>Rank</th>
+                            <th>Operations</th>
                         </tr>
                     </thead>
                     <tbody id="targets-list"></tbody>
                 </table>
-                <div style="color: #94a3b8; font-size:0.9rem; margin-top: 10px;">Available Liquid Wealth: <span id="gold-display" style="color:#eab308; font-weight:bold;">0 Gold</span></div>
             </div>
         </main>
     </div>
@@ -88,45 +109,28 @@
         let currentOffsetPage = 1;
         const targetsPerPage = 20;
 
-        // Calculates player's valid attack power factoring in paired weapon counts
         function calculateMyAttackPower() {
             if (!window.player) return 0;
             window.player.weapons = window.player.weapons || {};
-            
-            // Track total soldiers trained for combat
-            const totalAttackSoldiers = window.player.attack_troops || 0;
-
-            // Map standard weapon tier values
             const weaponTiers = [
-                { id: 'att_4', power: 1000 },
-                { id: 'att_3', power: 600 },
-                { id: 'att_2', power: 64 },
-                { id: 'att_1', power: 2 }
+                { id: 'att_4', power: 1000 }, { id: 'att_3', power: 600 },
+                { id: 'att_2', power: 64 },   { id: 'att_1', power: 2 }
             ];
-
-            let weaponsRemainingToEquip = totalAttackSoldiers;
+            let weaponsRemainingToEquip = window.player.attack_troops || 0;
             let totalAttackPowerValue = 0;
 
-            // Equip strongest weapons first up to available soldier pairing limits
             for (let weapon of weaponTiers) {
                 if (weaponsRemainingToEquip <= 0) break;
-                
                 let ownedCount = window.player.weapons[weapon.id] || 0;
                 let equippedCount = Math.min(ownedCount, weaponsRemainingToEquip);
-                
                 totalAttackPowerValue += equippedCount * weapon.power;
                 weaponsRemainingToEquip -= equippedCount;
             }
-
-            // Any remaining soldiers without armory weapons hit with a baseline strength of 1
-            if (weaponsRemainingToEquip > 0) {
-                totalAttackPowerValue += weaponsRemainingToEquip * 1;
-            }
-
+            if (weaponsRemainingToEquip > 0) totalAttackPowerValue += weaponsRemainingToEquip * 1;
             return totalAttackPowerValue;
         }
 
-        function generateTargets() {
+        function drawBattlefieldGrid() {
             const list = document.getElementById('targets-list');
             list.innerHTML = '';
 
@@ -136,37 +140,75 @@
             document.getElementById('page-text').innerText = `Viewing Targets ${startIdx.toLocaleString()} - ${endIdx.toLocaleString()}`;
             document.getElementById('back-btn').disabled = currentOffsetPage === 1;
 
+            // Fetch live Spy power from engine database variables
+            let myTotalSpyPower = window.getMyTotalSpyPower ? window.getMyTotalSpyPower() : 0;
+
             for (let i = startIdx; i <= endIdx; i++) {
                 let tr = document.createElement('tr');
                 
-                // Deterministic generation values based on item index
-                let totalSoldiers = Math.floor(Math.sin(i) * 200) + 250; 
-                let targetDefenseRating = Math.floor(Math.cos(i) * 450) + 500;
-                let targetGoldHoldings = Math.floor(Math.sin(i * i) * 15000) + 20000;
-                if (targetGoldHoldings < 0) targetGoldHoldings = 5000;
+                // Algorithmic variable equations based on cell indices
+                let targetSentryPower = Math.floor(Math.cos(i * 7) * 200) + 220; 
+                if (targetSentryPower < 10) targetSentryPower = 15;
 
-                tr.innerHTML = `
-                    <td>Commander_Unit_${i * 3}</td>
-                    <td style="color:#64748b;">G1-Sector_${i}</td>
-                    <td>${totalSoldiers.toLocaleString()} Troops</td>
-                    <td>
-                        <span class="recon-link" onclick="runIntelligenceRecon(${i}, ${targetDefenseRating}, ${targetGoldHoldings})">[RECON]</span>
-                        <span class="attack-link" onclick="launchIncursion(${i}, ${targetDefenseRating}, ${targetGoldHoldings})">[LAUNCH RAID]</span>
-                    </td>
-                `;
+                let allianceName = i % 3 === 0 ? "F L G" : (i % 5 === 0 ? "La Cosa Nostra" : "None");
+                let targetName = `Commander_Clone_${i * 2}`;
+                let totalSoldiers = Math.floor(Math.sin(i) * 350) + 400; 
+                let targetDefenseRating = Math.floor(Math.cos(i) * 500) + 550;
+                let targetGoldHoldings = Math.floor(Math.sin(i * i) * 30000) + 35000;
+                if (targetGoldHoldings < 0) targetGoldHoldings = 1200;
+                let targetRank = 500 - i;
+
+                // 2:1 SPY TO SENTRY CALCULATION LOOP
+                // If my spy power is greater than or equal to two times their sentry power, full reveal (White text row). 
+                // Otherwise, conceal behind security data walls (Green text row with '??? Gold' text).
+                let hasSpyAdvantage = myTotalSpyPower >= (targetSentryPower * 2);
+                
+                if (hasSpyAdvantage) {
+                    tr.className = "row-reveal";
+                    tr.innerHTML = `
+                        <td style="color: #64748b;">[${allianceName}]</td>
+                        <td style="font-weight: bold;">${targetName}</td>
+                        <td>${totalSoldiers.toLocaleString()}</td>
+                        <td style="color: #eab308; font-weight: bold;">${targetGoldHoldings.toLocaleString()} Gold</td>
+                        <td>#${targetRank}</td>
+                        <td>
+                            <span class="recon-link" onclick="runIntelligenceRecon(${i}, ${targetDefenseRating}, ${targetGoldHoldings})">[RECON]</span>
+                            <span class="attack-link" onclick="launchIncursion(${i}, ${targetDefenseRating}, ${targetGoldHoldings})">[ATTACK]</span>
+                        </td>
+                    `;
+                } else {
+                    tr.className = "row-hidden";
+                    tr.innerHTML = `
+                        <td style="color: rgba(34,197,94,0.4);">[${allianceName}]</td>
+                        <td>${targetName}</td>
+                        <td>${totalSoldiers.toLocaleString()}</td>
+                        <td style="font-weight: bold;">??? Gold</td>
+                        <td>#${targetRank}</td>
+                        <td>
+                            <span class="recon-link" onclick="runIntelligenceRecon(${i}, ${targetDefenseRating}, ${targetGoldHoldings})">[RECON]</span>
+                            <span class="attack-link" onclick="launchIncursion(${i}, ${targetDefenseRating}, ${targetGoldHoldings})">[ATTACK]</span>
+                        </td>
+                    `;
+                }
+
                 list.appendChild(tr);
             }
-            if(window.player) document.getElementById('gold-display').innerText = `${window.player.gold.toLocaleString()} Gold`;
+            updateBottomOverlayBox();
+        }
+
+        function updateBottomOverlayBox() {
+            if (window.player) {
+                document.getElementById('box-gold').innerText = Math.floor(window.player.gold).toLocaleString();
+                document.getElementById('box-turns').innerText = window.player.turns;
+            }
         }
 
         function changePage(direction) {
             currentOffsetPage += direction;
             if (currentOffsetPage < 1) currentOffsetPage = 1;
-            
             document.getElementById('intel-zone').style.display = "none";
             document.getElementById('battle-zone').style.display = "none";
-            
-            generateTargets();
+            drawBattlefieldGrid();
         }
 
         function runIntelligenceRecon(targetId, defenseRating, cashHoldings) {
@@ -174,20 +216,17 @@
             document.getElementById('battle-zone').style.display = "none";
 
             let myAttack = calculateMyAttackPower();
-            let strategyAdvice = "";
-            
-            if (myAttack > defenseRating) {
-                strategyAdvice = `<span style="color: #22c55e;">VICTORY PREDICTED: Your Attack Power (${myAttack.toLocaleString()}) bypasses their fortifications.</span>`;
-            } else {
-                strategyAdvice = `<span style="color: #ef4444;">WARNING — DEFEAT PREDICTED: Target Defense (${defenseRating.toLocaleString()}) outmatches your active Attack Power (${myAttack.toLocaleString()}). Acquire more weapons!</span>`;
-            }
+            let strategyAdvice = myAttack > defenseRating ? 
+                `<span style="color: #22c55e;">VICTORY PREDICTED: Attack Power overrides fortifications.</span>` : 
+                `<span style="color: #ef4444;">WARNING — DEFEAT PREDICTED: Upgrade weapons to strike safely!</span>`;
 
             intelZone.innerHTML = `
-                <h3 style="color: #3b82f6; text-transform: uppercase; font-size: 0.95rem; margin-bottom: 8px;">Spy Reconnaissance: Commander_Unit_${targetId}</h3>
+                <h3 style="color: #3b82f6; text-transform: uppercase; font-size: 0.95rem; margin-bottom: 8px;">Spy Reconnaissance Report</h3>
                 <p style="font-size: 0.9rem; line-height: 1.6; color: #94a3b8;">
-                    • Measured Defensive Efficiency: <strong style="color: #f8fafc;">${defenseRating.toLocaleString()} Defense Power</strong><br>
-                    • Discovered Unprotected Capital: <strong style="color: #eab308;">${cashHoldings.toLocaleString()} Gold Cash</strong><br>
-                    • Intelligence Projection: ${strategyAdvice}
+                    • Target: <strong style="color: #f8fafc;">Commander_Clone_${targetId * 2}</strong><br>
+                    • Defensive Rating: <strong style="color: #f8fafc;">${defenseRating.toLocaleString()} Defense</strong><br>
+                    • Treasure Holdings: <strong style="color: #eab308;">${cashHoldings.toLocaleString()} Gold</strong><br>
+                    • Projection: ${strategyAdvice}
                 </p>
             `;
             intelZone.style.display = "block";
@@ -197,11 +236,9 @@
         function launchIncursion(targetId, defenseRating, cashHoldings) {
             const battleZone = document.getElementById('battle-zone');
             document.getElementById('intel-zone').style.display = "none";
-
             let myAttack = calculateMyAttackPower();
 
             if (myAttack > defenseRating) {
-                // EXCLUSIVE MINIMEN PLUNDER CALCULATOR: Steals 90% to 100% of liquid assets
                 let plunderFactor = (Math.random() * 0.10) + 0.90; 
                 let goldStolen = Math.floor(cashHoldings * plunderFactor);
                 
@@ -209,32 +246,30 @@
                 window.saveData();
 
                 battleZone.innerHTML = `
-                    <h3 style="color: #22c55e; text-transform: uppercase; font-size: 0.95rem; margin-bottom: 8px;">Incursion Victory!</h3>
+                    <h3 style="color: #22c55e; text-transform: uppercase; font-size: 0.95rem; margin-bottom: 8px;">Assault Successful!</h3>
                     <p style="font-size: 0.9rem; color: #94a3b8;">
-                        Your assault task force breached the parameters of <strong style="color: #f8fafc;">Commander_Unit_${targetId}</strong>.<br>
-                        Your Attack Rating of <strong style="color: #22c55e;">${myAttack.toLocaleString()}</strong> overwhelmed their defenses (${defenseRating.toLocaleString()}).<br>
-                        <span style="color: #22c55e; font-weight: bold;">Plundered Loot Secured (90%-100% Drain): +${goldStolen.toLocaleString()} Gold Assets!</span>
+                        Overwhelmed defenses with <strong style="color: #22c55e;">${myAttack.toLocaleString()}</strong> power.<br>
+                        <span style="color: #22c55e; font-weight: bold;">Loot Plundered (90%-100% Drain): +${goldStolen.toLocaleString()} Gold Assets!</span>
                     </p>
                 `;
                 battleZone.style.borderColor = "#22c55e";
             } else {
                 battleZone.innerHTML = `
-                    <h3 style="color: #ef4444; text-transform: uppercase; font-size: 0.95rem; margin-bottom: 8px;">Incursion Defeated!</h3>
+                    <h3 style="color: #ef4444; text-transform: uppercase; font-size: 0.95rem; margin-bottom: 8px;">Assault Repelled!</h3>
                     <p style="font-size: 0.9rem; color: #94a3b8;">
-                        Your forces launched an assault on <strong style="color: #f8fafc;">Commander_Unit_${targetId}</strong> but were entirely repelled.<br>
-                        Your Attack Rating of <strong style="color: #ef4444;">${myAttack.toLocaleString()}</strong> failed to break through their fortified shields (${defenseRating.toLocaleString()}).<br>
-                        <span style="color: #ef4444;">Operation Status: Zero assets stolen. Upgrade your armaments in the Armory tab.</span>
+                        Your attack rating of <strong style="color: #ef4444;">${myAttack.toLocaleString()}</strong> crashed against fortifications (${defenseRating.toLocaleString()}).
                     </p>
                 `;
                 battleZone.style.borderColor = "#ef4444";
             }
             
             battleZone.style.display = "block";
-            document.getElementById('gold-display').innerText = `${window.player.gold.toLocaleString()} Gold`;
+            updateBottomOverlayBox();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        generateTargets();
+        drawBattlefieldGrid();
+        setInterval(updateBottomOverlayBox, 1000);
     </script>
 </body>
 </html>
