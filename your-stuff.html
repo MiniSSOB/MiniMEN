@@ -47,11 +47,8 @@
                 <a href="your-stuff.html" class="menu-item active">Your Stuff</a>
                 <a href="battlefield.html" class="menu-item">Battlefield</a>
                 <a href="armory.html" class="menu-item">Armory</a>
-                <a href="conquest.html" class="menu-item">Conquest</a>
-                <a href="training.html" class="menu-item">Training</a>
                 <a href="upgrades.html" class="menu-item">Upgrades</a>
-                <a href="intelligence.html" class="menu-item">Intelligence</a>
-                <a href="alliance.html" class="menu-item">Alliance</a>
+                <a href="training.html" class="menu-item">Training</a>
             </nav>
             <div class="menu-header">System</div>
             <nav class="menu-group">
@@ -82,23 +79,23 @@
         </main>
     </div>
 
+    <script src="game-engine.js"></script>
     <script>
-        // Read local state and force render profile stats dynamically
-        const currentSession = localStorage.getItem('minimen_session');
-        if (!currentSession) {
-            window.location.href = 'index.html';
-        } else {
-            const players = JSON.parse(localStorage.getItem('minimen_players')) || {};
-            const playerData = players[currentSession];
-
-            if (playerData) {
-                document.getElementById('profile-title').innerText = `Galaxy Profile: ${playerData.name}`;
-                document.getElementById('vault-display').innerText = `${playerData.vault.toLocaleString()} Gold`;
-                document.getElementById('turns-display').innerText = playerData.turns;
-                document.getElementById('troop-display').innerText = playerData.soldiers.toLocaleString();
-                document.getElementById('gold-display').innerText = `${playerData.gold.toLocaleString()} Gold`;
+        function renderProfileView() {
+            if (window.player) {
+                document.getElementById('profile-title').innerText = `Galaxy Profile: ${window.player.name}`;
+                document.getElementById('vault-display').innerText = `${window.player.vault.toLocaleString()} Gold`;
+                document.getElementById('turns-display').innerText = window.player.turns;
+                document.getElementById('troop-display').innerText = window.player.soldiers.toLocaleString();
+                document.getElementById('gold-display').innerText = `${window.player.gold.toLocaleString()} Gold`;
             }
         }
+
+        // Run primary render
+        renderProfileView();
+
+        // Keep updating view values dynamically when background engine ticks
+        setInterval(renderProfileView, 1000);
     </script>
 </body>
 </html>
