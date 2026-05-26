@@ -3,47 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiniMEN — Training Program</title>
+    <title>MiniMEN — Upgrade Matrix</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: #12141c; color: #e2e8f0; font-family: 'Courier New', Courier, monospace; padding: 20px; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
+        
         .game-container { display: flex; gap: 20px; width: 100%; max-width: 1300px; margin-top: 20px; }
         
-        /* Left Sidebar Layout */
         .sidebar { width: 220px; flex-shrink: 0; }
         .menu-header { background: linear-gradient(90deg, #ef4444, #991b1b); color: #ffffff; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; padding: 8px 12px; border: 2px solid #dc2626; border-bottom: none; border-radius: 4px 4px 0 0; letter-spacing: 1px; }
         .menu-group { background-color: #1e293b; border: 2px solid #334155; border-radius: 0 0 4px 4px; margin-bottom: 15px; overflow: hidden; }
         .menu-item { display: block; color: #94a3b8; text-decoration: none; padding: 10px 14px; font-size: 0.9rem; border-bottom: 1px solid #334155; }
         .menu-item.active { background-color: #0f172a; color: #ef4444; border-left: 4px solid #ef4444; font-weight: bold; }
 
-        /* Multi-Panel Columns split workspace */
-        .split-grid { display: flex; gap: 20px; width: 100%; }
-        .program-side { flex: 7; }
-        .roster-side { flex: 5; display: flex; flex-direction: column; gap: 15px; }
+        .status-box { background-color: #1e293b; border: 2px solid #334155; padding: 12px; border-radius: 4px; font-size: 0.85rem; line-height: 1.6; }
+        .status-title { font-weight: bold; color: #ef4444; border-bottom: 1px solid #334155; padding-bottom: 4px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        /* Unified Card Configurations */
-        .panel { background-color: #1e293b; border: 2px solid #334155; border-radius: 4px; overflow: hidden; margin-bottom: 15px; }
-        .panel-header { background-color: #0f172a; border-bottom: 2px solid #334155; padding: 12px; font-size: 1.1rem; font-weight: bold; color: #ef4444; text-align: center; text-transform: uppercase; letter-spacing: 1px; }
+        .main-panel { flex-grow: 1; background-color: #1e293b; border: 2px solid #334155; border-radius: 4px; overflow: hidden; }
+        .panel-header { background-color: #1e293b; border-bottom: 2px solid #334155; padding: 15px; font-size: 1.2rem; font-weight: bold; color: #ef4444; }
+        .panel-body { padding: 20px; }
         
-        /* Banner Indicators */
-        .funds-banner { background-color: #0f172a; border: 1px solid #334155; padding: 10px; font-size: 1.1rem; font-weight: bold; text-align: center; margin-bottom: 15px; letter-spacing: 1px; }
-        
-        /* Table Layout Matrix definitions */
-        .training-table { width: 100%; border-collapse: collapse; background-color: #0f172a; }
-        .training-table th { background-color: #1e293b; color: #94a3b8; padding: 10px; font-size: 0.75rem; text-transform: uppercase; text-align: left; border-bottom: 1px solid #334155; }
-        .training-table td { padding: 12px 10px; border-bottom: 1px solid #1e293b; font-size: 0.9rem; }
-        
-        .section-divider { background: linear-gradient(90deg, #1e293b, #0f172a); color: #ffffff !important; font-weight: bold !important; font-size: 0.8rem !important; letter-spacing: 1px; padding: 6px 10px !important; border-bottom: 2px solid #334155 !important; text-transform: uppercase; }
-        
-        .qty-input { width: 85px; background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; padding: 4px; text-align: center; font-family: inherit; border-radius: 4px; outline: none; }
-        .qty-input:focus { border-color: #ef4444; }
-        .action-btn { width: 100%; background: linear-gradient(90deg, #ef4444, #991b1b); color: white; border: 1px solid #dc2626; padding: 12px; font-weight: bold; text-transform: uppercase; cursor: pointer; font-family: inherit; letter-spacing: 1px; border-radius: 4px; }
-        .action-btn:hover { background: #dc2626; }
-
-        /* Status Feeds */
-        .alert-feed { font-size: 0.85rem; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center; display: none; font-weight: bold; }
-        .error { color: #ef4444; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; }
-        .success { color: #22c55e; background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; }
+        .upgrade-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .upgrade-card { background-color: #0f172a; border: 1px solid #334155; padding: 15px; border-radius: 4px; }
+        .upgrade-title { color: #ef4444; font-weight: bold; margin-bottom: 10px; }
+        .upgrade-btn { background: #334155; color: #f8fafc; border: none; padding: 8px 12px; width: 100%; cursor: pointer; border-radius: 4px; margin-top: 10px; }
+        .upgrade-btn:hover { background: #ef4444; }
     </style>
 </head>
 <body>
@@ -55,205 +39,45 @@
                 <a href="your-stuff.html" class="menu-item">Your Stuff</a>
                 <a href="battlefield.html" class="menu-item">Battlefield</a>
                 <a href="armory.html" class="menu-item">Armory</a>
-                <a href="upgrades.html" class="menu-item">Upgrades</a>
-                <a href="training.html" class="menu-item active">Training</a>
+                <a href="upgrades.html" class="menu-item active">Upgrades</a>
+                <a href="training.html" class="menu-item">Training</a>
+                <a href="attack-log.html" class="menu-item">Attack Log</a>
             </nav>
+            <div class="status-box">
+                <div class="status-title">Sector Assets</div>
+                <div>Gold: <span id="box-gold" style="color:#eab308; font-weight:bold;">0</span></div>
+                <div>Turns: <span id="box-turns" style="color:#f8fafc; font-weight:bold;">0</span></div>
+            </div>
         </aside>
 
-        <main class="split-grid">
-            
-            <div class="program-side">
-                <div id="alert" class="alert-feed"></div>
-                
-                <div class="funds-banner">Available Reservoir: <span id="pool-display" style="color: #ef4444;">0</span> Untrained Soldiers</div>
-
-                <form onsubmit="executeTrainingProgram(event)">
-                    <div class="panel">
-                        <table class="training-table">
-                            <thead>
-                                <tr>
-                                    <th>Training Program</th>
-                                    <th>Cost Per Unit</th>
-                                    <th style="text-align: center;">Quantity Assignment</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td colspan="3" class="section-divider">Attack / Defense Specialist</td></tr>
-                                <tr><td style="color:#ef4444; font-weight:bold;">Attack Specialist</td><td>2,000 Gold</td><td style="text-align: center;"><input type="number" id="train-attack" class="qty-input" min="0" placeholder="0"></td></tr>
-                                <tr><td style="color:#3b82f6; font-weight:bold;">Defense Specialist</td><td>2,000 Gold</td><td style="text-align: center;"><input type="number" id="train-defense" class="qty-input" min="0" placeholder="0"></td></tr>
-
-                                <tr><td colspan="3" class="section-divider">Spies / Sentries</td></tr>
-                                <tr><td style="color:#22c55e; font-weight:bold;">Spy</td><td>3,500 Gold</td><td style="text-align: center;"><input type="number" id="train-spy" class="qty-input" min="0" placeholder="0"></td></tr>
-                                <tr><td style="color:#a855f7; font-weight:bold;">Sentry</td><td>3,500 Gold</td><td style="text-align: center;"><input type="number" id="train-sentry" class="qty-input" min="0" placeholder="0"></td></tr>
-                            </tbody>
-                        </table>
+        <main class="main-panel">
+            <header class="panel-header">Upgrade Matrix</header>
+            <div class="panel-body">
+                <div class="upgrade-grid">
+                    <div class="upgrade-card">
+                        <div class="upgrade-title">Production Efficiency</div>
+                        <p style="font-size: 0.85rem; color:#94a3b8;">Increase Gold production per soldier by 5%.</p>
+                        <button class="upgrade-btn">Upgrade: 100,000 Gold</button>
                     </div>
-                    <button type="submit" class="action-btn">Train Selected Units</button>
-                </form>
-            </div>
-
-            <div class="roster-side">
-                
-                <div class="panel">
-                    <div class="panel-header">Personnel Roster</div>
-                    <table class="training-table">
-                        <thead>
-                            <tr><th>Troop Classification</th><th style="text-align: right;">Army Size</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Trained Attack Soldiers</td><td id="rost-attack" style="text-align: right; font-weight: bold; color: #ef4444;">0</td></tr>
-                            <tr><td>Trained Defense Soldiers</td><td id="rost-defense" style="text-align: right; font-weight: bold; color: #3b82f6;">0</td></tr>
-                            <tr><td>Untrained Soldiers</td><td id="rost-untrained" style="text-align: right; font-weight: bold; color: #94a3b8;">0</td></tr>
-                            <tr><td>Spies</td><td id="rost-spy" style="text-align: right; font-weight: bold; color: #22c55e;">0</td></tr>
-                            <tr><td>Sentries</td><td id="rost-sentry" style="text-align: right; font-weight: bold; color: #a855f7;">0</td></tr>
-                            <tr style="border-top: 2px solid #334155; background-color: #0f172a;"><td style="font-weight: bold;">Total Fighting Force</td><td id="rost-total" style="text-align: right; font-weight: bold; color: #f8fafc;">0</td></tr>
-                        </tbody>
-                    </table>
+                    <div class="upgrade-card">
+                        <div class="upgrade-title">Troop Intake Expansion</div>
+                        <p style="font-size: 0.85rem; color:#94a3b8;">Permanent bonus to soldier recruitment speed.</p>
+                        <button class="upgrade-btn">Upgrade: 250,000 Gold</button>
+                    </div>
                 </div>
-
-                <div class="panel">
-                    <div class="panel-header">Military Effectiveness</div>
-                    <table class="training-table">
-                        <thead>
-                            <tr><th>Action Vector</th><th style="text-align: right;">Active Power Rating</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>Strike Power</td><td id="power-strike" style="text-align: right; color:#ef4444; font-weight:bold;">0</td></tr>
-                            <tr><td>Defense Rating</td><td id="power-defense" style="text-align: right; color:#3b82f6; font-weight:bold;">0</td></tr>
-                            <tr><td>Spy Covert Action</td><td id="power-spy" style="text-align: right; color:#22c55e; font-weight:bold;">0</td></tr>
-                            <tr><td>Sentry Grid Density</td><td id="power-sentry" style="text-align: right; color:#a855f7; font-weight:bold;">0</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="panel" style="background-color: #0f172a; border: 1px solid #334155; padding: 12px; text-align: center; font-size: 0.9rem;">
-                    Financial Assets: <span id="gold-display" style="color: #eab308; font-weight: bold;">0 Gold</span>
-                </div>
-
             </div>
         </main>
     </div>
 
     <script src="game-engine.js"></script>
     <script>
-        const rateSheet = {
-            attack: 2000,
-            defense: 2000,
-            spy: 3500,
-            sentry: 3500
-        };
-
-        // Weapon/Tool configurations to map military ratings live inside training views
-        const itemPowers = {
-            att_4: 1000, att_3: 600, att_2: 64, att_1: 2,
-            def_4: 1000, def_3: 600, def_2: 64, def_1: 5,
-            spy_4: 1000, spy_3: 600, spy_2: 250, spy_1: 140,
-            sen_4: 1000, sen_3: 600, sen_2: 250, sen_1: 140
-        };
-
-        function calculateVectorPower(troopCount, groupPrefix, baseUnitValue) {
-            window.player.weapons = window.player.weapons || {};
-            let remainingTroops = troopCount;
-            let netPower = 0;
-
-            // Loop and group equipment keys highest power level descending
-            const keys = Object.keys(itemPowers).filter(k => k.startsWith(groupPrefix)).sort((a,b) => itemPowers[b] - itemPowers[a]);
-            
-            for (let id of keys) {
-                if (remainingTroops <= 0) break;
-                let owned = window.player.weapons[id] || 0;
-                let equipped = Math.min(owned, remainingTroops);
-                netPower += equipped * itemPowers[id];
-                remainingTroops -= equipped;
+        // Sync assets box
+        setInterval(() => {
+            if(window.player) {
+                document.getElementById('box-gold').innerText = Math.floor(window.player.gold).toLocaleString();
+                document.getElementById('box-turns').innerText = window.player.turns;
             }
-            if (remainingTroops > 0) netPower += remainingTroops * baseUnitValue;
-            return netPower;
-        }
-
-        function renderTrainingProgramPanel() {
-            if (!window.player) return;
-
-            const att = window.player.attack_troops || 0;
-            const def = window.player.defense_troops || 0;
-            const unt = window.player.soldiers || 0;
-            const spy = window.player.spy_troops || 0;
-            const sen = window.player.sentry_troops || 0;
-            const totalForce = att + def + unt + spy + sen;
-
-            // Render roster numbers
-            document.getElementById('rost-attack').innerText = att.toLocaleString();
-            document.getElementById('rost-defense').innerText = def.toLocaleString();
-            document.getElementById('rost-untrained').innerText = unt.toLocaleString();
-            document.getElementById('rost-spy').innerText = spy.toLocaleString();
-            document.getElementById('rost-sentry').innerText = sen.toLocaleString();
-            document.getElementById('rost-total').innerText = totalForce.toLocaleString();
-            document.getElementById('pool-display').innerText = unt.toLocaleString();
-            document.getElementById('gold-display').innerText = `${Math.floor(window.player.gold).toLocaleString()} Gold`;
-
-            // Calculate weapon-paired military metrics matching original engine rules
-            document.getElementById('power-strike').innerText = calculateVectorPower(att, 'att_', 1).toLocaleString();
-            document.getElementById('power-defense').innerText = calculateVectorPower(def, 'def_', 1).toLocaleString();
-            document.getElementById('power-spy').innerText = calculateVectorPower(spy, 'spy_', 1).toLocaleString();
-            document.getElementById('power-sentry').innerText = calculateVectorPower(sen, 'sen_', 1).toLocaleString();
-        }
-
-        function executeTrainingProgram(event) {
-            event.preventDefault();
-            const alertBox = document.getElementById('alert');
-            
-            const attReq = parseInt(document.getElementById('train-attack').value) || 0;
-            const defReq = parseInt(document.getElementById('train-defense').value) || 0;
-            const spyReq = parseInt(document.getElementById('train-spy').value) || 0;
-            const senReq = parseInt(document.getElementById('train-sentry').value) || 0;
-
-            const totalRequestedTroops = attReq + defReq + spyReq + senReq;
-            if (totalRequestedTroops <= 0) return;
-
-            // Validation 1: Check unit reservoir levels
-            if (totalRequestedTroops > window.player.soldiers) {
-                showAlert("INSUFFICIENT RESERVES IN UNTRAINED SOLDIER RESERVOIR", "error");
-                return;
-            }
-
-            // Validation 2: Check financial capacity scales
-            const totalFinancialCost = (attReq * rateSheet.attack) + (defReq * rateSheet.defense) + (spyReq * rateSheet.spy) + (senReq * rateSheet.sentry);
-            if (totalFinancialCost > window.player.gold) {
-                showAlert(`INSUFFICIENT CAPITAL. REQUIRE ${totalFinancialCost.toLocaleString()} GOLD ASSETS`, "error");
-                return;
-            }
-
-            // Deduct assets and credit roster profiles
-            window.player.gold -= totalFinancialCost;
-            window.player.soldiers -= totalRequestedTroops;
-            
-            window.player.attack_troops = (window.player.attack_troops || 0) + attReq;
-            window.player.defense_troops = (window.player.defense_troops || 0) + defReq;
-            window.player.spy_troops = (window.player.spy_troops || 0) + spyReq;
-            window.player.sentry_troops = (window.player.sentry_troops || 0) + senReq;
-
-            // Fire global state handler update
-            window.saveData();
-
-            showAlert(`TRAINING SUCCESSFUL: Assigned ${totalRequestedTroops.toLocaleString()} troops (-${totalFinancialCost.toLocaleString()} Gold)`, "success");
-            
-            document.getElementById('train-attack').value = '';
-            document.getElementById('train-defense').value = '';
-            document.getElementById('train-spy').value = '';
-            document.getElementById('train-sentry').value = '';
-
-            renderTrainingProgramPanel();
-        }
-
-        function showAlert(msg, type) {
-            const alertBox = document.getElementById('alert');
-            alertBox.innerText = msg;
-            alertBox.className = `alert-feed ${type}`;
-            alertBox.style.display = "block";
-            setTimeout(() => { alertBox.style.display = "none"; }, 4000);
-        }
-
-        renderTrainingProgramPanel();
-        setInterval(renderTrainingProgramPanel, 1000);
+        }, 1000);
     </script>
 </body>
 </html>
