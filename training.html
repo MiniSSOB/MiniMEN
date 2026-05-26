@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniMEN — Training Grounds</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #12141c; color: #e2e8f0; font-family: 'Courier New', Courier, monospace; padding: 20px; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
+        .game-container { display: flex; gap: 20px; width: 100%; max-width: 1200px; margin-top: 20px; }
+
+        /* Left Sidebar Layout */
+        .sidebar { width: 220px; flex-shrink: 0; }
+        .menu-header { background: linear-gradient(90deg, #ef4444, #991b1b); color: #ffffff; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; padding: 8px 12px; border: 2px solid #dc2626; border-bottom: none; border-radius: 4px 4px 0 0; }
+        .menu-group { background-color: #1e293b; border: 2px solid #334155; border-radius: 0 0 4px 4px; margin-bottom: 15px; overflow: hidden; }
+        .menu-item { display: block; color: #94a3b8; text-decoration: none; padding: 10px 14px; font-size: 0.9rem; border-bottom: 1px solid #334155; transition: all 0.2s ease; }
+        .menu-item:last-child { border-bottom: none; }
+        .menu-item:hover { background-color: #334155; color: #f8fafc; padding-left: 18px; }
+        .menu-item.active { background-color: #0f172a; color: #ef4444; border-left: 4px solid #ef4444; font-weight: bold; }
+
+        /* Right Core Frame */
+        .main-panel { flex-grow: 1; background-color: #1e293b; border: 2px solid #334155; border-radius: 4px; overflow: hidden; }
+        .panel-header { background-color: #1e293b; border-bottom: 2px solid #334155; padding: 15px; font-size: 1.2rem; font-weight: bold; color: #ef4444; }
+        .panel-body { padding: 20px; display: flex; flex-direction: column; align-items: center; }
+
+        /* Training Setup Grid Layout */
+        .training-table { width: 100%; max-width: 600px; border-collapse: collapse; margin: 20px 0; background-color: #0f172a; border: 1px solid #334155; }
+        .training-table th { background-color: #1e293b; border-bottom: 2px solid #334155; color: #ef4444; padding: 12px; text-align: left; font-size: 0.85rem; text-transform: uppercase; }
+        .training-table td { padding: 12px; border-bottom: 1px solid #334155; font-size: 0.95rem; }
+        .training-table tr:last-child td { border-bottom: none; }
+        
+        .quantity-input { width: 80px; background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; padding: 6px; font-family: inherit; text-align: center; border-radius: 4px; outline: none; }
+        .quantity-input:focus { border-color: #ef4444; }
+        
+        .action-btn { background: linear-gradient(90deg, #ef4444, #991b1b); color: white; border: 1px solid #dc2626; padding: 10px 20px; font-family: inherit; font-size: 0.9rem; font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 4px; margin-top: 10px; }
+        .action-btn:hover { background: #dc2626; }
+
+        /* Status & Inventory Labels */
+        .inventory-summary { width: 100%; max-width: 600px; border-top: 1px dashed #334155; padding-top: 20px; margin-top: 15px; font-size: 0.95rem; text-align: center; line-height: 1.8; color: #94a3b8; }
+        .highlight-text { color: #eab308; font-weight: bold; }
+        .troop-text { color: #ef4444; font-weight: bold; }
+        .alert-feed { font-size: 0.85rem; padding: 8px; border-radius: 4px; margin-bottom: 15px; width: 100%; max-width: 600px; text-align: center; display: none; }
+        .error { color: #ef4444; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; }
+        .success { color: #22c55e; background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; }
+
+        @media (max-width: 768px) { .game-container { flex-direction: column; } .sidebar { width: 100%; } }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <aside class="sidebar">
+            <div class="menu-header">Galaxy 1</div>
+            <nav class="menu-group">
+                <a href="your-stuff.html" class="menu-item">Your Stuff</a>
+                <a href="battlefield.html" class="menu-item">Battlefield</a>
+                <a href="armory.html" class="menu-item">Armory</a>
+                <a href="upgrades.html" class="menu-item">Upgrades</a>
+                <a href="training.html" class="menu-item active">Training</a>
+                <a href="intelligence.html" class="menu-item">Intelligence</a>
+                <a href="alliance.html" class="menu-item">Alliance</a>
+            </nav>
+            <div class="menu-header">System</div>
+            <nav class="menu-group">
+                <a href="index.html" class="menu-item">Disconnect Log</a>
+            </nav>
+        </aside>
+
+        <main class="main-panel">
+            <header class="panel-header">Training Grounds</header>
+            <div class="panel-body">
+                <div id="alert" class="alert-feed"></div>
+
+                <form onsubmit="processTraining(event)">
+                    <table class="training-table">
+                        <thead>
+                            <tr>
+                                <th>Troop Class</th>
+                                <th>Current Strength</th>
+                                <th>Train Units</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Attack Force</td>
+                                <td id="current-attack">0 Units</td>
+                                padding-left: 10px;
+                                <td><input type="number" id="train-attack" class="quantity-input" min="0" placeholder="0"></td>
+                            </tr>
+                            <tr>
+                                <td>Defense Division</td>
+                                <td id="current-defense">0 Units</td>
+                                <td><input type="number" id="train-defense" class="quantity-input" min="0" placeholder="0"></td>
+                            </tr>
+                            <tr>
+                                <td>Spy Operatives</td>
+                                <td id="current-spy">0 Units</td>
+                                <td><input type="number" id="train-spy" class="quantity-input" min="0" placeholder="0"></td>
+                            </tr>
+                            <tr>
+                                <td>Sentry Security</td>
+                                <td id="current-sentry">0 Units</td>
+                                <td><input type="number" id="train-sentry" class="quantity-input" min="0" placeholder="0"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style="text-align: right; max-width: 600px;">
+                        <button type="submit" class="action-btn">Confirm Assignments</button>
+                    </div>
+                </form>
+
+                <div class="inventory-summary">
+                    Available Reservoir: <span id="pool-display" class="troop-text">0</span> Untrained Soldiers<br>
+                    Financial Capital: <span id="gold-display" class="highlight-text">0</span> Gold
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const session = localStorage.getItem('minimen_session');
+        if (!session) window.location.href = 'index.html';
+
+        let players = JSON.parse(localStorage.getItem('minimen_players')) || {};
+        let player = players[session];
+
+        function renderStats() {
+            if (!player) return;
+            document.getElementById('current-attack').innerText = `${(player.attack_troops || 0).toLocaleString()} Units`;
+            document.getElementById('current-defense').innerText = `${(player.defense_troops || 0).toLocaleString()} Units`;
+            document.getElementById('current-spy').innerText = `${(player.spy_troops || 0).toLocaleString()} Units`;
+            document.getElementById('current-sentry').innerText = `${(player.sentry_troops || 0).toLocaleString()} Units`;
+            document.getElementById('pool-display').innerText = (player.soldiers || 0).toLocaleString();
+            document.getElementById('gold-display').innerText = `${(player.gold || 0).toLocaleString()} Gold`;
+        }
+
+        function processTraining(event) {
+            event.preventDefault();
+            const alertBox = document.getElementById('alert');
+            
+            const attReq = parseInt(document.getElementById('train-attack').value) || 0;
+            const defReq = parseInt(document.getElementById('train-defense').value) || 0;
+            const spyReq = parseInt(document.getElementById('train-spy').value) || 0;
+            const senReq = parseInt(document.getElementById('train-sentry').value) || 0;
+            
+            const totalRequested = attReq + defReq + spyReq + senReq;
+
+            if (totalRequested <= 0) return;
+
+            if (totalRequested > player.soldiers) {
+                alertBox.innerText = "INSUFFICIENT RESERVES IN SOLDIER POOL";
+                alertBox.className = "alert-feed error";
+                alertBox.style.display = "block";
+                return;
+            }
+
+            // Execute Database Conversions
+            player.soldiers -= totalRequested;
+            player.attack_troops = (player.attack_troops || 0) + attReq;
+            player.defense_troops = (player.defense_troops || 0) + defReq;
+            player.spy_troops = (player.spy_troops || 0) + spyReq;
+            player.sentry_troops = (player.sentry_troops || 0) + senReq;
+
+            players[session] = player;
+            localStorage.setItem('minimen_players', JSON.stringify(players));
+
+            alertBox.innerText = `SUCCESSFULLY TRAINED ${totalRequested} DISPATCHED TROOPS`;
+            alertBox.className = "alert-feed success";
+            alertBox.style.display = "block";
+            
+            document.getElementById('train-attack').value = '';
+            document.getElementById('train-defense').value = '';
+            document.getElementById('train-spy').value = '';
+            document.getElementById('train-sentry').value = '';
+            
+            renderStats();
+        }
+
+        renderStats();
+    </script>
+</body>
+</html>
