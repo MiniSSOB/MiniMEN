@@ -3,31 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiniMEN — Armory Core</title>
+    <title>MiniMEN — Armory Hub</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: #12141c; color: #e2e8f0; font-family: 'Courier New', Courier, monospace; padding: 20px; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
-        .game-container { display: flex; gap: 20px; width: 100%; max-width: 1200px; margin-top: 20px; }
+        .game-container { display: flex; gap: 20px; width: 100%; max-width: 1300px; margin-top: 20px; }
+        
+        /* Navigation Sidebar */
         .sidebar { width: 220px; flex-shrink: 0; }
-        .menu-header { background: linear-gradient(90deg, #ef4444, #991b1b); color: #ffffff; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; padding: 8px 12px; border: 2px solid #dc2626; border-bottom: none; border-radius: 4px 4px 0 0; }
+        .menu-header { background: linear-gradient(90deg, #ef4444, #991b1b); color: #ffffff; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; padding: 8px 12px; border: 2px solid #dc2626; border-bottom: none; border-radius: 4px 4px 0 0; letter-spacing: 1px; }
         .menu-group { background-color: #1e293b; border: 2px solid #334155; border-radius: 0 0 4px 4px; margin-bottom: 15px; overflow: hidden; }
         .menu-item { display: block; color: #94a3b8; text-decoration: none; padding: 10px 14px; font-size: 0.9rem; border-bottom: 1px solid #334155; }
         .menu-item.active { background-color: #0f172a; color: #ef4444; border-left: 4px solid #ef4444; font-weight: bold; }
-        .main-panel { flex-grow: 1; background-color: #1e293b; border: 2px solid #334155; border-radius: 4px; overflow: hidden; }
-        .panel-header { background-color: #1e293b; border-bottom: 2px solid #334155; padding: 15px; font-size: 1.2rem; font-weight: bold; color: #ef4444; }
-        .panel-body { padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .armory-table { width: 100%; max-width: 800px; border-collapse: collapse; margin-bottom: 20px; background-color: #0f172a; border: 1px solid #334155; }
-        .armory-table th { background-color: #1e293b; color: #ef4444; padding: 12px; text-align: left; font-size: 0.85rem; text-transform: uppercase; border-bottom: 2px solid #334155; }
-        .armory-table td { padding: 12px; border-bottom: 1px solid #334155; font-size: 0.95rem; }
-        .qty-input { width: 70px; background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; padding: 4px; text-align: center; border-radius: 4px; }
-        .action-btn { background: linear-gradient(90deg, #ef4444, #991b1b); color: white; border: 1px solid #dc2626; padding: 10px 20px; font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 4px; }
-        .inventory-summary { width: 100%; max-width: 800px; border-top: 1px dashed #334155; padding-top: 20px; font-size: 0.95rem; text-align: center; color: #94a3b8; }
-        .alert-feed { font-size: 0.85rem; padding: 8px; border-radius: 4px; margin-bottom: 15px; width: 100%; max-width: 800px; text-align: center; display: none; }
+
+        /* Split Main Workspaces */
+        .split-grid { display: flex; gap: 20px; width: 100%; }
+        .market-side { flex: 7; }
+        .inventory-side { flex: 5; display: flex; flex-direction: column; gap: 15px; }
+
+        /* Unified Card Panels */
+        .panel { background-color: #1e293b; border: 2px solid #334155; border-radius: 4px; overflow: hidden; margin-bottom: 15px; }
+        .panel-header { background-color: #0f172a; border-bottom: 2px solid #334155; padding: 12px; font-size: 1.1rem; font-weight: bold; color: #ef4444; text-align: center; }
+        
+        /* Top Banner Style Displays */
+        .funds-banner { background-color: #0f172a; border: 1px solid #334155; padding: 10px; font-size: 1.1rem; font-weight: bold; text-align: center; margin-bottom: 10px; letter-spacing: 1px; }
+        
+        /* Table Layout Configurations */
+        .armory-table { width: 100%; border-collapse: collapse; background-color: #0f172a; }
+        .armory-table th { background-color: #1e293b; color: #94a3b8; padding: 8px 10px; font-size: 0.75rem; text-transform: uppercase; text-align: left; border-bottom: 1px solid #334155; }
+        .armory-table td { padding: 10px; border-bottom: 1px solid #1e293b; font-size: 0.9rem; }
+        
+        /* Separator Group Section Banners */
+        .group-row-header { background: linear-gradient(90deg, #1e293b, #0f172a); color: #ffffff !important; font-weight: bold !important; font-size: 0.85rem !important; letter-spacing: 1px; padding: 6px 10px !important; border-bottom: 2px solid #334155 !important; text-transform: uppercase; }
+        
+        /* Form Inputs and Action Button Styles */
+        .qty-input { width: 75px; background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; padding: 4px; text-align: center; font-family: inherit; border-radius: 4px; }
+        .action-btn { width: 100%; background: linear-gradient(90deg, #ef4444, #991b1b); color: white; border: 1px solid #dc2626; padding: 12px; font-weight: bold; text-transform: uppercase; cursor: pointer; font-family: inherit; letter-spacing: 1px; border-radius: 4px; }
+        .action-btn:hover { background: #dc2626; }
+
+        /* Alert Notifications */
+        .alert-feed { font-size: 0.85rem; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center; display: none; font-weight: bold; }
         .error { color: #ef4444; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; }
         .success { color: #22c55e; background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; }
+
+        @media (max-width: 992px) { .split-grid { flex-direction: column; } }
     </style>
 </head>
 <body>
+
     <div class="game-container">
         <aside class="sidebar">
             <div class="menu-header">Galaxy 1</div>
@@ -39,87 +62,200 @@
                 <a href="training.html" class="menu-item">Training</a>
             </nav>
         </aside>
-        <main class="main-panel">
-            <header class="panel-header">Equipment Armory</header>
-            <div class="panel-body">
+
+        <main class="split-grid">
+            
+            <div class="market-side">
                 <div id="alert" class="alert-feed"></div>
-                <form onsubmit="buyWeapons(event)">
+                
+                <div class="funds-banner">Available Capital: <span id="gold-display" style="color: #eab308;">0 Gold</span></div>
+                <div class="funds-banner" style="font-size:0.9rem; color:#94a3b8; margin-bottom:15px;">Vault Reserves: <span id="vault-display" style="color:#f8fafc;">0 Gold</span></div>
+
+                <form onsubmit="buyHardware(event)">
+                    <div class="panel" style="margin-bottom: 15px;">
+                        <table class="armory-table">
+                            <thead>
+                                <tr>
+                                    <th>Asset Model</th>
+                                    <th style="text-align: center;">Rating</th>
+                                    <th>Market Price</th>
+                                    <th style="text-align: center;">Order</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="4" class="group-row-header">Strike Armaments</td></tr>
+                                <tr><td>Sarumans Ball Clone</td><td style="text-align: center; color:#ef4444;">+2</td><td>100 G</td><td style="text-align: center;"><input type="number" id="buy-att_1" class="qty-input" min="0" placeholder="0"></td></tr>
+                                <tr><td>Heavy Steed Clone</td><td style="text-align: center; color:#ef4444;">+64</td><td>50,000 G</td><td style="text-align: center;"><input type="number" id="buy-att_2" class="qty-input" min="0" placeholder="0"></td></tr>
+                                <tr><td>Chariot Clone</td><td style="text-align: center; color:#ef4444;">+600</td><td>450,000 G</td><td style="text-align: center;"><input type="number" id="buy-att_3" class="qty-input" min="0" placeholder="0"></td></tr>
+                                <tr><td>Blackpowder Missile Clone</td><td style="text-align: center; color:#ef4444;">+1,000</td><td>1,000,000 G</td><td style="text-align: center;"><input type="number" id="buy-att_4" class="qty-input" min="0" placeholder="0"></td></tr>
+
+                                <tr><td colspan="4" class="group-row-header">Defensive Bulwarks</td></tr>
+                                <tr><td>Spider Armor Clone</td><td style="text-align: center; color:#3b82f6;">+5</td><td>5,000 G</td><td style="text-align: center;"><input type="number" id="buy-def_1" class="qty-input" min="0" placeholder="0"></td></tr>
+                                <tr><td>Mithril Vest Clone</td><td style="text-align: center; color:#3b82f6;">+64</td><td>50,000 G</td><td style="text-align: center;"><input type="number" id="buy-def_2" class="qty-input" min="0" placeholder="0"></td></tr>
+                                <tr><td>Ebony Platemail Clone</td><td style="text-align: center; color:#3b82f6;">+600</td><td>450,000 G</td><td style="text-align: center;"><input type="number" id="buy-def_3" class="qty-input" min="0" placeholder="0"></td></tr>
+                                <tr><td>Invisibility Shield Clone</td><td style="text-align: center; color:#3b82f6;">+1,000</td><td>1,000,000 G</td><td style="text-align: center;"><input type="number" id="buy-def_4" class="qty-input" min="0" placeholder="0"></td></tr>
+
+                                <tr><td colspan="4" class="group-row-header">Covert Spy Intelligence Hardware</td></tr>
+                                <tr><td>Infiltration Cloak</td><td style="text-align: center; color:#22c55e;">+140</td><td>140,000 G</td><td style="text-align: center;"><input type="number" id="buy-spy_1" class="qty-input" min="0" placeholder="0"></td></tr>
+                                <tr><td>Grappling Hook</td><td style="text-align: center; color:#22c55e;">+250</td><td>250,000 G</td><td style="text-align: center;"><input type="number" id="buy-spy_2" class="qty-input" min="0" placeholder="0"></td></tr>
+                                <tr><td>Skeleton Key Tech</td><td style="text-align: center; color:#22c55e;">+600</td><td>600,000 G</td><td style="text-align: center;"><input type="number" id="buy-spy_3" class="qty-input" min="0" placeholder="0"></td></tr>
+                                <tr><td>Nunchaku Device</td><td style="text-align: center; color:#22c55e;">+1,000</td><td>1,000,000 G</td><td style="text-align: center;"><input type="number" id="buy-spy_4" class="qty-input" min="0" placeholder="0"></td></tr>
+
+                                <tr><td colspan="4" class="group-row-header">Sentry Counter-Intel Security</td></tr>
+                                <tr><td>Signal Horn Matrix</td><td style="text-align: center; color:#a855f7;">+140</td><td>140,000 G</td><td style="text-align: center;"><input type="number" id="buy-sen_1" class="qty-input" min="0" placeholder="0"></td></tr>
+                                <tr><td>Tripwire Grid Network</td><td style="text-align: center; color:#a855f7;">+250</td><td>250,000 G</td><td style="text-align: center;"><input type="number" id="buy-sen_2" class="qty-input" min="0" placeholder="0"></td></tr>
+                                <tr><td>Guard Cyber-Dog</td><td style="text-align: center; color:#a855f7;">+600</td><td>600,000 G</td><td style="text-align: center;"><input type="number" id="buy-sen_3" class="qty-input" min="0" placeholder="0"></td></tr>
+                                <tr><td>Lookout Control Tower</td><td style="text-align: center; color:#a855f7;">+1,000</td><td>1,000,000 G</td><td style="text-align: center;"><input type="number" id="buy-sen_4" class="qty-input" min="0" placeholder="0"></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button type="submit" class="action-btn">Buy Selected Weapons / Tools</button>
+                </form>
+            </div>
+
+            <div class="inventory-side">
+                
+                <div class="panel">
+                    <div class="panel-header">Current Weapons Inventory</div>
                     <table class="armory-table">
                         <thead>
-                            <tr>
-                                <th>Asset Name</th>
-                                <th>Class</th>
-                                <th>Rating</th>
-                                <th>Cost</th>
-                                <th>Owned</th>
-                                <th>Purchase</th>
-                            </tr>
+                            <tr><th>Asset Model</th><th style="text-align: center;">Holding Units</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td>Laser Rifle</td><td>Attack</td><td>+10</td><td>1,000 G</td><td id="own-att_1">0</td><td><input type="number" id="buy-att_1" class="qty-input" min="0" placeholder="0"></td></tr>
-                            <tr><td>Plasma Cannon</td><td>Attack</td><td>+65</td><td>5,000 G</td><td id="own-att_2">0</td><td><input type="number" id="buy-att_2" class="qty-input" min="0" placeholder="0"></td></tr>
-                            <tr><td>Plasteel Shield</td><td>Defense</td><td>+10</td><td>1,000 G</td><td id="own-def_1">0</td><td><input type="number" id="buy-def_1" class="qty-input" min="0" placeholder="0"></td></tr>
-                            <tr><td>Aegis Barrier</td><td>Defense</td><td>+65</td><td>5,000 G</td><td id="own-def_2">0</td><td><input type="number" id="buy-def_2" class="qty-input" min="0" placeholder="0"></td></tr>
-                            <tr><td>Cloak Matrix</td><td>Spy</td><td>+15</td><td>2,500 G</td><td id="own-spy_1">0</td><td><input type="number" id="buy-spy_1" class="qty-input" min="0" placeholder="0"></td></tr>
-                            <tr><td>Sensor Array</td><td>Sentry</td><td>+15</td><td>2,500 G</td><td id="own-sen_1">0</td><td><input type="number" id="buy-sen_1" class="qty-input" min="0" placeholder="0"></td></tr>
+                            <tr><td>Sarumans Ball Clone</td><td id="own-att_1" style="text-align: center; font-weight: bold;">0</td></tr>
+                            <tr><td>Heavy Steed Clone</td><td id="own-att_2" style="text-align: center; font-weight: bold;">0</td></tr>
+                            <tr><td>Chariot Clone</td><td id="own-att_3" style="text-align: center; font-weight: bold;">0</td></tr>
+                            <tr><td>Blackpowder Missile Clone</td><td id="own-att_4" style="text-align: center; font-weight: bold;">0</td></tr>
+                            <tr><td>Spider Armor Clone</td><td id="own-def_1" style="text-align: center; font-weight: bold;">0</td></tr>
+                            <tr><td>Mithril Vest Clone</td><td id="own-def_2" style="text-align: center; font-weight: bold;">0</td></tr>
+                            <tr><td>Ebony Platemail Clone</td><td id="own-def_3" style="text-align: center; font-weight: bold;">0</td></tr>
+                            <tr><td>Invisibility Shield Clone</td><td id="own-def_4" style="text-align: center; font-weight: bold;">0</td></tr>
                         </tbody>
                     </table>
-                    <div style="text-align: right; max-width: 800px;"><button type="submit" class="action-btn">Acquire Hardware</button></div>
-                </form>
-                <div class="inventory-summary">Available Liquidity: <span id="gold-display" style="color:#eab308; font-weight:bold;">0 Gold</span></div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">Current Covert Tools Inventory</div>
+                    <table class="armory-table">
+                        <thead>
+                            <tr><th>Asset Model</th><th style="text-align: center;">Holding Units</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Infiltration Cloak</td><td id="own-spy_1" style="text-align: center; font-weight: bold;">0</td></tr>
+                            <tr><td>Grappling Hook</td><td id="own-spy_2" style="text-align: center; font-weight: bold;">0</td></tr>
+                            <tr><td>Skeleton Key Tech</td><td id="own-spy_3" style="text-align: center; font-weight: bold;">0</td></tr>
+                            <tr><td>Nunchaku Device</td><td id="own-spy_4" style="text-align: center; font-weight: bold;">0</td></tr>
+                            <tr><td>Signal Horn Matrix</td><td id="own-sen_1" style="text-align: center; font-weight: bold;">0</td></tr>
+                            <tr><td>Tripwire Grid Network</td><td id="own-sen_2" style="text-align: center; font-weight: bold;">0</td></tr>
+                            <tr><td>Guard Cyber-Dog</td><td id="own-sen_3" style="text-align: center; font-weight: bold;">0</td></tr>
+                            <tr><td>Lookout Control Tower</td><td id="own-sen_4" style="text-align: center; font-weight: bold;">0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">Military Effectiveness</div>
+                    <table class="armory-table">
+                        <thead>
+                            <tr><th>Action Matrix</th><th style="text-align: right;">Total Power Rating</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Strike Power</td><td id="stat-strike" style="text-align: right; color:#ef4444; font-weight:bold;">0</td></tr>
+                            <tr><td>Defensive Rating</td><td id="stat-defense" style="text-align: right; color:#3b82f6; font-weight:bold;">0</td></tr>
+                            <tr><td>Spy Covert Action</td><td id="stat-spy" style="text-align: right; color:#22c55e; font-weight:bold;">0</td></tr>
+                            <tr><td>Sentry Grid Density</td><td id="stat-sentry" style="text-align: right; color:#a855f7; font-weight:bold;">0</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </main>
     </div>
+
     <script src="game-engine.js"></script>
     <script>
+        // Exact Strength Metric Mapping Matrix
         const market = {
-            att_1: { price: 1000 }, att_2: { price: 5000 },
-            def_1: { price: 1000 }, def_2: { price: 5000 },
-            spy_1: { price: 2500 }, sen_1: { price: 2500 }
+            att_1: { price: 100, power: 2 },     att_2: { price: 50000, power: 64 },
+            att_3: { price: 450000, power: 600 }, att_4: { price: 1000000, power: 1000 },
+            def_1: { price: 5000, power: 5 },    def_2: { price: 50000, power: 64 },
+            def_3: { price: 450000, power: 600 }, def_4: { price: 1000000, power: 1000 },
+            spy_1: { price: 140000, power: 140 }, spy_2: { price: 250000, power: 250 },
+            spy_3: { price: 600000, power: 600 }, spy_4: { price: 1000000, power: 1000 },
+            sen_1: { price: 140000, power: 140 }, sen_2: { price: 250000, power: 250 },
+            sen_3: { price: 600000, power: 600 }, sen_4: { price: 1000000, power: 1000 }
         };
-        function renderArmory() {
-            if (!player) return;
-            player.weapons = player.weapons || {};
+
+        function renderArmoryInterface() {
+            if (!window.player) return;
+            window.player.weapons = window.player.weapons || {};
+
+            let ratingTotals = { strike: 0, defense: 0, spy: 0, sentry: 0 };
+
+            // Initialize missing indexes dynamically and count power ratings
             Object.keys(market).forEach(id => {
-                document.getElementById(`own-${id}`).innerText = player.weapons[id] || 0;
+                const count = window.player.weapons[id] || 0;
+                const element = document.getElementById(`own-${id}`);
+                if (element) element.innerText = count.toLocaleString();
+
+                const itemPower = count * market[id].power;
+                if (id.startsWith('att_')) ratingTotals.strike += itemPower;
+                else if (id.startsWith('def_')) ratingTotals.defense += itemPower;
+                else if (id.startsWith('spy_')) ratingTotals.spy += itemPower;
+                else if (id.startsWith('sen_')) ratingTotals.sentry += itemPower;
             });
-            document.getElementById('gold-display').innerText = `${player.gold.toLocaleString()} Gold`;
+
+            // Update View Labels
+            document.getElementById('gold-display').innerText = `${window.player.gold.toLocaleString()} Gold`;
+            document.getElementById('vault-display').innerText = `${(window.player.vault || 0).toLocaleString()} Gold`;
+            document.getElementById('stat-strike').innerText = ratingTotals.strike.toLocaleString();
+            document.getElementById('stat-defense').innerText = ratingTotals.defense.toLocaleString();
+            document.getElementById('stat-spy').innerText = ratingTotals.spy.toLocaleString();
+            document.getElementById('stat-sentry').innerText = ratingTotals.sentry.toLocaleString();
         }
-        function buyWeapons(event) {
+
+        function buyHardware(event) {
             event.preventDefault();
             const alertBox = document.getElementById('alert');
-            let totalCost = 0;
-            let tempOrder = {};
+            let incrementalCost = 0;
+            let currentOrder = {};
 
             Object.keys(market).forEach(id => {
-                const qty = parseInt(document.getElementById(`buy-${id}`).value) || 0;
-                if (qty > 0) {
-                    totalCost += qty * market[id].price;
-                    tempOrder[id] = qty;
+                const inputField = document.getElementById(`buy-${id}`);
+                const quantity = parseInt(inputField.value) || 0;
+                if (quantity > 0) {
+                    incrementalCost += quantity * market[id].price;
+                    currentOrder[id] = quantity;
                 }
             });
 
-            if (totalCost <= 0) return;
-            if (totalCost > player.gold) {
-                alertBox.innerText = "INSUFFICIENT FUNDS IN CORES AVAILABLE";
+            if (incrementalCost <= 0) return;
+            if (incrementalCost > window.player.gold) {
+                alertBox.innerText = "INSUFFICIENT FUNDS IN CORES AVAILABLE FOR SECTOR TRANSACTION";
                 alertBox.className = "alert-feed error";
                 alertBox.style.display = "block";
                 return;
             }
 
-            player.gold -= totalCost;
-            Object.keys(tempOrder).forEach(id => {
-                player.weapons[id] = (player.weapons[id] || 0) + tempOrder[id];
+            // Deduct cost and save balances
+            window.player.gold -= incrementalCost;
+            Object.keys(currentOrder).forEach(id => {
+                window.player.weapons[id] = (window.player.weapons[id] || 0) + currentOrder[id];
                 document.getElementById(`buy-${id}`).value = '';
             });
 
-            saveData();
-            alertBox.innerText = `HARDWARE SECURED: -${totalCost.toLocaleString()} GOLD`;
+            window.saveData();
+            alertBox.innerText = `HARDWARE SHIPMENT TRACKED ACCURATELY: -${incrementalCost.toLocaleString()} GOLD ASSETS`;
             alertBox.className = "alert-feed success";
             alertBox.style.display = "block";
-            renderArmory();
+            
+            renderArmoryInterface();
+            setTimeout(() => { alertBox.style.display = "none"; }, 4000);
         }
-        renderArmory();
+
+        // Render initially and latch updates to core ticks
+        renderArmoryInterface();
+        setInterval(renderArmoryInterface, 1000);
     </script>
 </body>
 </html>
