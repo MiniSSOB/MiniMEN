@@ -19,6 +19,10 @@
         .menu-item:hover { background-color: #334155; color: #f8fafc; padding-left: 18px; }
         .menu-item.active { background-color: #0f172a; color: #ef4444; border-left: 4px solid #ef4444; font-weight: bold; }
 
+        /* Left Side Sector Assets Hub Overlay Box */
+        .status-box { background-color: #1e293b; border: 2px solid #334155; padding: 12px; border-radius: 4px; font-size: 0.85rem; line-height: 1.6; }
+        .status-title { font-weight: bold; color: #ef4444; border-bottom: 1px solid #334155; padding-bottom: 4px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+
         /* Right Content Panel */
         .main-panel { flex-grow: 1; background-color: #1e293b; border: 2px solid #334155; border-radius: 4px; overflow: hidden; }
         .panel-header { background-color: #1e293b; border-bottom: 2px solid #334155; padding: 15px; font-size: 1.2rem; font-weight: bold; color: #ef4444; }
@@ -49,11 +53,14 @@
                 <a href="armory.html" class="menu-item">Armory</a>
                 <a href="upgrades.html" class="menu-item">Upgrades</a>
                 <a href="training.html" class="menu-item">Training</a>
+                <a href="attack-log.html" class="menu-item">Attack Log</a>
             </nav>
-            <div class="menu-header">System</div>
-            <nav class="menu-group">
-                <a href="index.html" class="menu-item">Disconnect Log</a>
-            </nav>
+            
+            <div class="status-box">
+                <div class="status-title">Sector Assets</div>
+                <div>Gold: <span id="box-gold" style="color:#eab308; font-weight:bold;">0</span></div>
+                <div>Turns: <span id="box-turns" style="color:#f8fafc; font-weight:bold;">0</span></div>
+            </div>
         </aside>
 
         <main class="main-panel">
@@ -67,7 +74,7 @@
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Strategic Turns</div>
-                        <div id="turns-display" class="stat-value">50</div>
+                        <div id="turns-display" class="stat-value">0</div>
                     </div>
                 </div>
 
@@ -83,18 +90,23 @@
     <script>
         function renderProfileView() {
             if (window.player) {
+                // Update Main Profile Panel
                 document.getElementById('profile-title').innerText = `Galaxy Profile: ${window.player.name}`;
-                document.getElementById('vault-display').innerText = `${window.player.vault.toLocaleString()} Gold`;
+                document.getElementById('vault-display').innerText = `${(window.player.vault || 0).toLocaleString()} Gold`;
                 document.getElementById('turns-display').innerText = window.player.turns;
-                document.getElementById('troop-display').innerText = window.player.soldiers.toLocaleString();
-                document.getElementById('gold-display').innerText = `${window.player.gold.toLocaleString()} Gold`;
+                document.getElementById('troop-display').innerText = (window.player.soldiers || 0).toLocaleString();
+                document.getElementById('gold-display').innerText = `${Math.floor(window.player.gold).toLocaleString()} Gold`;
+                
+                // Update Left Side Sector Assets Box Panel
+                document.getElementById('box-gold').innerText = Math.floor(window.player.gold).toLocaleString();
+                document.getElementById('box-turns').innerText = window.player.turns;
             }
         }
 
-        // Run primary render
+        // Run initial data render mapping
         renderProfileView();
 
-        // Keep updating view values dynamically when background engine ticks
+        // Keep values ticking instantly across elements in absolute synchronization
         setInterval(renderProfileView, 1000);
     </script>
 </body>
