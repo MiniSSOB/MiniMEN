@@ -5,126 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MiniMEN — Access Portal</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background-color: #12141c;
-            color: #e2e8f0;
-            font-family: 'Courier New', Courier, monospace;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .login-card {
-            background-color: #1e293b;
-            border: 2px solid #334155;
-            border-radius: 6px;
-            width: 100%;
-            max-width: 400px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-        }
-        .login-header {
-            background: linear-gradient(90deg, #ef4444, #991b1b);
-            color: #ffffff;
-            font-weight: bold;
-            text-align: center;
-            font-size: 1.4rem;
-            letter-spacing: 2px;
-            padding: 15px;
-            border-bottom: 2px solid #dc2626;
-        }
-        .login-body {
-            padding: 25px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            color: #94a3b8;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-        }
-        .form-input {
-            width: 100%;
-            background-color: #0f172a;
-            border: 2px solid #334155;
-            color: #f8fafc;
-            padding: 10px 12px;
-            font-family: inherit;
-            font-size: 1rem;
-            border-radius: 4px;
-            outline: none;
-        }
-        .form-input:focus {
-            border-color: #ef4444;
-        }
-        .action-btn {
-            width: 100%;
-            background: linear-gradient(90deg, #ef4444, #991b1b);
-            color: white;
-            border: 2px solid #dc2626;
-            padding: 12px;
-            font-family: inherit;
-            font-size: 1rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
-            border-radius: 4px;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-        }
-        .action-btn:hover {
-            background: #dc2626;
-        }
-        .toggle-link {
-            color: #94a3b8;
-            font-size: 0.85rem;
-            text-align: center;
-            cursor: pointer;
-            display: block;
-            text-decoration: underline;
-        }
-        .toggle-link:hover {
-            color: #ef4444;
-        }
-        .alert-msg {
-            font-size: 0.85rem;
-            text-align: center;
-            margin-top: 15px;
-            display: none;
-            font-weight: bold;
-            padding: 8px;
-            border-radius: 4px;
-        }
-        .error {
-            color: #ef4444;
-            background-color: rgba(239, 68, 68, 0.1);
-            border: 1px solid #ef4444;
-        }
-        .success {
-            color: #22c55e;
-            background-color: rgba(34, 197, 94, 0.1);
-            border: 1px solid #22c55e;
-        }
-        .hidden {
-            display: none;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #12141c; color: #e2e8f0; font-family: 'Courier New', Courier, monospace; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .login-card { background-color: #1e293b; border: 2px solid #334155; border-radius: 6px; width: 100%; max-width: 400px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .login-header { background: linear-gradient(90deg, #ef4444, #991b1b); color: #ffffff; font-weight: bold; text-align: center; font-size: 1.4rem; letter-spacing: 2px; padding: 15px; border-bottom: 2px solid #dc2626; }
+        .login-body { padding: 25px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; color: #94a3b8; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+        .form-input { width: 100%; background-color: #0f172a; border: 2px solid #334155; color: #f8fafc; padding: 10px 12px; font-family: inherit; font-size: 1rem; border-radius: 4px; outline: none; }
+        .form-input:focus { border-color: #ef4444; }
+        .action-btn { width: 100%; background: linear-gradient(90deg, #ef4444, #991b1b); color: white; border: 2px solid #dc2626; padding: 12px; font-family: inherit; font-size: 1rem; font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 4px; letter-spacing: 1px; margin-bottom: 15px; }
+        .action-btn:hover { background: #dc2626; }
+        .toggle-link { color: #94a3b8; font-size: 0.85rem; text-align: center; cursor: pointer; display: block; text-decoration: underline; }
+        .toggle-link:hover { color: #ef4444; }
+        .alert-msg { font-size: 0.85rem; text-align: center; margin-top: 15px; display: none; font-weight: bold; padding: 8px; border-radius: 4px; }
+        .error { color: #ef4444; background-color: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; }
+        .success { color: #22c55e; background-color: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; }
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
     <div class="login-card">
         <div id="portal-title" class="login-header">MiniMEN LOGIN</div>
-        
         <div class="login-body">
             <div id="alert" class="alert-msg"></div>
 
@@ -162,7 +65,6 @@
         const loginForm = document.getElementById('login-form');
         const registerForm = document.getElementById('register-form');
 
-        // Swap back and forth between Login and Register views
         function toggleView(showRegister) {
             alertBox.style.display = 'none';
             if (showRegister) {
@@ -176,7 +78,6 @@
             }
         }
 
-        // Processing Registration
         function handleRegister(event) {
             event.preventDefault();
             const username = document.getElementById('reg-user').value.trim();
@@ -184,7 +85,6 @@
 
             if (!username || !password) return;
 
-            // Check if user account index array already exists
             let players = JSON.parse(localStorage.getItem('minimen_players')) || {};
 
             if (players[username.toLowerCase()]) {
@@ -192,10 +92,18 @@
                 return;
             }
 
-            // Create record data block and register to browser database
+            // Setting up starting parameters (100,000 Cash and 100 soldiers)
             players[username.toLowerCase()] = {
                 name: username,
-                password: password
+                password: password,
+                gold: 100000,
+                vault: 0,
+                turns: 50,
+                soldiers: 100,
+                attack_troops: 0,
+                defense_troops: 0,
+                spy_troops: 0,
+                sentry_troops: 0
             };
             localStorage.setItem('minimen_players', JSON.stringify(players));
 
@@ -204,22 +112,17 @@
             setTimeout(() => toggleView(false), 1500);
         }
 
-        // Processing Login Verification
         function handleLogin(event) {
             event.preventDefault();
             const username = document.getElementById('login-user').value.trim().toLowerCase();
             const password = document.getElementById('login-pass').value;
 
-            // Fetch stored user data array
             let players = JSON.parse(localStorage.getItem('minimen_players')) || {};
             let account = players[username];
 
             if (account && account.password === password) {
                 alertBox.style.display = 'none';
-                
-                // Track current session username so profile dashboard knows who loaded the view
-                localStorage.setItem('minimen_session', account.name);
-                
+                localStorage.setItem('minimen_session', account.name.toLowerCase());
                 window.location.href = 'your-stuff.html';
             } else {
                 showAlert("INVALID COMMANDER CREDENTIALS", "error");
