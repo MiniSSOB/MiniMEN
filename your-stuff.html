@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniMEN — Core Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #12141c;
+            color: #e2e8f0;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Master Grid Layout */
+        .game-container {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 20px;
+        }
+
+        /* Left Column Navigation (Classic Boxed Setup) */
+        .sidebar {
+            width: 220px;
+            flex-shrink: 0;
+        }
+        .menu-header {
+            background: linear-gradient(90deg, #ef4444, #991b1b);
+            color: #ffffff;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            padding: 8px 12px;
+            border: 2px solid #dc2626;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+        }
+        .menu-group {
+            background-color: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 0 0 4px 4px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .menu-item {
+            display: block;
+            color: #94a3b8;
+            text-decoration: none;
+            padding: 10px 14px;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #334155;
+            transition: all 0.2s ease;
+        }
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        .menu-item:hover {
+            background-color: #334155;
+            color: #f8fafc;
+            padding-left: 18px;
+        }
+        .menu-item.active {
+            background-color: #0f172a;
+            color: #ef4444;
+            border-left: 4px solid #ef4444;
+            font-weight: bold;
+        }
+
+        /* Right Column Content Panel */
+        .main-panel {
+            flex-grow: 1;
+            background-color: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .panel-header {
+            background-color: #1e293b;
+            border-bottom: 2px solid #334155;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ef4444;
+        }
+        .panel-body {
+            padding: 20px;
+        }
+
+        /* Fresh Start Profile Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .stat-card {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            padding: 12px 15px;
+            border-radius: 4px;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #f8fafc;
+        }
+        .stat-value.highlight {
+            color: #eab308; /* Starting Gold pop */
+        }
+
+        @media (max-width: 768px) {
+            .game-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        
+        <aside class="sidebar">
+            <div class="menu-header">Galaxy 1</div>
+            <nav class="menu-group">
+                <a href="your-stuff.html" class="menu-item active">Your Stuff</a>
+                <a href="battlefield.html" class="menu-item">Battlefield</a>
+                <a href="armory.html" class="menu-item">Armory</a>
+                <a href="conquest.html" class="menu-item">Conquest</a>
+                <a href="training.html" class="menu-item">Training</a>
+                <a href="upgrades.html" class="menu-item">Upgrades</a>
+                <a href="intelligence.html" class="menu-item">Intelligence</a>
+                <a href="alliance.html" class="menu-item">Alliance</a>
+            </nav>
+
+            <div class="menu-header">System</div>
+            <nav class="menu-group">
+                <a href="index.html" class="menu-item">Disconnect Log</a>
+            </nav>
+        </aside>
+
+        <main class="main-panel">
+            <header class="panel-header">Commander Profile: God</header>
+            <div class="panel-body">
+                <p>Core sector deployment complete. All indicators initialized at base parameters.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Liquid Wealth</div>
+                        <div class="stat-value highlight">0 Gold</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Secured Vault</div>
+                        <div class="stat-value">0 Gold</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Strategic Turns</div>
+                        <div class="stat-value">50</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Current Ranking</div>
+                        <div class="stat-value">Unranked</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>
