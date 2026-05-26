@@ -1,255 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>MiniBOSSX — forums soon</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: #0a0e16;
-      background-image: radial-gradient(circle at 20% 30%, #111827 1px, #05080f 1px);
-      background-size: 32px 32px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 1rem;
-      font-family: 'Segoe UI', 'Roboto', system-ui, 'Helvetica Neue', sans-serif;
-    }
-
-    /* site title outside the frame */
-    .site-title {
-      text-align: center;
-      margin-bottom: 12px;
-    }
-    .site-title h1 {
-      font-size: 24px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-      color: #eaf2ff;
-      text-shadow: 0 2px 0 #0a101c;
-    }
-    .site-title h1 span {
-      color: #5d9eff;
-    }
-
-    /* main frame */
-    .game-shell {
-      width: 900px;
-      max-width: 100%;
-      background: #121724;
-      border: 1px solid #2a3a55;
-      box-shadow: 8px 8px 0 #050a12;
-    }
-
-    .game-shell {
-      font-size: 11px;
-    }
-
-    .header {
-      background: #0c111c;
-      padding: 8px 14px;
-      border-bottom: 2px solid #3e6a97;
-      display: flex;
-      justify-content: flex-end;
-      align-items: baseline;
-      flex-wrap: wrap;
-    }
-
-    .badge {
-      background: #1a2538;
-      font-size: 9px;
-      padding: 3px 8px;
-      color: #9bb8e2;
-      border: 1px solid #2f405e;
-      text-transform: uppercase;
-    }
-
-    .content {
-      padding: 18px 20px;
-    }
-
-    .coming h2 {
-      font-size: 22px;
-      font-weight: 600;
-      color: #cddfff;
-      border-left: 4px solid #4a7ec7;
-      padding-left: 12px;
-      margin-bottom: 6px;
-    }
-
-    .coming .sub {
-      font-size: 10px;
-      color: #869dc9;
-      margin-left: 16px;
-      border-bottom: 1px dotted #2e4264;
-      display: inline-block;
-      padding-bottom: 2px;
-    }
-
-    .info-strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin: 24px 0 20px;
-    }
-
-    .tiny-card {
-      background: #0e1422;
-      border: 1px solid #25334d;
-      padding: 8px 12px;
-      flex: 1;
-      min-width: 130px;
-    }
-
-    .tiny-card .label {
-      font-size: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: #6a89bb;
-      margin-bottom: 4px;
-    }
-
-    .tiny-card .value {
-      font-size: 10.5px;
-      font-weight: 500;
-      color: #cce2ff;
-    }
-
-    .action-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 22px;
-    }
-
-    .tiny-btn {
-      background: #192237;
-      border: 1px solid #354b72;
-      padding: 6px 14px;
-      font-size: 10px;
-      font-weight: 500;
-      color: #d6e6ff;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      cursor: default;
-      font-family: inherit;
-      transition: 0.05s linear;
-    }
-
-    .tiny-btn:hover {
-      background: #253459;
-      border-color: #5c7fb2;
-    }
-
-    .footer-note {
-      margin-top: 22px;
-      padding-top: 12px;
-      border-top: 1px solid #1f2c42;
-      font-size: 9px;
-      text-align: right;
-      color: #61759e;
-    }
-
-    /* no rounded corners */
-    .game-shell,
-    .header,
-    .tiny-card,
-    .tiny-btn {
-      border-radius: 0px;
-    }
-
-    @media (max-width: 700px) {
-      body {
-        padding: 0.5rem;
-      }
-      .content {
-        padding: 12px 14px;
-      }
-      .site-title h1 {
-        font-size: 20px;
-      }
-      .coming h2 {
-        font-size: 18px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniMEN — Access Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #12141c;
+            color: #e2e8f0;
+            font-family: 'Courier New', Courier, monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .login-card {
+            background-color: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 6px;
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .login-header {
+            background: linear-gradient(90deg, #ef4444, #991b1b); /* Dark Cyber Red Theme */
+            color: #ffffff;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            padding: 15px;
+            border-bottom: 2px solid #dc2626;
+        }
+        .login-body {
+            padding: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        .form-input {
+            width: 100%;
+            background-color: #0f172a;
+            border: 2px solid #334155;
+            color: #f8fafc;
+            padding: 10px 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            border-radius: 4px;
+            outline: none;
+        }
+        .form-input:focus {
+            border-color: #ef4444;
+        }
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(90deg, #ef4444, #991b1b);
+            color: white;
+            border: 2px solid #dc2626;
+            padding: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 4px;
+            letter-spacing: 1px;
+        }
+        .login-btn:hover {
+            background: #dc2626;
+        }
+        .error-msg {
+            color: #ef4444;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-<!-- Site name outside the frame -->
-<div class="site-title">
-  <h1>MiniBOSS<span>X</span></h1>
-</div>
-
-<div class="game-shell">
-  <div class="header">
-    <div class="badge">// new server</div>
-  </div>
-  <div class="content">
-    <div class="coming">
-      <h2>forums coming soon</h2>
-      <div class="sub">old tools removed</div>
+    <div class="login-card">
+        <div class="login-header">MiniMEN</div>
+        <div class="login-body">
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="username">Commander Handle</label>
+                    <input type="text" id="username" class="form-input" required autocomplete="off" placeholder="Enter name...">
+                </div>
+                <div class="form-group">
+                    <label for="password">Security Crypt</label>
+                    <input type="password" id="password" class="form-input" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="login-btn">Initialize Connection</button>
+                <div id="error" class="error-msg">INVALID CREDENTIALS</div>
+            </form>
+        </div>
     </div>
 
-    <div class="info-strip">
-      <div class="tiny-card">
-        <div class="label">next phase</div>
-        <div class="value">forum · shit talking · ranks</div>
-      </div>
-      <div class="tiny-card">
-        <div class="label">backend</div>
-        <div class="value">dedicated box</div>
-      </div>
-      <div class="tiny-card">
-        <div class="label">status</div>
-        <div class="value">rebuilding · no eta</div>
-      </div>
-    </div>
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const errorDiv = document.getElementById('error');
 
-    <div class="action-row">
-      <span class="tiny-btn">⚔️ forum prep</span>
-      <span class="tiny-btn">🖥️ server info</span>
-      <span class="tiny-btn">🎮 later</span>
-    </div>
-
-    <div class="footer-note">
-      domain will point to dedicated server soon
-    </div>
-  </div>
-</div>
-
-<!-- StatCounter tracking script – REPLACE with your actual StatCounter code -->
-<!--
-  Default StatCounter code for MiniBOSSX
-  Go to https://statcounter.com/ to get your own code.
-  Replace "your_project_id" and "your_security_code" with your actual values.
--->
-<script>
-  // <![CDATA[
-  var sc_project = "13224045";
-  var sc_invisible = 1;
-  var sc_security = "d02faac4";
-  var sc_https = 1;
-  var sc_remove_link = 1;
-  // ]]>
-</script>
-<script src="https://www.statcounter.com/counter/counter.js" async></script>
-<noscript>
-  <div class="statcounter">
-    <img class="statcounter" src="https://c.statcounter.com/your_project_id/0/your_security_code/1/" alt="Web Analytics">
-  </div>
-</noscript>
-<!-- End of StatCounter Code -->
-
+            // Absolute hardcoded check for God / God
+            if (user === 'God' && pass === 'God') {
+                errorDiv.style.display = 'none';
+                window.location.href = 'your-stuff.html'; // Routes directly to the main stats page
+            } else {
+                errorDiv.style.display = 'block';
+            }
+        }
+    </script>
 </body>
 </html>
