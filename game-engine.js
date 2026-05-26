@@ -7,13 +7,21 @@ if (!session && !window.location.href.includes('index.html')) {
 let players = JSON.parse(localStorage.getItem('minimen_players')) || {};
 let player = players[session];
 
-// Force Starter Balance Alignment for existing testing accounts
-if (player && (player.gold === 100000 || player.soldiers === 100 || !player.initialized_v2)) {
+// Starter Balance Alignment
+if (player && !player.initialized_v3) {
     player.gold = 50000;
-    player.soldiers = 10;
-    player.weapons = player.weapons || { att_1: 0, att_2: 0, def_1: 0, def_2: 0, spy_1: 0, spy_2: 0, sen_1: 0, sen_2: 0 };
-    player.income_upgrades = player.income_upgrades || 0; // Starts at 0 upgrades
-    player.initialized_v2 = true;
+    player.soldiers = 10; // Untrained Pool
+    player.attack_troops = 0;
+    player.defense_troops = 0;
+    player.spy_troops = 0;
+    player.sentry_troops = 0;
+    player.weapons = player.weapons || {
+        att_1: 0, att_2: 0, att_3: 0, att_4: 0,
+        def_1: 0, def_2: 0, def_3: 0, def_4: 0,
+        spy_1: 0, spy_2: 0, spy_3: 0, spy_4: 0,
+        sen_1: 0, sen_2: 0, sen_3: 0, sen_4: 0
+    };
+    player.initialized_v3 = true;
     saveData();
 }
 
@@ -24,15 +32,16 @@ function saveData() {
     }
 }
 
-// Background Income Engine: 5 Gold Per Minute Per Soldier + Upgrade Boosts
+// Background Income Engine: 5 Gold Per Minute Per Valid Producing Soldier
 setInterval(() => {
     if (player) {
-        // Base income = soldiers * 5 gold. Every income upgrade adds 1 more passive soldier generation rate.
-        const goldEarned = Math.floor((player.soldiers * 5) / 60); // Distributed per second for smooth testing
+        // ONLY Attack, Defense, and Untrained Soldiers generate money. Spy and Sentry earn 0.
+        const producingTroops = (player.soldiers || 0) + (player.attack_troops || 0) + (player.defense_troops || 0);
+        const goldEarned = Math.floor((producingTroops * 5) / 60); // Per-second ticking smooth simulation
+        
         player.gold += goldEarned;
         saveData();
         
-        // Update elements dynamically if they exist on the active page view
         const goldText = document.getElementById('gold-display');
         if (goldText) goldText.innerText = `${player.gold.toLocaleString()} Gold`;
     }
