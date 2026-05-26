@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniMEN — War Zone</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #12141c; color: #e2e8f0; font-family: 'Courier New', Courier, monospace; padding: 20px; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
+        .game-container { display: flex; gap: 20px; width: 100%; max-width: 1200px; margin-top: 20px; }
+        .sidebar { width: 220px; flex-shrink: 0; }
+        .menu-header { background: linear-gradient(90deg, #ef4444, #991b1b); color: #ffffff; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; padding: 8px 12px; border: 2px solid #dc2626; border-bottom: none; border-radius: 4px 4px 0 0; }
+        .menu-group { background-color: #1e293b; border: 2px solid #334155; border-radius: 0 0 4px 4px; margin-bottom: 15px; overflow: hidden; }
+        .menu-item { display: block; color: #94a3b8; text-decoration: none; padding: 10px 14px; font-size: 0.9rem; border-bottom: 1px solid #334155; }
+        .menu-item.active { background-color: #0f172a; color: #ef4444; border-left: 4px solid #ef4444; font-weight: bold; }
+        .main-panel { flex-grow: 1; background-color: #1e293b; border: 2px solid #334155; border-radius: 4px; overflow: hidden; }
+        .panel-header { background-color: #1e293b; border-bottom: 2px solid #334155; padding: 15px; font-size: 1.2rem; font-weight: bold; color: #ef4444; }
+        .panel-body { padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .battle-table { width: 100%; max-width: 850px; border-collapse: collapse; margin-bottom: 15px; background-color: #0f172a; border: 1px solid #334155; }
+        .battle-table th { background-color: #1e293b; color: #ef4444; padding: 10px; font-size: 0.85rem; text-transform: uppercase; text-align: left; border-bottom: 2px solid #334155; }
+        .battle-table td { padding: 10px; border-bottom: 1px solid #334155; font-size: 0.9rem; }
+        .attack-link { color: #ef4444; font-weight: bold; text-decoration: none; cursor: pointer; }
+        .attack-link:hover { text-decoration: underline; }
+        .pagination { display: flex; gap: 10px; margin-bottom: 15px; }
+        .page-btn { background-color: #0f172a; border: 1px solid #334155; color: #94a3b8; padding: 6px 12px; cursor: pointer; font-family: inherit; border-radius: 4px; }
+        .page-btn.active { background-color: #ef4444; color: white; border-color: #dc2626; }
+        .alert-feed { font-size: 0.85rem; padding: 10px; border-radius: 4px; margin-bottom: 15px; width: 100%; max-width: 850px; text-align: center; display: none; color: #22c55e; background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <aside class="sidebar">
+            <div class="menu-header">Galaxy 1</div>
+            <nav class="menu-group">
+                <a href="your-stuff.html" class="menu-item">Your Stuff</a>
+                <a href="battlefield.html" class="menu-item active">Battlefield</a>
+                <a href="armory.html" class="menu-item">Armory</a>
+                <a href="upgrades.html" class="menu-item">Upgrades</a>
+                <a href="training.html" class="menu-item">Training</a>
+            </nav>
+        </aside>
+        <main class="main-panel">
+            <header class="panel-header">Sectors Grid (60 Targets Connected)</header>
+            <div class="panel-body">
+                <div id="battle-alert" class="alert-feed"></div>
+                <div class="pagination" id="pager-zone"></div>
+                <table class="battle-table">
+                    <thead><tr><th>Target Name</th><th>Classification</th><th>Soldier Force</th><th>Vault Protection</th><th>Incursion</th></tr></thead>
+                    <tbody id="targets-list"></tbody>
+                </table>
+                <div style="color: #94a3b8; font-size:0.9rem;">Wallet Assets: <span id="gold-display" style="color:#eab308; font-weight:bold;">0 Gold</span></div>
+            </div>
+        </main>
+    </div>
+    <script src="game-engine.js"></script>
+    <script>
+        let currentPage = 1;
+        const targetsPerPage = 20;
+        
+        function drawBattlefield() {
+            const list = document.getElementById('targets-list');
+            const pager = document.getElementById('pager-zone');
+            list.innerHTML = '';
+            pager.innerHTML = '';
+
+            // Render Page Index Triggers (1-3)
+            for (let i = 1; i <= 3; i++) {
+                let btn = document.createElement('button');
+                btn.className = `page-btn ${currentPage === i ? 'active' : ''}`;
+                btn.innerText = `Sector Block ${i}`;
+                btn.onclick = () => { currentPage = i; drawBattlefield(); };
+                pager.appendChild(btn);
+            }
+
+            const startIdx = (currentPage - 1) * targetsPerPage + 1;
+            const endIdx = currentPage * targetsPerPage;
+
+            for (let i = startIdx; i <= endIdx; i++) {
+                let tr = document.createElement('tr');
+                // Seed custom, randomized sector attributes
+                let sCount = Math.floor(Math.sin(i) * 30) + 45;
+                let vGold = Math.floor(Math.cos(i) * 4000) + 6000;
+                
+                tr.innerHTML = `
+                    <td>Commander_Clone_${i * 14}</td>
+                    <td style="color:#64748b;">G1-T${i}</td>
+                    <td>${sCount} Troops</td>
+                    <td style="color: #22c55e;">${vGold.toLocaleString()} G</td>
+                    <td><span class="attack-link" onclick="triggerIncursion(${i}, ${vGold})">[LAUNCH RAID]</span></td>
+                `;
+                list.appendChild(tr);
+            }
+            if(player) document.getElementById('gold-display').innerText = `${player.gold.toLocaleString()} Gold`;
+        }
+
+        function triggerIncursion(id, baseGold) {
+            const alertBox = document.getElementById('battle-alert');
+            
+            // Execute Random Drop Generator Logic: Loots roughly 10% - 30% of target holdings
+            let lootModifier = (Math.random() * 0.20) + 0.10;
+            let goldStolen = Math.floor(baseGold * lootModifier);
+            
+            player.gold += goldStolen;
+            saveData();
+            
+            alertBox.innerText = `RAID SUCCESSFUL ON CLONE ${id}! SEIZED ${goldStolen.toLocaleString()} GOLD ASSETS.`;
+            alertBox.style.display = "block";
+            
+            drawBattlefield();
+            setTimeout(() => { alertBox.style.display = "none"; }, 4000);
+        }
+        drawBattlefield();
+    </script>
+</body>
+</html>
