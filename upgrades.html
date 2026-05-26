@@ -3,29 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiniMEN — Upgrades Upgrade</title>
+    <title>MiniMEN — Upgrade Matrix</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: #12141c; color: #e2e8f0; font-family: 'Courier New', Courier, monospace; padding: 20px; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
-        .game-container { display: flex; gap: 20px; width: 100%; max-width: 1200px; margin-top: 20px; }
-
-        /* Left Sidebar Layout */
+        
+        .game-container { display: flex; gap: 20px; width: 100%; max-width: 1300px; margin-top: 20px; }
+        
         .sidebar { width: 220px; flex-shrink: 0; }
-        .menu-header { background: linear-gradient(90deg, #ef4444, #991b1b); color: #ffffff; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; padding: 8px 12px; border: 2px solid #dc2626; border-bottom: none; border-radius: 4px 4px 0 0; }
+        .menu-header { background: linear-gradient(90deg, #ef4444, #991b1b); color: #ffffff; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; padding: 8px 12px; border: 2px solid #dc2626; border-bottom: none; border-radius: 4px 4px 0 0; letter-spacing: 1px; }
         .menu-group { background-color: #1e293b; border: 2px solid #334155; border-radius: 0 0 4px 4px; margin-bottom: 15px; overflow: hidden; }
-        .menu-item { display: block; color: #94a3b8; text-decoration: none; padding: 10px 14px; font-size: 0.9rem; border-bottom: 1px solid #334155; transition: all 0.2s ease; }
-        .menu-item:last-child { border-bottom: none; }
-        .menu-item:hover { background-color: #334155; color: #f8fafc; padding-left: 18px; }
+        .menu-item { display: block; color: #94a3b8; text-decoration: none; padding: 10px 14px; font-size: 0.9rem; border-bottom: 1px solid #334155; }
         .menu-item.active { background-color: #0f172a; color: #ef4444; border-left: 4px solid #ef4444; font-weight: bold; }
 
-        /* Right Core Frame */
+        .status-box { background-color: #1e293b; border: 2px solid #334155; padding: 12px; border-radius: 4px; font-size: 0.85rem; line-height: 1.6; }
+        .status-title { font-weight: bold; color: #ef4444; border-bottom: 1px solid #334155; padding-bottom: 4px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+
         .main-panel { flex-grow: 1; background-color: #1e293b; border: 2px solid #334155; border-radius: 4px; overflow: hidden; }
         .panel-header { background-color: #1e293b; border-bottom: 2px solid #334155; padding: 15px; font-size: 1.2rem; font-weight: bold; color: #ef4444; }
-        .panel-body { padding: 40px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .panel-body { padding: 20px; }
         
-        .construction-box { border: 1px dashed #334155; padding: 30px; border-radius: 4px; max-width: 500px; background-color: #0f172a; }
-        .construction-box h2 { color: #ef4444; font-size: 1.1rem; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; }
-        .construction-box p { color: #94a3b8; font-size: 0.9rem; line-height: 1.6; }
+        .upgrade-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .upgrade-card { background-color: #0f172a; border: 1px solid #334155; padding: 15px; border-radius: 4px; }
+        .upgrade-title { color: #ef4444; font-weight: bold; margin-bottom: 10px; }
+        .upgrade-btn { background: #334155; color: #f8fafc; border: none; padding: 8px 12px; width: 100%; cursor: pointer; border-radius: 4px; margin-top: 10px; }
+        .upgrade-btn:hover { background: #ef4444; }
     </style>
 </head>
 <body>
@@ -39,25 +41,43 @@
                 <a href="armory.html" class="menu-item">Armory</a>
                 <a href="upgrades.html" class="menu-item active">Upgrades</a>
                 <a href="training.html" class="menu-item">Training</a>
-                <a href="intelligence.html" class="menu-item">Intelligence</a>
-                <a href="alliance.html" class="menu-item">Alliance</a>
+                <a href="attack-log.html" class="menu-item">Attack Log</a>
             </nav>
-            <div class="menu-header">System</div>
-            <nav class="menu-group">
-                <a href="index.html" class="menu-item">Disconnect Log</a>
-            </nav>
+            <div class="status-box">
+                <div class="status-title">Sector Assets</div>
+                <div>Gold: <span id="box-gold" style="color:#eab308; font-weight:bold;">0</span></div>
+                <div>Turns: <span id="box-turns" style="color:#f8fafc; font-weight:bold;">0</span></div>
+            </div>
         </aside>
 
         <main class="main-panel">
             <header class="panel-header">Upgrade Matrix</header>
             <div class="panel-body">
-                <div class="construction-box">
-                    <h2>Sector Signal Pending</h2>
-                    <p>Upgrade parameters are being mapped. This structural terminal will handle production efficiency multipliers, troop intake expansion modules, and defensive bulkhead plating calibrations.</p>
+                <div class="upgrade-grid">
+                    <div class="upgrade-card">
+                        <div class="upgrade-title">Production Efficiency</div>
+                        <p style="font-size: 0.85rem; color:#94a3b8;">Increase Gold production per soldier by 5%.</p>
+                        <button class="upgrade-btn">Upgrade: 100,000 Gold</button>
+                    </div>
+                    <div class="upgrade-card">
+                        <div class="upgrade-title">Troop Intake Expansion</div>
+                        <p style="font-size: 0.85rem; color:#94a3b8;">Permanent bonus to soldier recruitment speed.</p>
+                        <button class="upgrade-btn">Upgrade: 250,000 Gold</button>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
 
+    <script src="game-engine.js"></script>
+    <script>
+        // Sync assets box
+        setInterval(() => {
+            if(window.player) {
+                document.getElementById('box-gold').innerText = Math.floor(window.player.gold).toLocaleString();
+                document.getElementById('box-turns').innerText = window.player.turns;
+            }
+        }, 1000);
+    </script>
 </body>
 </html>
