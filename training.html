@@ -13,37 +13,36 @@
         .sidebar { width: 220px; flex-shrink: 0; }
         .menu-header { background: linear-gradient(90deg, #ef4444, #991b1b); color: #ffffff; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; padding: 8px 12px; border: 2px solid #dc2626; border-bottom: none; border-radius: 4px 4px 0 0; }
         .menu-group { background-color: #1e293b; border: 2px solid #334155; border-radius: 0 0 4px 4px; margin-bottom: 15px; overflow: hidden; }
-        .menu-item { display: block; color: #94a3b8; text-decoration: none; padding: 10px 14px; font-size: 0.9rem; border-bottom: 1px solid #334155; transition: all 0.2s ease; }
-        .menu-item:last-child { border-bottom: none; }
-        .menu-item:hover { background-color: #334155; color: #f8fafc; padding-left: 18px; }
+        .menu-item { display: block; color: #94a3b8; text-decoration: none; padding: 10px 14px; font-size: 0.9rem; border-bottom: 1px solid #334155; }
         .menu-item.active { background-color: #0f172a; color: #ef4444; border-left: 4px solid #ef4444; font-weight: bold; }
 
-        /* Right Core Frame */
+        /* Right Core Panel */
         .main-panel { flex-grow: 1; background-color: #1e293b; border: 2px solid #334155; border-radius: 4px; overflow: hidden; }
         .panel-header { background-color: #1e293b; border-bottom: 2px solid #334155; padding: 15px; font-size: 1.2rem; font-weight: bold; color: #ef4444; }
         .panel-body { padding: 20px; display: flex; flex-direction: column; align-items: center; }
 
-        /* Training Setup Grid Layout */
-        .training-table { width: 100%; max-width: 600px; border-collapse: collapse; margin: 20px 0; background-color: #0f172a; border: 1px solid #334155; }
-        .training-table th { background-color: #1e293b; border-bottom: 2px solid #334155; color: #ef4444; padding: 12px; text-align: left; font-size: 0.85rem; text-transform: uppercase; }
-        .training-table td { padding: 12px; border-bottom: 1px solid #334155; font-size: 0.95rem; }
-        .training-table tr:last-child td { border-bottom: none; }
+        /* Top Notification Cards */
+        .pool-banner { background-color: #0f172a; border: 2px solid #ef4444; color: #ffffff; font-size: 1.1rem; font-weight: bold; text-align: center; width: 100%; max-width: 650px; padding: 12px; margin-bottom: 15px; border-radius: 4px; letter-spacing: 1px; }
         
-        .quantity-input { width: 80px; background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; padding: 6px; font-family: inherit; text-align: center; border-radius: 4px; outline: none; }
+        /* Training Setup Table Layout */
+        .training-table { width: 100%; max-width: 650px; border-collapse: collapse; margin-bottom: 20px; background-color: #0f172a; border: 1px solid #334155; }
+        .training-table th { background-color: #1e293b; border-bottom: 2px solid #334155; color: #ef4444; padding: 12px; text-align: left; font-size: 0.85rem; text-transform: uppercase; }
+        .training-table td { padding: 12px; border-bottom: 1px solid #1e293b; font-size: 0.95rem; }
+        
+        .quantity-input { width: 85px; background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; padding: 6px; font-family: inherit; text-align: center; border-radius: 4px; outline: none; }
         .quantity-input:focus { border-color: #ef4444; }
         
-        .action-btn { background: linear-gradient(90deg, #ef4444, #991b1b); color: white; border: 1px solid #dc2626; padding: 10px 20px; font-family: inherit; font-size: 0.9rem; font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 4px; margin-top: 10px; }
+        .action-btn { background: linear-gradient(90deg, #ef4444, #991b1b); color: white; border: 1px solid #dc2626; padding: 12px 24px; font-family: inherit; font-size: 0.9rem; font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 4px; width: 100%; max-width: 650px; letter-spacing: 1px; }
         .action-btn:hover { background: #dc2626; }
 
-        /* Status & Inventory Labels */
-        .inventory-summary { width: 100%; max-width: 600px; border-top: 1px dashed #334155; padding-top: 20px; margin-top: 15px; font-size: 0.95rem; text-align: center; line-height: 1.8; color: #94a3b8; }
+        /* Bottom Status Metrics Labels */
+        .inventory-summary { width: 100%; max-width: 650px; border-top: 1px dashed #334155; padding-top: 20px; margin-top: 25px; font-size: 0.95rem; text-align: center; line-height: 1.8; color: #94a3b8; }
         .highlight-text { color: #eab308; font-weight: bold; }
         .troop-text { color: #ef4444; font-weight: bold; }
-        .alert-feed { font-size: 0.85rem; padding: 8px; border-radius: 4px; margin-bottom: 15px; width: 100%; max-width: 600px; text-align: center; display: none; }
+        
+        .alert-feed { font-size: 0.85rem; padding: 10px; border-radius: 4px; margin-bottom: 15px; width: 100%; max-width: 650px; text-align: center; display: none; font-weight: bold; }
         .error { color: #ef4444; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; }
         .success { color: #22c55e; background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; }
-
-        @media (max-width: 768px) { .game-container { flex-direction: column; } .sidebar { width: 100%; } }
     </style>
 </head>
 <body>
@@ -57,81 +56,82 @@
                 <a href="armory.html" class="menu-item">Armory</a>
                 <a href="upgrades.html" class="menu-item">Upgrades</a>
                 <a href="training.html" class="menu-item active">Training</a>
-                <a href="intelligence.html" class="menu-item">Intelligence</a>
-                <a href="alliance.html" class="menu-item">Alliance</a>
-            </nav>
-            <div class="menu-header">System</div>
-            <nav class="menu-group">
-                <a href="index.html" class="menu-item">Disconnect Log</a>
             </nav>
         </aside>
 
         <main class="main-panel">
-            <header class="panel-header">Training Grounds</header>
+            <header class="panel-header">Military Training Centers</header>
             <div class="panel-body">
+                
+                <div class="pool-banner">
+                    Available Reservoir: <span id="pool-display" style="color: #ef4444;">0</span> Untrained Soldiers
+                </div>
+
                 <div id="alert" class="alert-feed"></div>
 
-                <form onsubmit="processTraining(event)">
+                <form onsubmit="processTraining(event)" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
                     <table class="training-table">
                         <thead>
                             <tr>
-                                <th>Troop Class</th>
-                                <th>Current Strength</th>
-                                <th>Train Units</th>
+                                <th>Troop Assignment Class</th>
+                                <th>Current Force Strength</th>
+                                <th style="text-align: center;">Train Units</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Attack Force</td>
+                                <td style="font-weight: bold; color: #ef4444;">Attack Force (Income Producing)</td>
                                 <td id="current-attack">0 Units</td>
-                                padding-left: 10px;
-                                <td><input type="number" id="train-attack" class="quantity-input" min="0" placeholder="0"></td>
+                                <td style="text-align: center;"><input type="number" id="train-attack" class="quantity-input" min="0" placeholder="0"></td>
                             </tr>
                             <tr>
-                                <td>Defense Division</td>
+                                <td style="font-weight: bold; color: #3b82f6;">Defense Division (Income Producing)</td>
                                 <td id="current-defense">0 Units</td>
-                                <td><input type="number" id="train-defense" class="quantity-input" min="0" placeholder="0"></td>
+                                <td style="text-align: center;"><input type="number" id="train-defense" class="quantity-input" min="0" placeholder="0"></td>
                             </tr>
                             <tr>
-                                <td>Spy Operatives</td>
-                                <td id="current-spy">0 Units</td>
-                                <td><input type="number" id="train-spy" class="quantity-input" min="0" placeholder="0"></td>
+                                <td style="color: #64748b;">Spy Operatives (Non-Producing)</td>
+                                <td id="current-spy" style="color: #64748b;">0 Units</td>
+                                <td style="text-align: center;"><input type="number" id="train-spy" class="quantity-input" min="0" placeholder="0"></td>
                             </tr>
                             <tr>
-                                <td>Sentry Security</td>
-                                <td id="current-sentry">0 Units</td>
-                                <td><input type="number" id="train-sentry" class="quantity-input" min="0" placeholder="0"></td>
+                                <td style="color: #64748b;">Sentry Security (Non-Producing)</td>
+                                <td id="current-sentry" style="color: #64748b;">0 Units</td>
+                                <td style="text-align: center;"><input type="number" id="train-sentry" class="quantity-input" min="0" placeholder="0"></td>
                             </tr>
                         </tbody>
                     </table>
-                    <div style="text-align: right; max-width: 600px;">
-                        <button type="submit" class="action-btn">Confirm Assignments</button>
-                    </div>
+                    <button type="submit" class="action-btn">Confirm Specializations</button>
                 </form>
 
                 <div class="inventory-summary">
-                    Available Reservoir: <span id="pool-display" class="troop-text">0</span> Untrained Soldiers<br>
-                    Financial Capital: <span id="gold-display" class="highlight-text">0</span> Gold
+                    Active Income Force (Att + Def): <span id="producing-display" class="troop-text" style="color: #22c55e;">0</span> Active Miners<br>
+                    Financial Capital Asset: <span id="gold-display" class="highlight-text">0 Gold</span>
                 </div>
             </div>
         </main>
     </div>
 
+    <script src="game-engine.js"></script>
     <script>
-        const session = localStorage.getItem('minimen_session');
-        if (!session) window.location.href = 'index.html';
+        function renderTrainingStats() {
+            if (!window.player) return;
+            
+            // Force values to 0 if undefined
+            const att = window.player.attack_troops || 0;
+            const def = window.player.defense_troops || 0;
+            const spy = window.player.spy_troops || 0;
+            const sen = window.player.sentry_troops || 0;
+            const pool = window.player.soldiers || 0;
 
-        let players = JSON.parse(localStorage.getItem('minimen_players')) || {};
-        let player = players[session];
-
-        function renderStats() {
-            if (!player) return;
-            document.getElementById('current-attack').innerText = `${(player.attack_troops || 0).toLocaleString()} Units`;
-            document.getElementById('current-defense').innerText = `${(player.defense_troops || 0).toLocaleString()} Units`;
-            document.getElementById('current-spy').innerText = `${(player.spy_troops || 0).toLocaleString()} Units`;
-            document.getElementById('current-sentry').innerText = `${(player.sentry_troops || 0).toLocaleString()} Units`;
-            document.getElementById('pool-display').innerText = (player.soldiers || 0).toLocaleString();
-            document.getElementById('gold-display').innerText = `${(player.gold || 0).toLocaleString()} Gold`;
+            document.getElementById('current-attack').innerText = `${att.toLocaleString()} Troops`;
+            document.getElementById('current-defense').innerText = `${def.toLocaleString()} Troops`;
+            document.getElementById('current-spy').innerText = `${spy.toLocaleString()} Units`;
+            document.getElementById('current-sentry').innerText = `${sen.toLocaleString()} Units`;
+            
+            document.getElementById('pool-display').innerText = pool.toLocaleString();
+            document.getElementById('producing-display').innerText = (att + def).toLocaleString();
+            document.getElementById('gold-display').innerText = `${window.player.gold.toLocaleString()} Gold`;
         }
 
         function processTraining(event) {
@@ -147,24 +147,23 @@
 
             if (totalRequested <= 0) return;
 
-            if (totalRequested > player.soldiers) {
-                alertBox.innerText = "INSUFFICIENT RESERVES IN SOLDIER POOL";
+            if (totalRequested > window.player.soldiers) {
+                alertBox.innerText = "ERROR: CHOSEN COMMAND GENERATES INSUFFICIENT RESERVES IN UNTRAINED POOL";
                 alertBox.className = "alert-feed error";
                 alertBox.style.display = "block";
                 return;
             }
 
-            // Execute Database Conversions
-            player.soldiers -= totalRequested;
-            player.attack_troops = (player.attack_troops || 0) + attReq;
-            player.defense_troops = (player.defense_troops || 0) + defReq;
-            player.spy_troops = (player.spy_troops || 0) + spyReq;
-            player.sentry_troops = (player.sentry_troops || 0) + senReq;
+            // Transfer structural arrays
+            window.player.soldiers -= totalRequested;
+            window.player.attack_troops = (window.player.attack_troops || 0) + attReq;
+            window.player.defense_troops = (window.player.defense_troops || 0) + defReq;
+            window.player.spy_troops = (window.player.spy_troops || 0) + spyReq;
+            window.player.sentry_troops = (window.player.sentry_troops || 0) + senReq;
 
-            players[session] = player;
-            localStorage.setItem('minimen_players', JSON.stringify(players));
+            window.saveData();
 
-            alertBox.innerText = `SUCCESSFULLY TRAINED ${totalRequested} DISPATCHED TROOPS`;
+            alertBox.innerText = `SUCCESSFULLY DEPLOYED ${totalRequested.toLocaleString()} TROOPS TO THEIR STATIONS`;
             alertBox.className = "alert-feed success";
             alertBox.style.display = "block";
             
@@ -173,10 +172,12 @@
             document.getElementById('train-spy').value = '';
             document.getElementById('train-sentry').value = '';
             
-            renderStats();
+            renderTrainingStats();
+            setTimeout(() => { alertBox.style.display = "none"; }, 4000);
         }
 
-        renderStats();
+        renderTrainingStats();
+        setInterval(renderTrainingStats, 1000);
     </script>
 </body>
 </html>
