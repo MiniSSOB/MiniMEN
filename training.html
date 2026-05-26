@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiniMEN — Upgrade Matrix</title>
+    <title>MiniMEN — Training Program</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: #12141c; color: #e2e8f0; font-family: 'Courier New', Courier, monospace; padding: 20px; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
@@ -19,15 +19,26 @@
         .status-box { background-color: #1e293b; border: 2px solid #334155; padding: 12px; border-radius: 4px; font-size: 0.85rem; line-height: 1.6; }
         .status-title { font-weight: bold; color: #ef4444; border-bottom: 1px solid #334155; padding-bottom: 4px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .main-panel { flex-grow: 1; background-color: #1e293b; border: 2px solid #334155; border-radius: 4px; overflow: hidden; }
-        .panel-header { background-color: #1e293b; border-bottom: 2px solid #334155; padding: 15px; font-size: 1.2rem; font-weight: bold; color: #ef4444; }
-        .panel-body { padding: 20px; }
+        .split-grid { display: flex; gap: 20px; width: 100%; }
+        .program-side { flex: 7; }
+        .roster-side { flex: 5; display: flex; flex-direction: column; gap: 15px; }
+
+        .panel { background-color: #1e293b; border: 2px solid #334155; border-radius: 4px; overflow: hidden; margin-bottom: 15px; }
+        .panel-header { background-color: #0f172a; border-bottom: 2px solid #334155; padding: 12px; font-size: 1.1rem; font-weight: bold; color: #ef4444; text-align: center; text-transform: uppercase; letter-spacing: 1px; }
         
-        .upgrade-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .upgrade-card { background-color: #0f172a; border: 1px solid #334155; padding: 15px; border-radius: 4px; }
-        .upgrade-title { color: #ef4444; font-weight: bold; margin-bottom: 10px; }
-        .upgrade-btn { background: #334155; color: #f8fafc; border: none; padding: 8px 12px; width: 100%; cursor: pointer; border-radius: 4px; margin-top: 10px; }
-        .upgrade-btn:hover { background: #ef4444; }
+        .funds-banner { background-color: #0f172a; border: 1px solid #334155; padding: 10px; font-size: 1.1rem; font-weight: bold; text-align: center; margin-bottom: 15px; letter-spacing: 1px; }
+        
+        .training-table { width: 100%; border-collapse: collapse; background-color: #0f172a; }
+        .training-table th { background-color: #1e293b; color: #94a3b8; padding: 10px; font-size: 0.75rem; text-transform: uppercase; text-align: left; border-bottom: 1px solid #334155; }
+        .training-table td { padding: 12px 10px; border-bottom: 1px solid #1e293b; font-size: 0.9rem; }
+        
+        .section-divider { background: linear-gradient(90deg, #1e293b, #0f172a); color: #ffffff !important; font-weight: bold !important; font-size: 0.8rem !important; letter-spacing: 1px; padding: 6px 10px !important; border-bottom: 2px solid #334155 !important; text-transform: uppercase; }
+        
+        .qty-input { width: 85px; background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; padding: 4px; text-align: center; font-family: inherit; border-radius: 4px; outline: none; }
+        .action-btn { width: 100%; background: linear-gradient(90deg, #ef4444, #991b1b); color: white; border: 1px solid #dc2626; padding: 12px; font-weight: bold; text-transform: uppercase; cursor: pointer; font-family: inherit; letter-spacing: 1px; border-radius: 4px; }
+        .alert-feed { font-size: 0.85rem; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center; display: none; font-weight: bold; }
+        .error { color: #ef4444; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; }
+        .success { color: #22c55e; background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; }
     </style>
 </head>
 <body>
@@ -39,8 +50,8 @@
                 <a href="your-stuff.html" class="menu-item">Your Stuff</a>
                 <a href="battlefield.html" class="menu-item">Battlefield</a>
                 <a href="armory.html" class="menu-item">Armory</a>
-                <a href="upgrades.html" class="menu-item active">Upgrades</a>
-                <a href="training.html" class="menu-item">Training</a>
+                <a href="upgrades.html" class="menu-item">Upgrades</a>
+                <a href="training.html" class="menu-item active">Training</a>
                 <a href="attack-log.html" class="menu-item">Attack Log</a>
             </nav>
             <div class="status-box">
@@ -50,20 +61,37 @@
             </div>
         </aside>
 
-        <main class="main-panel">
-            <header class="panel-header">Upgrade Matrix</header>
-            <div class="panel-body">
-                <div class="upgrade-grid">
-                    <div class="upgrade-card">
-                        <div class="upgrade-title">Production Efficiency</div>
-                        <p style="font-size: 0.85rem; color:#94a3b8;">Increase Gold production per soldier by 5%.</p>
-                        <button class="upgrade-btn">Upgrade: 100,000 Gold</button>
+        <main class="split-grid">
+            <div class="program-side">
+                <div id="alert" class="alert-feed"></div>
+                <div class="funds-banner">Available Reservoir: <span id="pool-display" style="color: #ef4444;">0</span> Untrained Soldiers</div>
+
+                <form onsubmit="processTraining(event)">
+                    <div class="panel">
+                        <table class="training-table">
+                            <thead><tr><th>Training Program</th><th>Cost</th><th style="text-align: center;">Assignment</th></tr></thead>
+                            <tbody>
+                                <tr><td colspan="3" class="section-divider">Attack / Defense Specialist</td></tr>
+                                <tr><td style="color:#ef4444; font-weight:bold;">Attack Specialist</td><td>2,000 G</td><td style="text-align: center;"><input type="number" id="train-attack" class="qty-input" min="0"></td></tr>
+                                <tr><td style="color:#3b82f6; font-weight:bold;">Defense Specialist</td><td>2,000 G</td><td style="text-align: center;"><input type="number" id="train-defense" class="qty-input" min="0"></td></tr>
+                                <tr><td colspan="3" class="section-divider">Spies / Sentries</td></tr>
+                                <tr><td style="color:#22c55e; font-weight:bold;">Spy</td><td>3,500 G</td><td style="text-align: center;"><input type="number" id="train-spy" class="qty-input" min="0"></td></tr>
+                                <tr><td style="color:#a855f7; font-weight:bold;">Sentry</td><td>3,500 G</td><td style="text-align: center;"><input type="number" id="train-sentry" class="qty-input" min="0"></td></tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="upgrade-card">
-                        <div class="upgrade-title">Troop Intake Expansion</div>
-                        <p style="font-size: 0.85rem; color:#94a3b8;">Permanent bonus to soldier recruitment speed.</p>
-                        <button class="upgrade-btn">Upgrade: 250,000 Gold</button>
-                    </div>
+                    <button type="submit" class="action-btn">Train Selected Units</button>
+                </form>
+            </div>
+
+            <div class="roster-side">
+                <div class="panel">
+                    <div class="panel-header">Personnel Roster</div>
+                    <table class="training-table">
+                        <thead><tr><th>Class</th><th style="text-align: right;">Units</th></tr></thead>
+                        <tbody id="roster-list">
+                            </tbody>
+                    </table>
                 </div>
             </div>
         </main>
@@ -71,13 +99,44 @@
 
     <script src="game-engine.js"></script>
     <script>
-        // Sync assets box
-        setInterval(() => {
-            if(window.player) {
-                document.getElementById('box-gold').innerText = Math.floor(window.player.gold).toLocaleString();
-                document.getElementById('box-turns').innerText = window.player.turns;
+        function renderTraining() {
+            if (!window.player) return;
+            document.getElementById('pool-display').innerText = (window.player.soldiers || 0).toLocaleString();
+            document.getElementById('box-gold').innerText = Math.floor(window.player.gold).toLocaleString();
+            document.getElementById('box-turns').innerText = window.player.turns;
+
+            const roster = document.getElementById('roster-list');
+            roster.innerHTML = `
+                <tr><td>Attack</td><td style="text-align:right;">${(window.player.attack_troops || 0).toLocaleString()}</td></tr>
+                <tr><td>Defense</td><td style="text-align:right;">${(window.player.defense_troops || 0).toLocaleString()}</td></tr>
+                <tr><td>Spy</td><td style="text-align:right;">${(window.player.spy_troops || 0).toLocaleString()}</td></tr>
+                <tr><td>Sentry</td><td style="text-align:right;">${(window.player.sentry_troops || 0).toLocaleString()}</td></tr>
+            `;
+        }
+
+        function processTraining(event) {
+            event.preventDefault();
+            const att = parseInt(document.getElementById('train-attack').value) || 0;
+            const def = parseInt(document.getElementById('train-defense').value) || 0;
+            const spy = parseInt(document.getElementById('train-spy').value) || 0;
+            const sen = parseInt(document.getElementById('train-sentry').value) || 0;
+            const total = att + def + spy + sen;
+
+            if(total > window.player.soldiers) {
+                alert("Insufficient untrained soldiers!");
+                return;
             }
-        }, 1000);
+            window.player.soldiers -= total;
+            window.player.attack_troops += att;
+            window.player.defense_troops += def;
+            window.player.spy_troops += spy;
+            window.player.sentry_troops += sen;
+            window.saveData();
+            renderTraining();
+        }
+
+        renderTraining();
+        setInterval(renderTraining, 1000);
     </script>
 </body>
 </html>
