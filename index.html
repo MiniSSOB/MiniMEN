@@ -30,7 +30,7 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
         .login-header {
-            background: linear-gradient(90deg, #ef4444, #991b1b); /* Dark Cyber Red Theme */
+            background: linear-gradient(90deg, #ef4444, #991b1b);
             color: #ffffff;
             font-weight: bold;
             text-align: center;
@@ -67,7 +67,7 @@
         .form-input:focus {
             border-color: #ef4444;
         }
-        .login-btn {
+        .action-btn {
             width: 100%;
             background: linear-gradient(90deg, #ef4444, #991b1b);
             color: white;
@@ -80,15 +80,42 @@
             cursor: pointer;
             border-radius: 4px;
             letter-spacing: 1px;
+            margin-bottom: 15px;
         }
-        .login-btn:hover {
+        .action-btn:hover {
             background: #dc2626;
         }
-        .error-msg {
+        .toggle-link {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            text-align: center;
+            cursor: pointer;
+            display: block;
+            text-decoration: underline;
+        }
+        .toggle-link:hover {
             color: #ef4444;
+        }
+        .alert-msg {
             font-size: 0.85rem;
             text-align: center;
             margin-top: 15px;
+            display: none;
+            font-weight: bold;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .error {
+            color: #ef4444;
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+        }
+        .success {
+            color: #22c55e;
+            background-color: rgba(34, 197, 94, 0.1);
+            border: 1px solid #22c55e;
+        }
+        .hidden {
             display: none;
         }
     </style>
@@ -96,37 +123,113 @@
 <body>
 
     <div class="login-card">
-        <div class="login-header">MiniMEN</div>
+        <div id="portal-title" class="login-header">MiniMEN LOGIN</div>
+        
         <div class="login-body">
+            <div id="alert" class="alert-msg"></div>
+
             <form id="login-form" onsubmit="handleLogin(event)">
                 <div class="form-group">
-                    <label for="username">Commander Handle</label>
-                    <input type="text" id="username" class="form-input" required autocomplete="off" placeholder="Enter name...">
+                    <label for="login-user">Commander Handle</label>
+                    <input type="text" id="login-user" class="form-input" required autocomplete="off" placeholder="Enter name...">
                 </div>
                 <div class="form-group">
-                    <label for="password">Security Crypt</label>
-                    <input type="password" id="password" class="form-input" required placeholder="••••••••">
+                    <label for="login-pass">Security Crypt</label>
+                    <input type="password" id="login-pass" class="form-input" required placeholder="••••••••">
                 </div>
-                <button type="submit" class="login-btn">Initialize Connection</button>
-                <div id="error" class="error-msg">INVALID CREDENTIALS</div>
+                <button type="submit" class="action-btn">Initialize Connection</button>
+                <div class="toggle-link" onclick="toggleView(true)">Need an account? Open Registration</div>
+            </form>
+
+            <form id="register-form" class="hidden" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="reg-user">New Commander Handle</label>
+                    <input type="text" id="reg-user" class="form-input" required autocomplete="off" placeholder="Create name...">
+                </div>
+                <div class="form-group">
+                    <label for="reg-pass">Create Security Crypt</label>
+                    <input type="password" id="reg-pass" class="form-input" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="action-btn">Register Commander</button>
+                <div class="toggle-link" onclick="toggleView(false)">Return to Login Portal</div>
             </form>
         </div>
     </div>
 
     <script>
+        const alertBox = document.getElementById('alert');
+        const portalTitle = document.getElementById('portal-title');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+
+        // Swap back and forth between Login and Register views
+        function toggleView(showRegister) {
+            alertBox.style.display = 'none';
+            if (showRegister) {
+                portalTitle.innerText = "MiniMEN REGISTRATION";
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+            } else {
+                portalTitle.innerText = "MiniMEN LOGIN";
+                registerForm.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+            }
+        }
+
+        // Processing Registration
+        function handleRegister(event) {
+            event.preventDefault();
+            const username = document.getElementById('reg-user').value.trim();
+            const password = document.getElementById('reg-pass').value;
+
+            if (!username || !password) return;
+
+            // Check if user account index array already exists
+            let players = JSON.parse(localStorage.getItem('minimen_players')) || {};
+
+            if (players[username.toLowerCase()]) {
+                showAlert("HANDLE ALREADY CLAIMED IN SECTOR", "error");
+                return;
+            }
+
+            // Create record data block and register to browser database
+            players[username.toLowerCase()] = {
+                name: username,
+                password: password
+            };
+            localStorage.setItem('minimen_players', JSON.stringify(players));
+
+            showAlert("REGISTRATION COMPLETE! YOU CAN NOW LOG IN.", "success");
+            document.getElementById('register-form').reset();
+            setTimeout(() => toggleView(false), 1500);
+        }
+
+        // Processing Login Verification
         function handleLogin(event) {
             event.preventDefault();
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            const errorDiv = document.getElementById('error');
+            const username = document.getElementById('login-user').value.trim().toLowerCase();
+            const password = document.getElementById('login-pass').value;
 
-            // Absolute hardcoded check for God / God
-            if (user === 'God' && pass === 'God') {
-                errorDiv.style.display = 'none';
-                window.location.href = 'your-stuff.html'; // Routes directly to the main stats page
+            // Fetch stored user data array
+            let players = JSON.parse(localStorage.getItem('minimen_players')) || {};
+            let account = players[username];
+
+            if (account && account.password === password) {
+                alertBox.style.display = 'none';
+                
+                // Track current session username so profile dashboard knows who loaded the view
+                localStorage.setItem('minimen_session', account.name);
+                
+                window.location.href = 'your-stuff.html';
             } else {
-                errorDiv.style.display = 'block';
+                showAlert("INVALID COMMANDER CREDENTIALS", "error");
             }
+        }
+
+        function showAlert(text, type) {
+            alertBox.innerText = text;
+            alertBox.className = `alert-msg ${type}`;
+            alertBox.style.display = 'block';
         }
     </script>
 </body>
