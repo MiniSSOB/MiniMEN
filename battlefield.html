@@ -140,27 +140,24 @@
             document.getElementById('page-text').innerText = `Viewing Targets ${startIdx.toLocaleString()} - ${endIdx.toLocaleString()}`;
             document.getElementById('back-btn').disabled = currentOffsetPage === 1;
 
-            // Fetch live Spy power from engine database variables
             let myTotalSpyPower = window.getMyTotalSpyPower ? window.getMyTotalSpyPower() : 0;
 
             for (let i = startIdx; i <= endIdx; i++) {
                 let tr = document.createElement('tr');
                 
-                // Algorithmic variable equations based on cell indices
-                let targetSentryPower = Math.floor(Math.cos(i * 7) * 200) + 220; 
-                if (targetSentryPower < 10) targetSentryPower = 15;
+                // Scale target security metrics upward based on page depths
+                let targetSentryPower = Math.floor(Math.cos(i * i) * (i * 12)) + (i * 25) + 30;
+                if (targetSentryPower < 15) targetSentryPower = 15;
 
                 let allianceName = i % 3 === 0 ? "F L G" : (i % 5 === 0 ? "La Cosa Nostra" : "None");
                 let targetName = `Commander_Clone_${i * 2}`;
-                let totalSoldiers = Math.floor(Math.sin(i) * 350) + 400; 
-                let targetDefenseRating = Math.floor(Math.cos(i) * 500) + 550;
-                let targetGoldHoldings = Math.floor(Math.sin(i * i) * 30000) + 35000;
+                let totalSoldiers = Math.floor(Math.sin(i) * 350) + 400 + (i * 5); 
+                let targetDefenseRating = Math.floor(Math.cos(i) * 500) + 550 + (i * 45);
+                let targetGoldHoldings = Math.floor(Math.sin(i * i) * 30000) + 35000 + (i * 150);
                 if (targetGoldHoldings < 0) targetGoldHoldings = 1200;
-                let targetRank = 500 - i;
+                let targetRank = 10000 - i;
 
                 // 2:1 SPY TO SENTRY CALCULATION LOOP
-                // If my spy power is greater than or equal to two times their sentry power, full reveal (White text row). 
-                // Otherwise, conceal behind security data walls (Green text row with '??? Gold' text).
                 let hasSpyAdvantage = myTotalSpyPower >= (targetSentryPower * 2);
                 
                 if (hasSpyAdvantage) {
