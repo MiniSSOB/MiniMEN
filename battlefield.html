@@ -88,17 +88,42 @@
         let currentOffsetPage = 1;
         const targetsPerPage = 20;
 
-        // Helper function to calculate player's total current Attack Power based on weapon inventory
+        // Calculates player's valid attack power factoring in paired weapon counts
         function calculateMyAttackPower() {
             if (!window.player) return 0;
             window.player.weapons = window.player.weapons || {};
-            // Power rankings matching our Armory setup
-            const weaponPowers = { att_1: 2, att_2: 64, att_3: 600, att_4: 1000 };
-            let totalAttack = 0;
-            Object.keys(weaponPowers).forEach(id => {
-                totalAttack += (window.player.weapons[id] || 0) * weaponPowers[id];
-            });
-            return totalAttack;
+            
+            // Track total soldiers trained for combat
+            const totalAttackSoldiers = window.player.attack_troops || 0;
+
+            // Map standard weapon tier values
+            const weaponTiers = [
+                { id: 'att_4', power: 1000 },
+                { id: 'att_3', power: 600 },
+                { id: 'att_2', power: 64 },
+                { id: 'att_1', power: 2 }
+            ];
+
+            let weaponsRemainingToEquip = totalAttackSoldiers;
+            let totalAttackPowerValue = 0;
+
+            // Equip strongest weapons first up to available soldier pairing limits
+            for (let weapon of weaponTiers) {
+                if (weaponsRemainingToEquip <= 0) break;
+                
+                let ownedCount = window.player.weapons[weapon.id] || 0;
+                let equippedCount = Math.min(ownedCount, weaponsRemainingToEquip);
+                
+                totalAttackPowerValue += equippedCount * weapon.power;
+                weaponsRemainingToEquip -= equippedCount;
+            }
+
+            // Any remaining soldiers without armory weapons hit with a baseline strength of 1
+            if (weaponsRemainingToEquip > 0) {
+                totalAttackPowerValue += weaponsRemainingToEquip * 1;
+            }
+
+            return totalAttackPowerValue;
         }
 
         function generateTargets() {
@@ -108,16 +133,15 @@
             const startIdx = (currentOffsetPage - 1) * targetsPerPage + 1;
             const endIdx = currentOffsetPage * targetsPerPage;
 
-            // Update header pagination tracking text labels
             document.getElementById('page-text').innerText = `Viewing Targets ${startIdx.toLocaleString()} - ${endIdx.toLocaleString()}`;
             document.getElementById('back-btn').disabled = currentOffsetPage === 1;
 
             for (let i = startIdx; i <= endIdx; i++) {
                 let tr = document.createElement('tr');
                 
-                // Seed distinct, algorithmic stats matching target ID indexes
+                // Deterministic generation values based on item index
                 let totalSoldiers = Math.floor(Math.sin(i) * 200) + 250; 
-                let targetDefenseRating = Math.floor(Math.cos(i) * 450) + 500; // Algorithmic raw defense score
+                let targetDefenseRating = Math.floor(Math.cos(i) * 450) + 500;
                 let targetGoldHoldings = Math.floor(Math.sin(i * i) * 15000) + 20000;
                 if (targetGoldHoldings < 0) targetGoldHoldings = 5000;
 
@@ -139,17 +163,15 @@
             currentOffsetPage += direction;
             if (currentOffsetPage < 1) currentOffsetPage = 1;
             
-            // Hide previous reports when pagination moves
             document.getElementById('intel-zone').style.display = "none";
             document.getElementById('battle-zone').style.display = "none";
             
             generateTargets();
         }
 
-        // INTELLIGENCE MODULE: Reveals hidden database values
         function runIntelligenceRecon(targetId, defenseRating, cashHoldings) {
             const intelZone = document.getElementById('intel-zone');
-            document.getElementById('battle-zone').style.display = "none"; // Clear combat panel view
+            document.getElementById('battle-zone').style.display = "none";
 
             let myAttack = calculateMyAttackPower();
             let strategyAdvice = "";
@@ -157,7 +179,7 @@
             if (myAttack > defenseRating) {
                 strategyAdvice = `<span style="color: #22c55e;">VICTORY PREDICTED: Your Attack Power (${myAttack.toLocaleString()}) bypasses their fortifications.</span>`;
             } else {
-                strategyAdvice = `<span style="color: #ef4444;">WARNING — DEFEAT PREDICTED: Target Defense (${defenseRating.toLocaleString()}) outmatches your active Attack Power (${myAttack.toLocaleString()}). Acquire more Armory weapons first!</span>`;
+                strategyAdvice = `<span style="color: #ef4444;">WARNING — DEFEAT PREDICTED: Target Defense (${defenseRating.toLocaleString()}) outmatches your active Attack Power (${myAttack.toLocaleString()}). Acquire more weapons!</span>`;
             }
 
             intelZone.innerHTML = `
@@ -172,16 +194,15 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // COMBAT SYSTEM ENGINE
         function launchIncursion(targetId, defenseRating, cashHoldings) {
             const battleZone = document.getElementById('battle-zone');
-            document.getElementById('intel-zone').style.display = "none"; // Clear spy panel view
+            document.getElementById('intel-zone').style.display = "none";
 
             let myAttack = calculateMyAttackPower();
 
             if (myAttack > defenseRating) {
-                // Win Condition: Steal a percentage chunk of their money pool
-                let plunderFactor = (Math.random() * 0.15) + 0.15; // Plunders 15% - 30%
+                // EXCLUSIVE MINIMEN PLUNDER CALCULATOR: Steals 90% to 100% of liquid assets
+                let plunderFactor = (Math.random() * 0.10) + 0.90; 
                 let goldStolen = Math.floor(cashHoldings * plunderFactor);
                 
                 window.player.gold += goldStolen;
@@ -192,12 +213,11 @@
                     <p style="font-size: 0.9rem; color: #94a3b8;">
                         Your assault task force breached the parameters of <strong style="color: #f8fafc;">Commander_Unit_${targetId}</strong>.<br>
                         Your Attack Rating of <strong style="color: #22c55e;">${myAttack.toLocaleString()}</strong> overwhelmed their defenses (${defenseRating.toLocaleString()}).<br>
-                        <span style="color: #eab308; font-weight: bold;">Plundered Loot Secured: +${goldStolen.toLocaleString()} Gold Assets!</span>
+                        <span style="color: #22c55e; font-weight: bold;">Plundered Loot Secured (90%-100% Drain): +${goldStolen.toLocaleString()} Gold Assets!</span>
                     </p>
                 `;
                 battleZone.style.borderColor = "#22c55e";
             } else {
-                // Lose Condition: Assault repelled by superior defensive equipment stats
                 battleZone.innerHTML = `
                     <h3 style="color: #ef4444; text-transform: uppercase; font-size: 0.95rem; margin-bottom: 8px;">Incursion Defeated!</h3>
                     <p style="font-size: 0.9rem; color: #94a3b8;">
