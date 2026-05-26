@@ -25,15 +25,19 @@ if (player && (!player.test_mode_v5 || player.soldiers < 10 || player.gold < 100
         sen_1: 0, sen_2: 0, sen_3: 0, sen_4: 0
     };
     player.test_mode_v5 = true; // Strict structural baseline flag
-    saveData();
+    
+    // Immediately clear out data right into local storage
+    players[session] = player;
+    localStorage.setItem('minimen_players', JSON.stringify(players));
 }
 
-function saveData() {
+// FIXED CRITICAL ARMORED BUY SNIPPET: Exposing function globally to separate page loops
+window.saveData = function() {
     if (session && player) {
         players[session] = player;
         localStorage.setItem('minimen_players', JSON.stringify(players));
     }
-}
+};
 
 // SOLDIER-PAIRED INTELLIGENCE CALCULATOR
 // Scans trained spy operatives and equips your strongest spy gear up to your physical army limit
@@ -80,7 +84,7 @@ setInterval(() => {
         const goldEarnedPerSecond = (producingTroops * 5) / 60; 
         
         player.gold += goldEarnedPerSecond;
-        saveData();
+        window.saveData();
         
         const goldText = document.getElementById('gold-display');
         if (goldText) goldText.innerText = `${Math.floor(player.gold).toLocaleString()} Gold`;
@@ -92,7 +96,7 @@ setInterval(() => {
     if (player) {
         if ((player.turns || 0) < 1440) {
             player.turns = (player.turns || 0) + 1;
-            saveData();
+            window.saveData();
             
             const turnsText = document.getElementById('turns-display');
             if (turnsText) turnsText.innerText = player.turns;
