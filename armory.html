@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniMEN — Armory Core</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #12141c; color: #e2e8f0; font-family: 'Courier New', Courier, monospace; padding: 20px; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
+        .game-container { display: flex; gap: 20px; width: 100%; max-width: 1200px; margin-top: 20px; }
+        .sidebar { width: 220px; flex-shrink: 0; }
+        .menu-header { background: linear-gradient(90deg, #ef4444, #991b1b); color: #ffffff; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; padding: 8px 12px; border: 2px solid #dc2626; border-bottom: none; border-radius: 4px 4px 0 0; }
+        .menu-group { background-color: #1e293b; border: 2px solid #334155; border-radius: 0 0 4px 4px; margin-bottom: 15px; overflow: hidden; }
+        .menu-item { display: block; color: #94a3b8; text-decoration: none; padding: 10px 14px; font-size: 0.9rem; border-bottom: 1px solid #334155; }
+        .menu-item.active { background-color: #0f172a; color: #ef4444; border-left: 4px solid #ef4444; font-weight: bold; }
+        .main-panel { flex-grow: 1; background-color: #1e293b; border: 2px solid #334155; border-radius: 4px; overflow: hidden; }
+        .panel-header { background-color: #1e293b; border-bottom: 2px solid #334155; padding: 15px; font-size: 1.2rem; font-weight: bold; color: #ef4444; }
+        .panel-body { padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .armory-table { width: 100%; max-width: 800px; border-collapse: collapse; margin-bottom: 20px; background-color: #0f172a; border: 1px solid #334155; }
+        .armory-table th { background-color: #1e293b; color: #ef4444; padding: 12px; text-align: left; font-size: 0.85rem; text-transform: uppercase; border-bottom: 2px solid #334155; }
+        .armory-table td { padding: 12px; border-bottom: 1px solid #334155; font-size: 0.95rem; }
+        .qty-input { width: 70px; background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; padding: 4px; text-align: center; border-radius: 4px; }
+        .action-btn { background: linear-gradient(90deg, #ef4444, #991b1b); color: white; border: 1px solid #dc2626; padding: 10px 20px; font-weight: bold; text-transform: uppercase; cursor: pointer; border-radius: 4px; }
+        .inventory-summary { width: 100%; max-width: 800px; border-top: 1px dashed #334155; padding-top: 20px; font-size: 0.95rem; text-align: center; color: #94a3b8; }
+        .alert-feed { font-size: 0.85rem; padding: 8px; border-radius: 4px; margin-bottom: 15px; width: 100%; max-width: 800px; text-align: center; display: none; }
+        .error { color: #ef4444; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; }
+        .success { color: #22c55e; background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <aside class="sidebar">
+            <div class="menu-header">Galaxy 1</div>
+            <nav class="menu-group">
+                <a href="your-stuff.html" class="menu-item">Your Stuff</a>
+                <a href="battlefield.html" class="menu-item">Battlefield</a>
+                <a href="armory.html" class="menu-item active">Armory</a>
+                <a href="upgrades.html" class="menu-item">Upgrades</a>
+                <a href="training.html" class="menu-item">Training</a>
+            </nav>
+        </aside>
+        <main class="main-panel">
+            <header class="panel-header">Equipment Armory</header>
+            <div class="panel-body">
+                <div id="alert" class="alert-feed"></div>
+                <form onsubmit="buyWeapons(event)">
+                    <table class="armory-table">
+                        <thead>
+                            <tr>
+                                <th>Asset Name</th>
+                                <th>Class</th>
+                                <th>Rating</th>
+                                <th>Cost</th>
+                                <th>Owned</th>
+                                <th>Purchase</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Laser Rifle</td><td>Attack</td><td>+10</td><td>1,000 G</td><td id="own-att_1">0</td><td><input type="number" id="buy-att_1" class="qty-input" min="0" placeholder="0"></td></tr>
+                            <tr><td>Plasma Cannon</td><td>Attack</td><td>+65</td><td>5,000 G</td><td id="own-att_2">0</td><td><input type="number" id="buy-att_2" class="qty-input" min="0" placeholder="0"></td></tr>
+                            <tr><td>Plasteel Shield</td><td>Defense</td><td>+10</td><td>1,000 G</td><td id="own-def_1">0</td><td><input type="number" id="buy-def_1" class="qty-input" min="0" placeholder="0"></td></tr>
+                            <tr><td>Aegis Barrier</td><td>Defense</td><td>+65</td><td>5,000 G</td><td id="own-def_2">0</td><td><input type="number" id="buy-def_2" class="qty-input" min="0" placeholder="0"></td></tr>
+                            <tr><td>Cloak Matrix</td><td>Spy</td><td>+15</td><td>2,500 G</td><td id="own-spy_1">0</td><td><input type="number" id="buy-spy_1" class="qty-input" min="0" placeholder="0"></td></tr>
+                            <tr><td>Sensor Array</td><td>Sentry</td><td>+15</td><td>2,500 G</td><td id="own-sen_1">0</td><td><input type="number" id="buy-sen_1" class="qty-input" min="0" placeholder="0"></td></tr>
+                        </tbody>
+                    </table>
+                    <div style="text-align: right; max-width: 800px;"><button type="submit" class="action-btn">Acquire Hardware</button></div>
+                </form>
+                <div class="inventory-summary">Available Liquidity: <span id="gold-display" style="color:#eab308; font-weight:bold;">0 Gold</span></div>
+            </div>
+        </main>
+    </div>
+    <script src="game-engine.js"></script>
+    <script>
+        const market = {
+            att_1: { price: 1000 }, att_2: { price: 5000 },
+            def_1: { price: 1000 }, def_2: { price: 5000 },
+            spy_1: { price: 2500 }, sen_1: { price: 2500 }
+        };
+        function renderArmory() {
+            if (!player) return;
+            player.weapons = player.weapons || {};
+            Object.keys(market).forEach(id => {
+                document.getElementById(`own-${id}`).innerText = player.weapons[id] || 0;
+            });
+            document.getElementById('gold-display').innerText = `${player.gold.toLocaleString()} Gold`;
+        }
+        function buyWeapons(event) {
+            event.preventDefault();
+            const alertBox = document.getElementById('alert');
+            let totalCost = 0;
+            let tempOrder = {};
+
+            Object.keys(market).forEach(id => {
+                const qty = parseInt(document.getElementById(`buy-${id}`).value) || 0;
+                if (qty > 0) {
+                    totalCost += qty * market[id].price;
+                    tempOrder[id] = qty;
+                }
+            });
+
+            if (totalCost <= 0) return;
+            if (totalCost > player.gold) {
+                alertBox.innerText = "INSUFFICIENT FUNDS IN CORES AVAILABLE";
+                alertBox.className = "alert-feed error";
+                alertBox.style.display = "block";
+                return;
+            }
+
+            player.gold -= totalCost;
+            Object.keys(tempOrder).forEach(id => {
+                player.weapons[id] = (player.weapons[id] || 0) + tempOrder[id];
+                document.getElementById(`buy-${id}`).value = '';
+            });
+
+            saveData();
+            alertBox.innerText = `HARDWARE SECURED: -${totalCost.toLocaleString()} GOLD`;
+            alertBox.className = "alert-feed success";
+            alertBox.style.display = "block";
+            renderArmory();
+        }
+        renderArmory();
+    </script>
+</body>
+</html>
