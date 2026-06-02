@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniMEN - Personal Stats</title>
+    <style>
+        /* Base Game Styling */
+        body { 
+            background-color: #000; 
+            color: #ddd; 
+            font-family: 'Courier New', Courier, monospace; 
+            display: flex; 
+            margin: 0; 
+            min-height: 100vh;
+        }
+
+        /* Navigation Sidebar */
+        #sidebar { 
+            width: 220px; 
+            background-color: #0a0a0a; 
+            padding: 20px 0; 
+            border-right: 2px solid #333;
+            flex-shrink: 0;
+        }
+        #sidebar h2 { text-align: center; color: #fff; margin-bottom: 20px; }
+        #sidebar a { 
+            display: block; 
+            color: #85c1e9; 
+            text-decoration: none; 
+            padding: 10px 20px; 
+            border-bottom: 1px solid #222;
+            font-weight: bold;
+        }
+        #sidebar a:hover, #sidebar a.active { 
+            background-color: #222; 
+            color: #fff; 
+            border-left: 4px solid #85c1e9;
+        }
+
+        /* Main Content Dashboard */
+        #main-content { 
+            flex-grow: 1; 
+            padding: 30px; 
+            background-color: #111;
+            overflow-x: auto;
+        }
+        h1 { color: #fff; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 0; }
+        h2 { color: #85c1e9; margin-top: 30px; border-bottom: 1px dashed #333; padding-bottom: 5px; text-transform: uppercase; font-size: 1.2em; }
+
+        /* Grid Layout */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .panel {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 0;
+            overflow: hidden;
+        }
+        .panel h3 {
+            background-color: #222;
+            color: #fff;
+            margin: 0;
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+            font-size: 1em;
+        }
+
+        /* Tables */
+        table.stat-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+            font-size: 0.9em;
+        }
+        table.stat-table th, table.stat-table td {
+            padding: 8px 12px;
+            border-bottom: 1px dashed #222;
+        }
+        table.stat-table th {
+            text-align: left;
+            color: #aaa;
+            font-weight: normal;
+        }
+        table.stat-table tr.header-row th {
+            background-color: #111;
+            color: #85c1e9;
+            font-weight: bold;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+        table.stat-table td { color: #fff; font-weight: bold; }
+        .text-gold { color: #ffd700; }
+        .text-red { color: #ff3333; }
+        .text-green { color: #4CAF50; }
+        
+        table.leaderboard-table th { text-align: center; }
+        table.leaderboard-table td { text-align: center; }
+        table.leaderboard-table td:nth-child(2) { text-align: left; }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar">
+        <h2>MiniMEN</h2>
+        <a href="index.html">Command Center</a>
+        <a href="battlefield.html">Battlefield</a>
+        <a href="armory.html">Armory</a>
+        <a href="conquest.html">Conquest</a>
+        <a href="training.html">Training</a>
+        <a href="upgrades.html">Upgrades</a>
+        <a href="intelligence.html">Intelligence</a>
+        <a href="alliances.html">Alliances</a>
+        <a href="trade.html">Trade</a>
+        <a href="safe.html">Safe</a>
+        <a href="attack-log.html">Attack Log</a>
+        <a href="rewards.html">Rewards</a>
+        <a href="statistics.html" class="active">Statistics</a>
+        <a href="donate.html">Donate</a>
+        <a href="buddy-list.html">Buddy List</a>
+        <a href="logout.html">Log Out</a>
+    </div>
+
+    <div id="main-content">
+        <h1>Personal Stats Report</h1>
+
+        <h2>Combat Operations</h2>
+        <div class="stat-grid">
+            
+            <div class="panel">
+                <h3>Attacks By You</h3>
+                <table class="stat-table">
+                    <tr><th>Attempted / Won / Lost:</th><td>92 / <span class="text-green">92</span> / <span class="text-red">0</span></td></tr>
+                    <tr><th>Gold Stolen:</th><td class="text-gold">3,203,610,291</td></tr>
+                    <tr><th>Experience Gained:</th><td class="text-green">11,040</td></tr>
+                    <tr class="header-row"><th colspan="2">Casualties Inflicted vs Suffered</th></tr>
+                    <tr><th>Defenders (Soldiers/Mercs):</th><td>0 / 1,913 <span class="text-red">(0)</span></td></tr>
+                    <tr><th>Untrained (Soldiers/Mercs):</th><td>10,705 / 2,728 <span class="text-red">(1,153)</span></td></tr>
+                    <tr><th>Spies / Sentries:</th><td>81 / 72 <span class="text-red">(0)</span></td></tr>
+                </table>
+            </div>
+
+            <div class="panel">
+                <h3>Attacks Against You</h3>
+                <table class="stat-table">
+                    <tr><th>Defended / Lost / Won:</th><td>682 / <span class="text-red">682</span> / <span class="text-green">0</span></td></tr>
+                    <tr><th>Gold Lost:</th><td class="text-red">20,852,457,843</td></tr>
+                    <tr class="header-row"><th colspan="2">Casualties Suffered vs Inflicted</th></tr>
+                    <tr><th>Defenders (Soldiers/Mercs):</th><td><span class="text-red">0 / 0</span> (0)</td></tr>
+                    <tr><th>Untrained (Soldiers/Mercs):</th><td><span class="text-red">48,340 / 0</span> (9,703)</td></tr>
+                    <tr><th>Spies / Sentries:</th><td><span class="text-red">353 / 0</span> (0)</td></tr>
+                </table>
+            </div>
+
+            <div class="panel">
+                <h3>Raids By You</h3>
+                <table class="stat-table">
+                    <tr><th>Attempted / Won / Lost:</th><td>1 / <span class="text-green">1</span> / <span class="text-red">0</span></td></tr>
+                    <tr><th>Gold Stolen:</th><td class="text-gold">2,046,667</td></tr>
+                    <tr><th>Experience Gained:</th><td class="text-green">15</td></tr>
+                    <tr class="header-row"><th colspan="2">Casualties Inflicted vs Suffered</th></tr>
+                    <tr><th>Defenders (Soldiers/Mercs):</th><td>0 / 0 <span class="text-red">(0)</span></td></tr>
+                    <tr><th>Untrained (Soldiers/Mercs):</th><td>40 / 0 <span class="text-red">(4)</span></td></tr>
+                </table>
+            </div>
+
+            <div class="panel">
+                <h3>Raids Against You</h3>
+                <table class="stat-table">
+                    <tr><th>Defended / Lost / Won:</th><td>1 / <span class="text-red">1</span> / <span class="text-green">0</span></td></tr>
+                    <tr><th>Gold Lost:</th><td class="text-red">840,289</td></tr>
+                    <tr class="header-row"><th colspan="2">Casualties Suffered vs Inflicted</th></tr>
+                    <tr><th>Defenders (Soldiers/Mercs):</th><td><span class="text-red">0 / 0</span> (0)</td></tr>
+                    <tr><th>Untrained (Soldiers/Mercs):</th><td><span class="text-red">34 / 0</span> (8)</td></tr>
+                </table>
+            </div>
+
+        </div>
+
+        <h2>Covert Operations</h2>
+        <div class="stat-grid">
+            
+            <div class="panel">
+                <h3>Sabotages By You (Normal & Revenge)</h3>
+                <table class="stat-table">
+                    <tr><th>Attempted / Success / Fail:</th><td>0 / <span class="text-green">0</span> / <span class="text-red">0</span></td></tr>
+                    <tr><th>Gold Sabbed / Stolen:</th><td class="text-gold">0 / 0</td></tr>
+                    <tr><th>Experience Gained:</th><td class="text-green">0</td></tr>
+                    <tr class="header-row"><th colspan="2">Covert Casualties (Kills)</th></tr>
+                    <tr><th>Spies / Sentries:</th><td>0 / 0</td></tr>
+                </table>
+            </div>
+
+            <div class="panel">
+                <h3>Sabotages Against You (Normal & Rev)</h3>
+                <table class="stat-table">
+                    <tr><th>Defended / Success / Fail:</th><td>0 / <span class="text-red">0</span> / <span class="text-green">0</span></td></tr>
+                    <tr><th>Gold Sabbed / Lost:</th><td class="text-red">0 / 0</td></tr>
+                    <tr class="header-row"><th colspan="2">Covert Casualties (Losses)</th></tr>
+                    <tr><th>Spies / Sentries:</th><td><span class="text-red">0 / 0</span></td></tr>
+                </table>
+            </div>
+
+        </div>
+
+        <h2>Leaderboards</h2>
+        <div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));">
+            
+            <div class="panel">
+                <h3>Top 10 Hits</h3>
+                <table class="stat-table leaderboard-table">
+                    <tr class="header-row"><th>Rank</th><th>Player</th><th>Gold Stolen</th></tr>
+                    <tr><td>#1</td><td>evilxsoul</td><td class="text-gold">62,559,695</td></tr>
+                    <tr><td>#2</td><td>Jarawa</td><td class="text-gold">55,090,822</td></tr>
+                    <tr><td>#3</td><td>whois</td><td class="text-gold">54,251,531</td></tr>
+                    <tr><td>#4</td><td>zuperman</td><td class="text-gold">48,712,567</td></tr>
+                    <tr><td>#5</td><td>TheFrogFather</td><td class="text-gold">48,707,475</td></tr>
+                </table>
+            </div>
+
+            <div class="panel">
+                <h3>Top 10 Farms</h3>
+                <table class="stat-table leaderboard-table">
+                    <tr class="header-row"><th>Rank</th><th>Player</th><th>Gold Stolen</th></tr>
+                    <tr><td>#1</td><td>Jarawa</td><td class="text-gold">91,065,884</td></tr>
+                    <tr><td>#2</td><td>Jinzer</td><td class="text-gold">85,986,477</td></tr>
+                    <tr><td>#3</td><td>whois</td><td class="text-gold">83,903,323</td></tr>
+                    <tr><td>#4</td><td>Obsessed</td><td class="text-gold">82,495,621</td></tr>
+                    <tr><td>#5</td><td>Jaimiessleftnut</td><td class="text-gold">78,649,114</td></tr>
+                </table>
+            </div>
+
+            <div class="panel" style="grid-column: 1 / -1;">
+                <h3>Top 5 Alliances Farmed</h3>
+                <table class="stat-table leaderboard-table">
+                    <tr class="header-row"><th>Rank</th><th>Alliance</th><th>Gold Stolen</th><th>Soldiers Killed</th><th>Mercs Killed</th></tr>
+                    <tr><td>#1</td><td>Sweet Revenge</td><td class="text-gold">431,184,093</td><td>907</td><td>215</td></tr>
+                    <tr><td>#2</td><td>Relentless Legacy</td><td class="text-gold">322,928,811</td><td>900</td><td>530</td></tr>
+                    <tr><td>#3</td><td>La Cosa Nostra</td><td class="text-gold">199,725,930</td><td>852</td><td>82</td></tr>
+                    <tr><td>#4</td><td>Deadpool's Avengers</td><td class="text-gold">177,003,827</td><td>91</td><td>1,887</td></tr>
+                    <tr><td>#5</td><td>DEMK</td><td class="text-gold">142,331,456</td><td>244</td><td>31</td></tr>
+                </table>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
