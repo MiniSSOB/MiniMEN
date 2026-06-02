@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniMEN - Log Out</title>
+    <style>
+        body { 
+            background-color: #000; 
+            color: #ddd; 
+            font-family: 'Courier New', Courier, monospace; 
+            display: flex; 
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .logout-panel {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            padding: 40px;
+            border-radius: 4px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+        h1 { color: #fff; margin-top: 0; }
+        .btn {
+            background-color: #660000;
+            color: #fff;
+            border: 1px solid #ff3333;
+            padding: 15px 30px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            font-size: 1.2em;
+            border-radius: 2px;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+        }
+        .btn:hover { background-color: #990000; }
+        .btn-cancel {
+            background-color: #333;
+            border-color: #555;
+            margin-top: 15px;
+        }
+        .btn-cancel:hover { background-color: #444; }
+    </style>
+</head>
+<body>
+
+    <div class="logout-panel">
+        <h1>Log Out</h1>
+        <p>Are you sure you want to log out of MiniMEN?</p>
+        
+        <a href="index.html" class="btn">Confirm Log Out</a>
+        
+        <a href="index.html" class="btn btn-cancel">Cancel</a>
+    </div>
+
+</body>
+</html>
