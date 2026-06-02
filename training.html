@@ -3,140 +3,286 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiniMEN — Training Program</title>
+    <title>MiniMEN - Training</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: #12141c; color: #e2e8f0; font-family: 'Courier New', Courier, monospace; padding: 20px; min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; }
-        
-        .game-container { display: flex; gap: 20px; width: 100%; max-width: 1300px; margin-top: 20px; }
-        
-        .sidebar { width: 220px; flex-shrink: 0; }
-        .menu-header { background: linear-gradient(90deg, #ef4444, #991b1b); color: #ffffff; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; padding: 8px 12px; border: 2px solid #dc2626; border-bottom: none; border-radius: 4px 4px 0 0; letter-spacing: 1px; }
-        .menu-group { background-color: #1e293b; border: 2px solid #334155; border-radius: 0 0 4px 4px; margin-bottom: 15px; overflow: hidden; }
-        .menu-item { display: block; color: #94a3b8; text-decoration: none; padding: 10px 14px; font-size: 0.9rem; border-bottom: 1px solid #334155; }
-        .menu-item.active { background-color: #0f172a; color: #ef4444; border-left: 4px solid #ef4444; font-weight: bold; }
+        /* Base Game Styling */
+        body { 
+            background-color: #000; 
+            color: #ddd; 
+            font-family: 'Courier New', Courier, monospace; 
+            display: flex; 
+            margin: 0; 
+            min-height: 100vh;
+        }
 
-        .status-box { background-color: #1e293b; border: 2px solid #334155; padding: 12px; border-radius: 4px; font-size: 0.85rem; line-height: 1.6; }
-        .status-title { font-weight: bold; color: #ef4444; border-bottom: 1px solid #334155; padding-bottom: 4px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        /* Navigation Sidebar */
+        #sidebar { 
+            width: 220px; 
+            background-color: #0a0a0a; 
+            padding: 20px 0; 
+            border-right: 2px solid #333;
+            flex-shrink: 0;
+        }
+        #sidebar h2 { text-align: center; color: #fff; margin-bottom: 20px; }
+        #sidebar a { 
+            display: block; 
+            color: #85c1e9; 
+            text-decoration: none; 
+            padding: 10px 20px; 
+            border-bottom: 1px solid #222;
+            font-weight: bold;
+        }
+        #sidebar a:hover, #sidebar a.active { 
+            background-color: #222; 
+            color: #fff; 
+            border-left: 4px solid #85c1e9;
+        }
 
-        .split-grid { display: flex; gap: 20px; width: 100%; }
-        .program-side { flex: 7; }
-        .roster-side { flex: 5; display: flex; flex-direction: column; gap: 15px; }
+        /* Main Content Dashboard */
+        #main-content { 
+            flex-grow: 1; 
+            padding: 30px; 
+            background-color: #111;
+            overflow-x: auto;
+        }
+        h1 { color: #fff; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 0; }
+        
+        /* Status Bars & Panels */
+        .status-bar {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.1em;
+            color: #fff;
+            display: flex;
+            justify-content: space-around;
+        }
+        .text-gold { color: #ffd700; font-weight: bold; }
+        .text-blue { color: #85c1e9; font-weight: bold; }
 
-        .panel { background-color: #1e293b; border: 2px solid #334155; border-radius: 4px; overflow: hidden; margin-bottom: 15px; }
-        .panel-header { background-color: #0f172a; border-bottom: 2px solid #334155; padding: 12px; font-size: 1.1rem; font-weight: bold; color: #ef4444; text-align: center; text-transform: uppercase; letter-spacing: 1px; }
+        /* Forms and Inputs */
+        input[type="number"] {
+            background-color: #000;
+            color: #fff;
+            border: 1px solid #333;
+            padding: 8px;
+            font-family: inherit;
+            border-radius: 2px;
+            width: 100px;
+            text-align: right;
+        }
+        button, .btn {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            border-radius: 2px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1.1em;
+        }
+        button:hover, .btn:hover { background-color: #4CAF50; border-color: #4CAF50; }
+        .btn-max { background-color: #222; padding: 6px 12px; font-size: 0.9em; }
         
-        .funds-banner { background-color: #0f172a; border: 1px solid #334155; padding: 10px; font-size: 1.1rem; font-weight: bold; text-align: center; margin-bottom: 15px; letter-spacing: 1px; }
+        .action-row {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+        }
+
+        /* Tables */
+        table.training-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            margin-bottom: 20px;
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+        }
+        table.training-table th {
+            background-color: #222;
+            color: #85c1e9;
+            padding: 12px 15px;
+            border-bottom: 2px solid #333;
+            text-transform: uppercase;
+        }
+        table.training-table td {
+            padding: 12px 15px;
+            border-bottom: 1px dashed #222;
+            vertical-align: middle;
+        }
+        table.training-table tr:hover { background-color: #111; }
         
-        .training-table { width: 100%; border-collapse: collapse; background-color: #0f172a; }
-        .training-table th { background-color: #1e293b; color: #94a3b8; padding: 10px; font-size: 0.75rem; text-transform: uppercase; text-align: left; border-bottom: 1px solid #334155; }
-        .training-table td { padding: 12px 10px; border-bottom: 1px solid #1e293b; font-size: 0.9rem; }
-        
-        .section-divider { background: linear-gradient(90deg, #1e293b, #0f172a); color: #ffffff !important; font-weight: bold !important; font-size: 0.8rem !important; letter-spacing: 1px; padding: 6px 10px !important; border-bottom: 2px solid #334155 !important; text-transform: uppercase; }
-        
-        .qty-input { width: 85px; background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; padding: 4px; text-align: center; font-family: inherit; border-radius: 4px; outline: none; }
-        .action-btn { width: 100%; background: linear-gradient(90deg, #ef4444, #991b1b); color: white; border: 1px solid #dc2626; padding: 12px; font-weight: bold; text-transform: uppercase; cursor: pointer; font-family: inherit; letter-spacing: 1px; border-radius: 4px; }
-        .alert-feed { font-size: 0.85rem; padding: 10px; border-radius: 4px; margin-bottom: 15px; text-align: center; display: none; font-weight: bold; }
-        .error { color: #ef4444; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; }
-        .success { color: #22c55e; background: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; }
+        /* Section Headers */
+        .section-header {
+            background-color: #0a0a0a;
+            color: #fff;
+            padding: 10px 15px;
+            font-weight: bold;
+            border-bottom: 1px solid #333;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
-    <div class="game-container">
-        <aside class="sidebar">
-            <div class="menu-header">Galaxy 1</div>
-            <nav class="menu-group">
-                <a href="your-stuff.html" class="menu-item">Your Stuff</a>
-                <a href="battlefield.html" class="menu-item">Battlefield</a>
-                <a href="armory.html" class="menu-item">Armory</a>
-                <a href="upgrades.html" class="menu-item">Upgrades</a>
-                <a href="training.html" class="menu-item active">Training</a>
-                <a href="attack-log.html" class="menu-item">Attack Log</a>
-            </nav>
-            <div class="status-box">
-                <div class="status-title">Sector Assets</div>
-                <div>Gold: <span id="box-gold" style="color:#eab308; font-weight:bold;">0</span></div>
-                <div>Turns: <span id="box-turns" style="color:#f8fafc; font-weight:bold;">0</span></div>
-            </div>
-        </aside>
-
-        <main class="split-grid">
-            <div class="program-side">
-                <div id="alert" class="alert-feed"></div>
-                <div class="funds-banner">Available Reservoir: <span id="pool-display" style="color: #ef4444;">0</span> Untrained Soldiers</div>
-
-                <form onsubmit="processTraining(event)">
-                    <div class="panel">
-                        <table class="training-table">
-                            <thead><tr><th>Training Program</th><th>Cost</th><th style="text-align: center;">Assignment</th></tr></thead>
-                            <tbody>
-                                <tr><td colspan="3" class="section-divider">Attack / Defense Specialist</td></tr>
-                                <tr><td style="color:#ef4444; font-weight:bold;">Attack Specialist</td><td>2,000 G</td><td style="text-align: center;"><input type="number" id="train-attack" class="qty-input" min="0"></td></tr>
-                                <tr><td style="color:#3b82f6; font-weight:bold;">Defense Specialist</td><td>2,000 G</td><td style="text-align: center;"><input type="number" id="train-defense" class="qty-input" min="0"></td></tr>
-                                <tr><td colspan="3" class="section-divider">Spies / Sentries</td></tr>
-                                <tr><td style="color:#22c55e; font-weight:bold;">Spy</td><td>3,500 G</td><td style="text-align: center;"><input type="number" id="train-spy" class="qty-input" min="0"></td></tr>
-                                <tr><td style="color:#a855f7; font-weight:bold;">Sentry</td><td>3,500 G</td><td style="text-align: center;"><input type="number" id="train-sentry" class="qty-input" min="0"></td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <button type="submit" class="action-btn">Train Selected Units</button>
-                </form>
-            </div>
-
-            <div class="roster-side">
-                <div class="panel">
-                    <div class="panel-header">Personnel Roster</div>
-                    <table class="training-table">
-                        <thead><tr><th>Class</th><th style="text-align: right;">Units</th></tr></thead>
-                        <tbody id="roster-list">
-                            </tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
+    <div id="sidebar">
+        <h2>MiniMEN</h2>
+        <a href="index.html">Command Center</a>
+        <a href="battlefield.html">Battlefield</a>
+        <a href="armory.html">Armory</a>
+        <a href="conquest.html">Conquest</a>
+        <a href="training.html" class="active">Training</a>
+        <a href="upgrades.html">Upgrades</a>
+        <a href="intelligence.html">Intelligence</a>
+        <a href="alliances.html">Alliances</a>
+        <a href="trade.html">Trade</a>
+        <a href="attack-log.html">Attack Log</a>
+        <a href="rewards.html">Rewards</a>
+        <a href="statistics.html">Statistics</a>
+        <a href="donate.html">Donate</a>
+        <a href="buddy-list.html">Buddy List</a>
+        <a href="logout.html">Log Out</a>
     </div>
 
-    <script src="game-engine.js"></script>
-    <script>
-        function renderTraining() {
-            if (!window.player) return;
-            document.getElementById('pool-display').innerText = (window.player.soldiers || 0).toLocaleString();
-            document.getElementById('box-gold').innerText = Math.floor(window.player.gold).toLocaleString();
-            document.getElementById('box-turns').innerText = window.player.turns;
+    <div id="main-content">
+        <h1>Training & Personnel</h1>
+        
+        <div class="status-bar">
+            <div>Available Funds: <span class="text-gold">20,727,163 Gold</span></div>
+            <div>Untrained Soldiers: <span class="text-gold">38,737</span></div>
+        </div>
 
-            const roster = document.getElementById('roster-list');
-            roster.innerHTML = `
-                <tr><td>Attack</td><td style="text-align:right;">${(window.player.attack_troops || 0).toLocaleString()}</td></tr>
-                <tr><td>Defense</td><td style="text-align:right;">${(window.player.defense_troops || 0).toLocaleString()}</td></tr>
-                <tr><td>Spy</td><td style="text-align:right;">${(window.player.spy_troops || 0).toLocaleString()}</td></tr>
-                <tr><td>Sentry</td><td style="text-align:right;">${(window.player.sentry_troops || 0).toLocaleString()}</td></tr>
-            `;
-        }
+        <form action="#" method="POST">
+            <table class="training-table">
+                <thead>
+                    <tr>
+                        <th>Training Program</th>
+                        <th>Cost Per Unit</th>
+                        <th>Quantity to Train</th>
+                        <th>Max Train</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="4" class="section-header">Attack / Defense Specialists</td></tr>
+                    <tr>
+                        <td>Attack Specialist</td>
+                        <td class="text-gold">2,000 Gold</td>
+                        <td><input type="number" min="0" value="0"></td>
+                        <td><button type="button" class="btn-max">10,363</button></td>
+                    </tr>
+                    <tr>
+                        <td>Defense Specialist</td>
+                        <td class="text-gold">2,000 Gold</td>
+                        <td><input type="number" min="0" value="0"></td>
+                        <td><button type="button" class="btn-max">10,363</button></td>
+                    </tr>
 
-        function processTraining(event) {
-            event.preventDefault();
-            const att = parseInt(document.getElementById('train-attack').value) || 0;
-            const def = parseInt(document.getElementById('train-defense').value) || 0;
-            const spy = parseInt(document.getElementById('train-spy').value) || 0;
-            const sen = parseInt(document.getElementById('train-sentry').value) || 0;
-            const total = att + def + spy + sen;
+                    <tr><td colspan="4" class="section-header">Covert Operations</td></tr>
+                    <tr>
+                        <td>Spy</td>
+                        <td class="text-gold">3,500 Gold</td>
+                        <td><input type="number" min="0" value="0"></td>
+                        <td><button type="button" class="btn-max">5,922</button></td>
+                    </tr>
+                    <tr>
+                        <td>Sentry</td>
+                        <td class="text-gold">3,500 Gold</td>
+                        <td><input type="number" min="0" value="0"></td>
+                        <td><button type="button" class="btn-max">5,922</button></td>
+                    </tr>
 
-            if(total > window.player.soldiers) {
-                alert("Insufficient untrained soldiers!");
-                return;
-            }
-            window.player.soldiers -= total;
-            window.player.attack_troops += att;
-            window.player.defense_troops += def;
-            window.player.spy_troops += spy;
-            window.player.sentry_troops += sen;
-            window.saveData();
-            renderTraining();
-        }
+                    <tr><td colspan="4" class="section-header">Reassign Troops (Back to Untrained)</td></tr>
+                    <tr>
+                        <td>Reassign Attack Specialist</td>
+                        <td class="text-gold">0 Gold</td>
+                        <td><input type="number" min="0" value="0"></td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>Reassign Defense Specialist</td>
+                        <td class="text-gold">0 Gold</td>
+                        <td><input type="number" min="0" value="0"></td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="action-row">
+                <button type="submit" class="btn" style="font-size: 1.5em; padding: 15px 40px; background-color: #4CAF50;">Train Troops!</button>
+                <button type="button" class="btn" style="font-size: 1.5em; padding: 15px 40px; margin-left: 20px; background-color: #555;">Clear Fields</button>
+            </div>
+        </form>
 
-        renderTraining();
-        setInterval(renderTraining, 1000);
-    </script>
+        <h2 style="color: #fff; margin-top: 40px; border-bottom: 1px solid #333; padding-bottom: 10px;">Buy Mercenaries</h2>
+        <div style="background-color: #2a2a00; border-left: 4px solid #ffd700; padding: 15px; margin-bottom: 20px; color: #ffd700;">
+            Current Mercs: 0% of your allowance. You can buy up to <strong>13,230</strong> more Mercenaries based on your Total Fighting Force.
+        </div>
+
+        <form action="#" method="POST">
+            <table class="training-table">
+                <thead>
+                    <tr>
+                        <th>Mercenary Type</th>
+                        <th>Cost Per Unit</th>
+                        <th>Available for Hire</th>
+                        <th>Quantity to Buy</th>
+                        <th>Max Buy</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Attack Specialist</td>
+                        <td class="text-gold">4,500 Gold</td>
+                        <td>148,737</td>
+                        <td><input type="number" min="0" value="0"></td>
+                        <td><button type="button" class="btn-max">4,606</button></td>
+                    </tr>
+                    <tr>
+                        <td>Defense Specialist</td>
+                        <td class="text-gold">4,500 Gold</td>
+                        <td>185,516</td>
+                        <td><input type="number" min="0" value="0"></td>
+                        <td><button type="button" class="btn-max">4,606</button></td>
+                    </tr>
+                    <tr>
+                        <td>Untrained Mercenary</td>
+                        <td class="text-gold">3,500 Gold</td>
+                        <td>120,929</td>
+                        <td><input type="number" min="0" value="0"></td>
+                        <td><button type="button" class="btn-max">5,922</button></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="action-row">
+                <button type="submit" class="btn" style="font-size: 1.2em; padding: 10px 30px;">Hire Mercenaries</button>
+            </div>
+        </form>
+
+        <h2 style="color: #fff; margin-top: 40px; border-bottom: 1px solid #333; padding-bottom: 10px;">Quick Training Calculations</h2>
+        <table class="training-table">
+            <tbody>
+                <tr>
+                    <td>Train ALL Untrained to Attack/Defense Specialists</td>
+                    <td class="text-gold" style="text-align: right;">Cost = 77,474,000 Gold</td>
+                </tr>
+                <tr>
+                    <td>Train ALL Untrained to Spy/Sentry Specialists</td>
+                    <td class="text-gold" style="text-align: right;">Cost = 135,579,500 Gold</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
 </body>
 </html>
