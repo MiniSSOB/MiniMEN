@@ -1,5 +1,56 @@
-body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f0f0f0; }
-#app { text-align: center; width: 90%; max-width: 400px; }
-#box-btn { padding: 20px 40px; font-size: 1.5rem; cursor: pointer; border-radius: 10px; }
-#timer { font-size: 2rem; margin-bottom: 10px; }
-input { display: block; width: 100%; padding: 10px; margin-bottom: 10px; box-sizing: border-box; }
+body {
+  background-color: #050505;
+  color: #c0c0c0;
+  font-family: 'Verdana', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.login-box {
+  border: 2px outset #555; /* The classic 2000s raised edge */
+  padding: 40px;
+  background: #1a1a1a;
+  width: 320px;
+  text-align: center;
+}
+
+h2 {
+  color: #e0e0e0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #444;
+  padding-bottom: 10px;
+}
+
+input {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 20px 0; /* Spaced out nicely */
+  background: #000;
+  border: 1px solid #777;
+  color: #0f0;
+  padding: 12px;
+  font-family: monospace;
+}
+
+button {
+  background: #333;
+  color: #fff;
+  border: 2px outset #666; /* Sharp square button */
+  padding: 12px 30px;
+  margin-top: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+  width: 100%; /* Makes the button fill the space sleekly */
+}
+
+button:hover {
+  background: #444;
+  border-style: inset; /* Reverses the border so it looks "clicked" */
+}
