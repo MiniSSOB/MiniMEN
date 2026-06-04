@@ -2,57 +2,42 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Box</title>
-  <link rel="stylesheet" href="thebox.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>THE BOX - Kings of Chaos Style</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div class="game-container" id="appRoot">
+  <div class="game-title">THE BOX</div>
 
-  <div class="main-container">
-    <h1 class="game-title">THE BOX</h1>
+  <!-- LOGIN / REGISTER DYNAMIC PANEL -->
+  <div id="authContainer"></div>
 
-    <div id="login-view" class="box-panel">
-      <h2>SYSTEM ACCESS</h2>
-      <form id="loginForm">
-        <input type="text" id="login-name" placeholder="ENTER NAME" required>
-        <input type="text" id="login-username" placeholder="ENTER USERNAME" required>
-        <button type="submit">Login</button>
-      </form>
-      <div class="toggle-link">
-        <p>NO DOSSIER? <a href="#" id="show-register">REGISTER HERE</a></p>
-      </div>
+  <!-- MAIN GAME PANEL (hidden until logged in) -->
+  <div id="mainPanel" class="hidden">
+    <div class="balance-area">
+      <span class="balance-text">💰 CASH STACK</span>
+      <span class="balance-amount" id="balanceDisplay">$0</span>
     </div>
 
-    <div id="register-view" class="box-panel" style="display: none;">
-      <h2>CREATE DOSSIER</h2>
-      <form id="registerForm">
-        <input type="text" id="reg-name" placeholder="CHOOSE NAME" required>
-        <input type="text" id="reg-username" placeholder="CHOOSE USERNAME" required>
-        <button type="submit">Register</button>
-      </form>
-      <div class="toggle-link">
-        <p>EXISTING OPERATIVE? <a href="#" id="show-login">RETURN TO LOGIN</a></p>
-      </div>
+    <div class="timer-area">
+      <div style="font-size: 14px; margin-bottom: 6px;">⏱️ NEXT BOX CLICK IN</div>
+      <div class="timer-digits" id="timerDisplay">00:00</div>
     </div>
 
-    <div id="game-view" class="box-panel" style="display: none;">
-      <h2>COMMAND CENTER</h2>
-      
-      <div class="stats-panel">
-        <p>OPERATIVE: <span id="display-name" class="highlight"></span></p>
-        <p>FUNDS: $<span id="display-money" class="highlight">0</span></p>
-      </div>
-
-      <div class="timer-panel">
-        <p>NEXT DROP AVAILABLE IN: <span id="timer" class="highlight">00:00</span></p>
-      </div>
-
-      <button id="open-box-btn">OPEN THE BOX</button>
-      <button id="logout-btn" class="danger-btn">LOGOUT</button>
+    <div class="the-box-button" id="clickBoxBtn">
+      <div class="box-text">■ THE BOX ■</div>
+      <div style="font-size: 12px; margin-top: 8px;">[ CLICK FOR REWARD ]</div>
     </div>
 
+    <div id="resultMessage" class="result-message">Ready to open the box? 🎲</div>
+
+    <div class="micro-menu">
+      <button id="logoutBtn">🚪 LOG OUT</button>
+    </div>
   </div>
+</div>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
