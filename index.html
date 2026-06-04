@@ -1,27 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Box</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div id="app">
-        <h1>THE BOX</h1>
-        
-        <div id="auth-screen">
-            <input type="text" id="username" placeholder="Username">
-            <button id="auth-btn">Login</button>
-            <p id="toggle-auth">Don't have an account? Register</p>
-        </div>
+<style>
+  body {
+    background-color: #000;
+    color: #0f0; /* Classic terminal green */
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
 
-        <div id="game-screen" style="display:none;">
-            <div id="timer">05:00</div>
-            <button id="box-btn">CLICK THE BOX</button>
-            <p>Balance: <span id="balance">0</span> Box</p>
-        </div>
-    </div>
-    <script src="script.js"></script>
-</body>
-</html>
+  .login-box {
+    border: 1px solid #333;
+    padding: 30px;
+    background: #0d0d0d;
+    box-shadow: 0 0 10px #000;
+    text-align: center;
+    width: 300px;
+  }
+
+  input {
+    display: block;
+    width: 90%;
+    margin: 10px auto;
+    background: #000;
+    border: 1px solid #0f0;
+    color: #0f0;
+    padding: 8px;
+  }
+
+  button {
+    background: #0f0;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+</style>
