@@ -1,0 +1,5 @@
+body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f0f0f0; }
+#app { text-align: center; width: 90%; max-width: 400px; }
+#box-btn { padding: 20px 40px; font-size: 1.5rem; cursor: pointer; border-radius: 10px; }
+#timer { font-size: 2rem; margin-bottom: 10px; }
+input { display: block; width: 100%; padding: 10px; margin-bottom: 10px; box-sizing: border-box; }
