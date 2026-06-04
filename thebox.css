@@ -9,8 +9,24 @@ body {
   margin: 0;
 }
 
-.login-box {
-  border: 2px outset #555; /* The classic 2000s raised edge */
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-title {
+  color: #0f0;
+  font-size: 4rem;
+  text-transform: uppercase;
+  letter-spacing: 10px;
+  margin-bottom: 30px;
+  text-shadow: 0 0 15px #0f0;
+  font-family: monospace;
+}
+
+.box-panel {
+  border: 2px outset #555;
   padding: 40px;
   background: #1a1a1a;
   width: 320px;
@@ -30,7 +46,7 @@ input {
   display: block;
   box-sizing: border-box;
   width: 100%;
-  margin: 20px 0; /* Spaced out nicely */
+  margin: 20px 0;
   background: #000;
   border: 1px solid #777;
   color: #0f0;
@@ -41,16 +57,66 @@ input {
 button {
   background: #333;
   color: #fff;
-  border: 2px outset #666; /* Sharp square button */
+  border: 2px outset #666;
   padding: 12px 30px;
   margin-top: 10px;
   font-weight: bold;
   cursor: pointer;
   text-transform: uppercase;
-  width: 100%; /* Makes the button fill the space sleekly */
+  width: 100%;
 }
 
 button:hover {
   background: #444;
-  border-style: inset; /* Reverses the border so it looks "clicked" */
+  border-style: inset;
+}
+
+button:disabled {
+  background: #222;
+  color: #555;
+  border: 2px solid #333;
+  cursor: not-allowed;
+}
+
+.danger-btn {
+  background: #4a0000;
+  margin-top: 25px;
+}
+
+.danger-btn:hover {
+  background: #6a0000;
+}
+
+.toggle-link {
+  margin-top: 25px;
+  font-size: 0.85rem;
+  border-top: 1px dashed #444;
+  padding-top: 15px;
+}
+
+.toggle-link a {
+  color: #0f0;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.toggle-link a:hover {
+  text-decoration: underline;
+  color: #fff;
+}
+
+.stats-panel, .timer-panel {
+  background: #0d0d0d;
+  border: 1px solid #333;
+  padding: 15px;
+  margin-bottom: 20px;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.highlight {
+  color: #0f0;
+  font-weight: bold;
+  font-family: monospace;
+  font-size: 1.1rem;
 }
