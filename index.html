@@ -8,44 +8,75 @@
 </head>
 <body>
 
-<div class="screen">
-  <div class="massive-title">THE BOX</div>
+<div class="massive-title">THE BOX</div>
 
-  <div id="loginScreen">
-    <div class="form-card">
-      <input type="text" id="loginName" placeholder="USERNAME">
-      <input type="password" id="loginPass" placeholder="PASSWORD">
-      <button id="doLoginBtn">ENTER</button>
-      <p class="switch" id="gotoReg">NO ACCOUNT? REGISTER</p>
-      <div id="loginMsg" class="error-msg"></div>
+<div class="container">
+  
+  <div id="loginScreen" class="auth-box">
+    <input type="text" id="loginName" placeholder="USERNAME">
+    <input type="password" id="loginPass" placeholder="PASSWORD">
+    <button id="doLoginBtn">ENTER</button>
+    <p class="switch" id="gotoReg">NO ACCOUNT? REGISTER</p>
+    <div id="loginMsg" class="error-msg" style="display:none;"></div>
+  </div>
+
+  <div id="registerScreen" class="auth-box" style="display:none">
+    <input type="text" id="regName" placeholder="USERNAME">
+    <input type="password" id="regPass" placeholder="PASSWORD">
+    <button id="doRegBtn">REGISTER</button>
+    <p class="switch" id="gotoLog">BACK TO LOGIN</p>
+    <div id="regMsg" class="error-msg" style="display:none;"></div>
+  </div>
+
+  <div id="gameScreen" class="game-layout" style="display:none">
+    
+    <div class="left-stats">
+      <div class="stat-box">💰 $<span id="cashVal">0</span></div>
+      <div class="stat-box">📦 <span id="rollsVal">0</span> ROLLS</div>
+      
+      <div class="nav-menu">
+        <button id="navBoxBtn" class="side-btn active-tab">THE BOX</button>
+        <button id="navUpgBtn" class="side-btn">UPGRADES</button>
+        <button id="logoutBtn" class="side-btn logout">LEAVE</button>
+      </div>
+    </div>
+
+    <div class="right-content">
+      
+      <div id="boxView" class="tab-view">
+        <div class="timer-display">⏱️ <span id="timerVal">00:00</span></div>
+        
+        <div id="boxBtn" class="big-box-button">
+          <div class="box-icon">■</div>
+          <div class="box-label">OPEN THE BOX</div>
+        </div>
+        
+        <div id="gameMsg" class="result-area">Awaiting interaction...</div>
+      </div>
+
+      <div id="upgView" class="tab-view" style="display:none">
+        <h2 class="upg-title">BLACK MARKET</h2>
+        
+        <div class="upgrade-card">
+          <div class="upg-info">
+            <h3>HACK TIMER (-10s)</h3>
+            <p>Current Cooldown: <span id="currentCdDisplay" class="highlight">300s</span></p>
+          </div>
+          <button id="buyTimerBtn" class="upg-buy-btn">COST: <span id="upgTimerCost">1000</span></button>
+        </div>
+
+        <div class="upgrade-card">
+          <div class="upg-info">
+            <h3>CORRUPT RNG (BOOST MAX)</h3>
+            <p>Current Max Payout: $<span id="currentMaxDisplay" class="highlight">1000</span></p>
+          </div>
+          <button id="buyLootBtn" class="upg-buy-btn">COST: <span id="upgLootCost">500</span></button>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <div id="registerScreen" style="display:none">
-    <div class="form-card">
-      <input type="text" id="regName" placeholder="USERNAME">
-      <input type="password" id="regPass" placeholder="PASSWORD">
-      <button id="doRegBtn">REGISTER</button>
-      <p class="switch" id="gotoLog">BACK TO LOGIN</p>
-      <div id="regMsg" class="error-msg"></div>
-    </div>
-  </div>
-
-  <div id="gameScreen" style="display:none">
-    <div class="stats-row">
-      <div class="stat">💰 <span id="cashVal">0</span></div>
-      <div class="stat">⏱️ <span id="timerVal">00:00</span></div>
-    </div>
-    
-    <div id="boxBtn" class="big-box-button">
-      <div class="box-icon">■</div>
-      <div class="box-label">OPEN THE BOX</div>
-    </div>
-    
-    <div id="gameMsg" class="result-area">Click the box</div>
-    
-    <button id="logoutBtn" class="logout">LEAVE</button>
-  </div>
 </div>
 
 <script src="script.js"></script>
