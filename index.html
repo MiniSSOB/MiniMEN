@@ -1,41 +1,22 @@
-<style>
-  body {
-    background-color: #000;
-    color: #0f0; /* Classic terminal green */
-    font-family: 'Courier New', Courier, monospace;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-  }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Access</title>
+  <link rel="stylesheet" href="thebox.css">
+</head>
+<body>
 
-  .login-box {
-    border: 1px solid #333;
-    padding: 30px;
-    background: #0d0d0d;
-    box-shadow: 0 0 10px #000;
-    text-align: center;
-    width: 300px;
-  }
+  <div class="login-box">
+    <h2>SYSTEM ACCESS</h2>
+    <form id="loginForm">
+      <input type="text" id="name" placeholder="ENTER NAME" required>
+      <input type="text" id="username" placeholder="ENTER USERNAME" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
 
-  input {
-    display: block;
-    width: 90%;
-    margin: 10px auto;
-    background: #000;
-    border: 1px solid #0f0;
-    color: #0f0;
-    padding: 8px;
-  }
-
-  button {
-    background: #0f0;
-    color: #000;
-    border: none;
-    padding: 10px 20px;
-    font-weight: bold;
-    cursor: pointer;
-    text-transform: uppercase;
-  }
-</style>
+  <script src="script.js"></script>
+</body>
+</html>
