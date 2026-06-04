@@ -8,59 +8,55 @@ body {
   background: #050505;
   min-height: 100vh;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   font-family: 'Courier New', 'Lucida Console', monospace;
-  padding: 16px;
+  padding: 20px;
 }
 
-.screen {
-  width: 100%;
-  max-width: 500px;
-  background: #0a0a0a;
-  border: 1px solid #2a1a1a;
-  padding: 25px 20px 35px;
-}
-
-/* HUGE TITLE */
 .massive-title {
-  font-size: 68px;
+  font-size: 72px;
   font-family: 'Impact', 'Courier New', monospace;
   font-weight: 900;
   text-align: center;
   color: #cc3333;
   text-shadow: 3px 3px 0 #3a0a0a;
   letter-spacing: 8px;
-  margin-bottom: 35px;
-  padding-bottom: 15px;
-  border-bottom: 2px solid #2a1a1a;
+  margin-bottom: 40px;
   word-break: keep-all;
+  width: 100%;
 }
 
-.form-card {
+.container {
   width: 100%;
+  max-width: 800px;
+}
+
+/* LOGIN / REGISTER */
+.auth-box {
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 input {
   width: 100%;
-  background: #111111;
+  background: #111;
   border: 1px solid #2a2020;
   padding: 14px;
   margin-bottom: 15px;
-  color: #dddddd;
+  color: #ddd;
   font-family: monospace;
   font-size: 16px;
   font-weight: bold;
-  outline: none;
 }
 
 input:focus {
+  outline: none;
   border-color: #cc3333;
   background: #1a1111;
 }
 
 button {
-  width: 100%;
   background: #1a1111;
   border: 1px solid #cc3333;
   color: #cc5555;
@@ -69,7 +65,7 @@ button {
   font-weight: bold;
   padding: 12px;
   cursor: pointer;
-  margin-top: 10px;
+  transition: all 0.05s;
 }
 
 button:active {
@@ -86,51 +82,100 @@ button:active {
   text-decoration: underline;
 }
 
-.switch:hover {
-  color: #cc5555;
-}
+.switch:hover { color: #cc5555; }
 
 .error-msg {
   margin-top: 15px;
   padding: 8px;
   background: #1a0a0a;
   color: #cc6666;
-  font-size: 11px;
+  font-size: 12px;
   text-align: center;
   border-left: 3px solid #cc3333;
 }
 
-.stats-row {
+/* GAME LAYOUT */
+.game-layout {
   display: flex;
-  gap: 15px;
-  margin-bottom: 30px;
+  gap: 40px;
+  width: 100%;
 }
 
-.stat {
-  flex: 1;
-  background: #111111;
-  border: 1px solid #2a2020;
-  padding: 12px;
-  text-align: center;
+/* LEFT MENU */
+.left-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  min-width: 220px;
+}
+
+.stat-box {
+  background: #0a0a0a;
+  border: 1px solid #2a1a1a;
+  padding: 15px;
   font-size: 18px;
   font-weight: bold;
-  color: #cc5555;
+  color: #dd8888;
 }
 
-.stat span {
+.stat-box span {
+  color: #fff;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.side-btn {
+  width: 100%;
+  padding: 15px;
+  text-align: left;
+  border-left: 4px solid transparent;
+}
+
+.side-btn.active-tab {
+  background: #1a0a0a;
+  border-left: 4px solid #cc3333;
+  color: #fff;
+}
+
+.logout {
+  margin-top: 20px;
+  border-color: #6a3a3a;
+  color: #aa5555;
+}
+
+/* RIGHT CONTENT */
+.right-content {
+  flex: 1;
+}
+
+.tab-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timer-display {
   font-size: 24px;
-  color: #dd8888;
-  margin-left: 8px;
+  font-weight: bold;
+  color: #cc5555;
+  margin-bottom: 20px;
 }
 
 .big-box-button {
-  background: #0f0a0a;
+  width: 100%;
+  max-width: 400px;
+  background: #0a0a0a;
   border: 3px solid #cc3333;
-  padding: 35px 15px;
+  padding: 50px 20px;
   text-align: center;
   cursor: pointer;
-  margin: 15px 0;
   box-shadow: 0 5px 0 #3a1111;
+  transition: 0.05s linear;
 }
 
 .big-box-button:active {
@@ -139,51 +184,92 @@ button:active {
 }
 
 .box-icon {
-  font-size: 64px;
+  font-size: 72px;
   color: #cc4444;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .box-label {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: bold;
-  letter-spacing: 3px;
-  color: #cc6666;
+  letter-spacing: 4px;
+  color: #ffffff; /* White text so it's easier on the eyes */
   font-family: Impact, monospace;
 }
 
 .result-area {
-  background: #0f0a0a;
-  padding: 14px;
-  text-align: center;
-  font-size: 13px;
+  margin-top: 30px;
+  background: #0a0a0a;
+  padding: 15px 30px;
+  font-size: 16px;
   color: #cc7777;
   border-left: 3px solid #cc3333;
-  margin: 20px 0;
 }
 
-.logout {
-  background: #1a1111;
-  border: 1px solid #6a3a3a;
-  color: #aa5555;
-  width: 50%;
-  margin: 10px auto 0;
-  display: block;
+/* UPGRADES SCREEN */
+.upg-title {
+  color: #cc3333;
+  font-family: Impact;
+  letter-spacing: 3px;
+  margin-bottom: 25px;
+  border-bottom: 1px solid #2a1a1a;
+  padding-bottom: 10px;
+  width: 100%;
+  text-align: center;
+}
+
+.upgrade-card {
+  width: 100%;
+  background: #0a0a0a;
+  border: 1px solid #2a1a1a;
+  padding: 20px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.upg-info h3 {
+  color: #fff;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.upg-info p {
+  color: #888;
   font-size: 14px;
 }
 
-@media (max-width: 550px) {
-  .massive-title {
-    font-size: 48px;
-    letter-spacing: 4px;
+.highlight { color: #cc5555; font-weight: bold; }
+
+.upg-buy-btn {
+  width: auto;
+  min-width: 150px;
+  margin: 0;
+}
+
+.upg-buy-btn:disabled {
+  background: #050505;
+  border-color: #333;
+  color: #555;
+  cursor: not-allowed;
+}
+
+/* RESPONSIVE */
+@media (max-width: 700px) {
+  .game-layout {
+    flex-direction: column;
   }
-  .stat span {
-    font-size: 18px;
+  .left-stats {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
   }
-  .box-icon {
-    font-size: 48px;
-  }
-  .box-label {
-    font-size: 18px;
-  }
+  .stat-box { flex: 1; text-align: center; }
+  .nav-menu { width: 100%; flex-direction: row; }
+  .side-btn { padding: 10px; text-align: center; border-left: none; border-bottom: 4px solid transparent; }
+  .side-btn.active-tab { border-left: none; border-bottom: 4px solid #cc3333; }
+  .logout { margin-top: 0; }
+  .upgrade-card { flex-direction: column; text-align: center; gap: 15px; }
+  .upg-buy-btn { width: 100%; }
 }
