@@ -5,27 +5,26 @@
 }
 
 body {
-  background: #0a0a0a;
+  background: #050505;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: 'Courier New', 'Lucida Console', monospace;
-  padding: 20px;
+  padding: 16px;
 }
 
 .screen {
   width: 100%;
   max-width: 500px;
-  background: #0c0c0c;
-  border: 1px solid #2a2020;
+  background: #0a0a0a;
+  border: 1px solid #2a1a1a;
   padding: 25px 20px 35px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.8);
 }
 
-/* HUGE TITLE - BIGGER THAN EVERYTHING */
+/* HUGE TITLE */
 .massive-title {
-  font-size: 72px;
+  font-size: 68px;
   font-family: 'Impact', 'Courier New', monospace;
   font-weight: 900;
   text-align: center;
@@ -33,30 +32,29 @@ body {
   text-shadow: 3px 3px 0 #3a0a0a;
   letter-spacing: 8px;
   margin-bottom: 35px;
-  word-break: keep-all;
-  border-bottom: 2px solid #2a1a1a;
   padding-bottom: 15px;
+  border-bottom: 2px solid #2a1a1a;
+  word-break: keep-all;
 }
 
-/* FORM STYLES */
 .form-card {
   width: 100%;
 }
 
 input {
   width: 100%;
-  background: #111;
+  background: #111111;
   border: 1px solid #2a2020;
   padding: 14px;
   margin-bottom: 15px;
-  color: #ddd;
+  color: #dddddd;
   font-family: monospace;
   font-size: 16px;
   font-weight: bold;
+  outline: none;
 }
 
 input:focus {
-  outline: none;
   border-color: #cc3333;
   background: #1a1111;
 }
@@ -72,7 +70,6 @@ button {
   padding: 12px;
   cursor: pointer;
   margin-top: 10px;
-  transition: all 0.05s;
 }
 
 button:active {
@@ -103,10 +100,8 @@ button:active {
   border-left: 3px solid #cc3333;
 }
 
-/* GAME SCREEN */
 .stats-row {
   display: flex;
-  justify-content: space-between;
   gap: 15px;
   margin-bottom: 30px;
 }
@@ -136,7 +131,6 @@ button:active {
   cursor: pointer;
   margin: 15px 0;
   box-shadow: 0 5px 0 #3a1111;
-  transition: 0.05s linear;
 }
 
 .big-box-button:active {
@@ -178,26 +172,18 @@ button:active {
   font-size: 14px;
 }
 
-/* PHONE RESPONSIVE */
 @media (max-width: 550px) {
   .massive-title {
-    font-size: 52px;
-    letter-spacing: 5px;
+    font-size: 48px;
+    letter-spacing: 4px;
   }
-  
   .stat span {
     font-size: 18px;
   }
-  
   .box-icon {
     font-size: 48px;
   }
-  
   .box-label {
     font-size: 18px;
-  }
-  
-  .screen {
-    padding: 20px 15px 30px;
   }
 }
