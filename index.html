@@ -2,44 +2,97 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>THE BOX</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>THE BOX - Kings of Chaos Style</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="box-container">
-  <h1 class="main-title">THE BOX</h1>
-
-  <!-- LOGIN FORM -->
-  <div id="loginView">
-    <input type="text" id="loginName" placeholder="USERNAME">
-    <input type="password" id="loginPw" placeholder="PASSWORD">
-    <button id="loginSubmit">LOGIN</button>
-    <p class="switch-link" id="gotoRegister">NO ACCOUNT? REGISTER</p>
-    <p id="loginError" class="error"></p>
-  </div>
-
-  <!-- REGISTER FORM -->
-  <div id="registerView" style="display:none">
-    <input type="text" id="regName" placeholder="USERNAME">
-    <input type="password" id="regPw" placeholder="PASSWORD">
-    <button id="regSubmit">REGISTER</button>
-    <p class="switch-link" id="gotoLogin">BACK TO LOGIN</p>
-    <p id="regError" class="error"></p>
-  </div>
-
-  <!-- GAME VIEW -->
-  <div id="gameView" style="display:none">
-    <div class="cash">💰 <span id="cashAmount">0</span></div>
-    <div class="timer">⏱️ NEXT CLICK: <span id="timerDisplay">00:00</span></div>
-    <div class="box-button" id="clickBox">
-      <span class="big-box">■</span>
-      <span>THE BOX</span>
+<div class="game-wrapper">
+  
+  <!-- LOGIN SECTION -->
+  <div id="loginSection" class="section">
+    <div class="title-block">
+      <h1 class="game-name">THE BOX</h1>
+      <div class="title-divider"></div>
+      <p class="tagline">OPEN IT. RISK IT. RULE IT.</p>
     </div>
-    <div id="message">CLICK THE BOX</div>
-    <button id="logoutGame">LOGOUT</button>
+    
+    <div class="form-container">
+      <div id="loginFormArea">
+        <div class="input-field">
+          <span class="input-icon">👤</span>
+          <input type="text" id="loginUsername" placeholder="CALLSIGN">
+        </div>
+        <div class="input-field">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="loginPassword" placeholder="PASSWORD">
+        </div>
+        <button id="loginActionBtn" class="action-btn">▶ ENTER THE BOX ◀</button>
+        <div class="form-footer">
+          <span id="switchToRegisterBtn">🔻 NO ACCOUNT? RISE UP 🔻</span>
+        </div>
+        <div id="loginFeedback" class="feedback-msg"></div>
+      </div>
+      
+      <div id="registerFormArea" style="display:none">
+        <div class="input-field">
+          <span class="input-icon">⚡</span>
+          <input type="text" id="registerUsername" placeholder="CHOOSE CALLSIGN">
+        </div>
+        <div class="input-field">
+          <span class="input-icon">🗝️</span>
+          <input type="password" id="registerPassword" placeholder="CREATE PASSWORD">
+        </div>
+        <button id="registerActionBtn" class="action-btn">⚔️ FORGE ACCOUNT ⚔️</button>
+        <div class="form-footer">
+          <span id="switchToLoginBtn">🔺 BACK TO THE BOX 🔺</span>
+        </div>
+        <div id="registerFeedback" class="feedback-msg"></div>
+      </div>
+    </div>
+    
+    <div class="grunge-corner"></div>
   </div>
+  
+  <!-- GAME SECTION (HIDDEN UNTIL LOGIN) -->
+  <div id="gameSection" class="section" style="display:none">
+    <div class="title-block small-title">
+      <h1 class="game-name small">THE BOX</h1>
+      <div class="title-divider"></div>
+    </div>
+    
+    <!-- TOP STATS BAR -->
+    <div class="stats-bar">
+      <div class="stat-box">
+        <span class="stat-label">💰 CASH</span>
+        <span class="stat-value" id="gameCash">$0</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-label">⏱️ NEXT</span>
+        <span class="stat-value" id="gameTimer">00:00</span>
+      </div>
+    </div>
+    
+    <!-- THE BOX BUTTON -->
+    <div class="box-container-game" id="clickableBox">
+      <div class="box-glow"></div>
+      <div class="box-symbol">■</div>
+      <div class="box-title">THE BOX</div>
+      <div class="box-subtitle">TAP TO OPEN</div>
+    </div>
+    
+    <!-- RESULT MESSAGE -->
+    <div id="gameMessage" class="message-area">READY TO RISK IT ALL?</div>
+    
+    <!-- LOGOUT BUTTON -->
+    <div class="bottom-actions">
+      <button id="logoutGameBtn" class="logout-btn">🚪 WALK AWAY</button>
+    </div>
+    
+    <div class="grunge-corner bottom"></div>
+  </div>
+  
 </div>
 
 <script src="script.js"></script>
