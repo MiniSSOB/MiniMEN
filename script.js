@@ -1,35 +1,53 @@
 // STORAGE
-const USER_KEY = "thebox_users";
-const SESSION_KEY = "thebox_session";
+const STORAGE_USERS = "thebox_users_v2";
+const STORAGE_SESSION = "thebox_session_v2";
 
 let currentUser = null;
 let timerInterval = null;
 
-// DOM ELEMENTS
-const loginView = document.getElementById("loginView");
-const registerView = document.getElementById("registerView");
-const gameView = document.getElementById("gameView");
-const cashSpan = document.getElementById("cashAmount");
-const timerSpan = document.getElementById("timerDisplay");
-const messageDiv = document.getElementById("message");
+// DOM elements
+const loginSection = document.getElementById("loginSection");
+const gameSection = document.getElementById("gameSection");
+const loginFormArea = document.getElementById("loginFormArea");
+const registerFormArea = document.getElementById("registerFormArea");
+const gameCashSpan = document.getElementById("gameCash");
+const gameTimerSpan = document.getElementById("gameTimer");
+const gameMessageDiv = document.getElementById("gameMessage");
+const clickableBox = document.getElementById("clickableBox");
+const logoutGameBtn = document.getElementById("logoutGameBtn");
 
-// Helper: get users
-function getUsers() {
-  const raw = localStorage.getItem(USER_KEY);
+// Feedback elements
+const loginFeedback = document.getElementById("loginFeedback");
+const registerFeedback = document.getElementById("registerFeedback");
+
+// Inputs
+const loginUsername = document.getElementById("loginUsername");
+const loginPassword = document.getElementById("loginPassword");
+const registerUsername = document.getElementById("registerUsername");
+const registerPassword = document.getElementById("registerPassword");
+
+// Buttons
+const loginActionBtn = document.getElementById("loginActionBtn");
+const registerActionBtn = document.getElementById("registerActionBtn");
+const switchToRegisterBtn = document.getElementById("switchToRegisterBtn");
+const switchToLoginBtn = document.getElementById("switchToLoginBtn");
+
+// ========== HELPERS ==========
+function loadUsers() {
+  const raw = localStorage.getItem(STORAGE_USERS);
   return raw ? JSON.parse(raw) : {};
 }
 
 function saveUsers(users) {
-  localStorage.setItem(USER_KEY, JSON.stringify(users));
+  localStorage.setItem(STORAGE_USERS, JSON.stringify(users));
 }
 
-// Check session on load
-function checkSession() {
-  const savedName = localStorage.getItem(SESSION_KEY);
-  if (!savedName) return false;
-  const users = getUsers();
-  if (users[savedName]) {
-    currentUser = users[savedName];
+function loadSession() {
+  const sessionName = localStorage.getItem(STORAGE_SESSION);
+  if (!sessionName) return false;
+  const users = loadUsers();
+  if (users[sessionName]) {
+    currentUser = { ...users[sessionName] };
     return true;
   }
   return false;
@@ -37,9 +55,14 @@ function checkSession() {
 
 function saveSession() {
   if (currentUser) {
-    localStorage.setItem(SESSION_KEY, currentUser.username);
-    const users = getUsers();
-    users[currentUser.username] = currentUser;
+    localStorage.setItem(STORAGE_SESSION, currentUser.username);
+    const users = loadUsers();
+    users[currentUser.username] = {
+      username: currentUser.username,
+      password: currentUser.password,
+      balance: currentUser.balance,
+      lastClick: currentUser.lastClick
+    };
     saveUsers(users);
   }
 }
@@ -48,43 +71,51 @@ function saveSession() {
 function getRemainingSeconds() {
   if (!currentUser || !currentUser.lastClick) return 0;
   const elapsed = Math.floor((Date.now() - currentUser.lastClick) / 1000);
-  const left = 300 - elapsed;
-  return left > 0 ? left : 0;
+  const remaining = 300 - elapsed;
+  return remaining > 0 ? remaining : 0;
 }
 
-function updateTimerDisplay() {
+function updateTimerUI() {
   if (!currentUser) return;
-  const left = getRemainingSeconds();
-  if (left <= 0) {
-    timerSpan.innerText = "00:00";
+  const remaining = getRemainingSeconds();
+  if (remaining <= 0) {
+    gameTimerSpan.innerText = "00:00";
+    if (clickableBox) clickableBox.style.opacity = "1";
   } else {
-    const mins = Math.floor(left / 60);
-    const secs = left % 60;
-    timerSpan.innerText = `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+    const mins = Math.floor(remaining / 60);
+    const secs = remaining % 60;
+    gameTimerSpan.innerText = `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+    if (clickableBox) clickableBox.style.opacity = "0.7";
   }
 }
 
-function startTimer() {
+function startTimerLoop() {
   if (timerInterval) clearInterval(timerInterval);
   timerInterval = setInterval(() => {
-    if (currentUser) updateTimerDisplay();
+    if (currentUser) {
+      updateTimerUI();
+      if (getRemainingSeconds() === 0 && clickableBox) clickableBox.style.opacity = "1";
+    }
   }, 200);
 }
 
-function updateCash() {
-  if (cashSpan) cashSpan.innerText = currentUser.balance.toFixed(2);
+function updateCashUI() {
+  if (gameCashSpan) gameCashSpan.innerText = `$${currentUser.balance.toFixed(2)}`;
 }
 
-function showMessage(msg, isError = false) {
-  messageDiv.innerText = msg;
-  messageDiv.style.color = isError ? "#e68a2e" : "#dfb15c";
-  setTimeout(() => {
-    if (currentUser && messageDiv) messageDiv.innerText = "CLICK THE BOX";
-  }, 2500);
+function setGameMessage(msg, isError = false) {
+  if (gameMessageDiv) {
+    gameMessageDiv.innerHTML = msg;
+    gameMessageDiv.style.color = isError ? "#e6a04a" : "#dbb45c";
+    gameMessageDiv.style.borderLeftColor = isError ? "#b85c2a" : "#b87c2e";
+    setTimeout(() => {
+      if (currentUser && gameMessageDiv) gameMessageDiv.innerHTML = "READY TO RISK IT ALL?";
+    }, 2600);
+  }
 }
 
-// REWARD SYSTEM
-function getReward() {
+// REWARD SYSTEM (weighted)
+function getRandomReward() {
   const r = Math.random() * 100;
   if (r < 50) return Math.floor(Math.random() * 100) + 1;
   if (r < 75) return Math.floor(Math.random() * 200) + 101;
@@ -94,166 +125,157 @@ function getReward() {
   return 1000;
 }
 
+function getRarityTag(amount) {
+  if (amount <= 100) return "COMMON";
+  if (amount <= 300) return "SOLID";
+  if (amount <= 500) return "RARE";
+  if (amount <= 800) return "LEGENDARY";
+  if (amount < 1000) return "MYTHIC";
+  return "JACKPOT!!!";
+}
+
+// BOX CLICK HANDLER
 function handleBoxClick() {
   if (!currentUser) return;
-  
   const remaining = getRemainingSeconds();
   if (remaining > 0) {
     const mins = Math.floor(remaining / 60);
     const secs = remaining % 60;
-    showMessage(`WAIT ${mins}m ${secs}s`, true);
+    setGameMessage(`⛔ LOCKED · WAIT ${mins}m ${secs}s`, true);
     return;
   }
 
-  const reward = getReward();
+  const reward = getRandomReward();
   currentUser.balance += reward;
   currentUser.lastClick = Date.now();
   saveSession();
-  updateCash();
+  updateCashUI();
 
-  let rarity = "";
-  if (reward <= 100) rarity = "COMMON";
-  else if (reward <= 300) rarity = "SOLID";
-  else if (reward <= 500) rarity = "RARE";
-  else if (reward <= 800) rarity = "LEGENDARY";
-  else if (reward < 1000) rarity = "MYTHIC";
-  else rarity = "JACKPOT!!!";
-
-  showMessage(`$${reward.toFixed(2)} - ${rarity}`);
-  updateTimerDisplay();
+  const rarity = getRarityTag(reward);
+  setGameMessage(`💸 +$${reward.toFixed(2)} · ${rarity} 💸`);
+  updateTimerUI();
+  if (clickableBox) clickableBox.style.opacity = "0.7";
 }
 
+// LOGOUT
 function logout() {
   if (timerInterval) clearInterval(timerInterval);
   currentUser = null;
-  localStorage.removeItem(SESSION_KEY);
-  
-  // Show login, hide game
-  gameView.style.display = "none";
-  loginView.style.display = "block";
-  registerView.style.display = "none";
-  
-  // Clear inputs
-  document.getElementById("loginName").value = "";
-  document.getElementById("loginPw").value = "";
-  document.getElementById("regName").value = "";
-  document.getElementById("regPw").value = "";
+  localStorage.removeItem(STORAGE_SESSION);
+  gameSection.style.display = "none";
+  loginSection.style.display = "block";
+  loginFormArea.style.display = "block";
+  registerFormArea.style.display = "none";
+  loginUsername.value = "";
+  loginPassword.value = "";
+  registerUsername.value = "";
+  registerPassword.value = "";
+  loginFeedback.innerText = "";
+  registerFeedback.innerText = "";
 }
 
-function login() {
-  const username = document.getElementById("loginName").value.trim();
-  const password = document.getElementById("loginPw").value;
-  const errorP = document.getElementById("loginError");
-  
+// LOGIC LOGIN / REGISTER
+function attemptLogin() {
+  const username = loginUsername.value.trim();
+  const password = loginPassword.value;
   if (!username || !password) {
-    errorP.innerText = "Enter username and password";
+    loginFeedback.innerText = "❌ ENTER CALLSIGN & PASSWORD";
     return;
   }
-  
-  const users = getUsers();
+  const users = loadUsers();
   const user = users[username];
   if (!user || user.password !== password) {
-    errorP.innerText = "Invalid login";
+    loginFeedback.innerText = "❌ INVALID CREDENTIALS";
     return;
   }
-  
   currentUser = {
     username: user.username,
     password: user.password,
     balance: user.balance,
     lastClick: user.lastClick || null
   };
-  
   saveSession();
-  
-  // SWITCH VIEWS
-  loginView.style.display = "none";
-  registerView.style.display = "none";
-  gameView.style.display = "block";
-  
-  updateCash();
-  updateTimerDisplay();
-  startTimer();
-  messageDiv.innerText = "CLICK THE BOX";
-  errorP.innerText = "";
+  // Switch to Game UI
+  loginSection.style.display = "none";
+  gameSection.style.display = "block";
+  updateCashUI();
+  updateTimerUI();
+  startTimerLoop();
+  gameMessageDiv.innerHTML = "READY TO RISK IT ALL?";
+  loginFeedback.innerText = "";
 }
 
-function register() {
-  const username = document.getElementById("regName").value.trim();
-  const password = document.getElementById("regPw").value;
-  const errorP = document.getElementById("regError");
-  
+function attemptRegister() {
+  const username = registerUsername.value.trim();
+  const password = registerPassword.value;
   if (!username || !password) {
-    errorP.innerText = "Fill all fields";
+    registerFeedback.innerText = "❌ FILL BOTH FIELDS";
     return;
   }
   if (password.length < 3) {
-    errorP.innerText = "Password too short (min 3)";
+    registerFeedback.innerText = "❌ PASSWORD TOO SHORT (3+ CHARS)";
     return;
   }
   if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-    errorP.innerText = "Letters, numbers, underscore only";
+    registerFeedback.innerText = "❌ USE LETTERS, NUMBERS, UNDERSCORE";
     return;
   }
-  
-  const users = getUsers();
+  const users = loadUsers();
   if (users[username]) {
-    errorP.innerText = "Username taken";
+    registerFeedback.innerText = "❌ CALLSIGN ALREADY TAKEN";
     return;
   }
-  
   const newUser = {
     username: username,
     password: password,
     balance: 250.00,
     lastClick: null
   };
-  
   users[username] = newUser;
   saveUsers(users);
-  currentUser = newUser;
+  currentUser = { ...newUser };
   saveSession();
-  
-  // SWITCH TO GAME
-  loginView.style.display = "none";
-  registerView.style.display = "none";
-  gameView.style.display = "block";
-  
-  updateCash();
-  updateTimerDisplay();
-  startTimer();
-  messageDiv.innerText = "CLICK THE BOX";
-  errorP.innerText = "";
+  // Switch to Game
+  loginSection.style.display = "none";
+  gameSection.style.display = "block";
+  updateCashUI();
+  updateTimerUI();
+  startTimerLoop();
+  gameMessageDiv.innerHTML = "READY TO RISK IT ALL?";
+  registerFeedback.innerText = "";
 }
 
 // EVENT LISTENERS
-document.getElementById("loginSubmit").addEventListener("click", login);
-document.getElementById("regSubmit").addEventListener("click", register);
-document.getElementById("gotoRegister").addEventListener("click", () => {
-  loginView.style.display = "none";
-  registerView.style.display = "block";
-  document.getElementById("loginError").innerText = "";
-  document.getElementById("regError").innerText = "";
-});
-document.getElementById("gotoLogin").addEventListener("click", () => {
-  registerView.style.display = "none";
-  loginView.style.display = "block";
-  document.getElementById("loginError").innerText = "";
-  document.getElementById("regError").innerText = "";
-});
-document.getElementById("clickBox").addEventListener("click", handleBoxClick);
-document.getElementById("logoutGame").addEventListener("click", logout);
+loginActionBtn.addEventListener("click", attemptLogin);
+registerActionBtn.addEventListener("click", attemptRegister);
 
-// INITIALIZE
-if (checkSession() && currentUser) {
-  loginView.style.display = "none";
-  registerView.style.display = "none";
-  gameView.style.display = "block";
-  updateCash();
-  updateTimerDisplay();
-  startTimer();
+switchToRegisterBtn.addEventListener("click", () => {
+  loginFormArea.style.display = "none";
+  registerFormArea.style.display = "block";
+  loginFeedback.innerText = "";
+  registerFeedback.innerText = "";
+});
+
+switchToLoginBtn.addEventListener("click", () => {
+  registerFormArea.style.display = "none";
+  loginFormArea.style.display = "block";
+  loginFeedback.innerText = "";
+  registerFeedback.innerText = "";
+});
+
+clickableBox.addEventListener("click", handleBoxClick);
+logoutGameBtn.addEventListener("click", logout);
+
+// INIT
+if (loadSession() && currentUser) {
+  loginSection.style.display = "none";
+  gameSection.style.display = "block";
+  updateCashUI();
+  updateTimerUI();
+  startTimerLoop();
 } else {
-  loginView.style.display = "block";
-  registerView.style.display = "none";
-  gameView.style.display = "none";
+  loginSection.style.display = "block";
+  gameSection.style.display = "none";
+  loginFormArea.style.display = "block";
+  registerFormArea.style.display = "none";
 }
