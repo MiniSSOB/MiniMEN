@@ -2,39 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>THE BOX - Kings of Chaos Style</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THE BOX</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="game-container" id="appRoot">
-  <div class="game-title">THE BOX</div>
 
-  <!-- LOGIN / REGISTER DYNAMIC PANEL -->
-  <div id="authContainer"></div>
+<div class="box-container">
+  <h1 class="main-title">THE BOX</h1>
 
-  <!-- MAIN GAME PANEL (hidden until logged in) -->
-  <div id="mainPanel" class="hidden">
-    <div class="balance-area">
-      <span class="balance-text">💰 CASH STACK</span>
-      <span class="balance-amount" id="balanceDisplay">$0</span>
+  <!-- LOGIN FORM -->
+  <div id="loginView">
+    <input type="text" id="loginName" placeholder="USERNAME">
+    <input type="password" id="loginPw" placeholder="PASSWORD">
+    <button id="loginSubmit">LOGIN</button>
+    <p class="switch-link" id="gotoRegister">NO ACCOUNT? REGISTER</p>
+    <p id="loginError" class="error"></p>
+  </div>
+
+  <!-- REGISTER FORM -->
+  <div id="registerView" style="display:none">
+    <input type="text" id="regName" placeholder="USERNAME">
+    <input type="password" id="regPw" placeholder="PASSWORD">
+    <button id="regSubmit">REGISTER</button>
+    <p class="switch-link" id="gotoLogin">BACK TO LOGIN</p>
+    <p id="regError" class="error"></p>
+  </div>
+
+  <!-- GAME VIEW -->
+  <div id="gameView" style="display:none">
+    <div class="cash">💰 <span id="cashAmount">0</span></div>
+    <div class="timer">⏱️ NEXT CLICK: <span id="timerDisplay">00:00</span></div>
+    <div class="box-button" id="clickBox">
+      <span class="big-box">■</span>
+      <span>THE BOX</span>
     </div>
-
-    <div class="timer-area">
-      <div style="font-size: 14px; margin-bottom: 6px;">⏱️ NEXT BOX CLICK IN</div>
-      <div class="timer-digits" id="timerDisplay">00:00</div>
-    </div>
-
-    <div class="the-box-button" id="clickBoxBtn">
-      <div class="box-text">■ THE BOX ■</div>
-      <div style="font-size: 12px; margin-top: 8px;">[ CLICK FOR REWARD ]</div>
-    </div>
-
-    <div id="resultMessage" class="result-message">Ready to open the box? 🎲</div>
-
-    <div class="micro-menu">
-      <button id="logoutBtn">🚪 LOG OUT</button>
-    </div>
+    <div id="message">CLICK THE BOX</div>
+    <button id="logoutGame">LOGOUT</button>
   </div>
 </div>
 
