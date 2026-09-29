@@ -4,9 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MinibossX</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Chakra+Petch:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 <header>
@@ -14,8 +13,9 @@
   <div id="hud"></div>
 </header>
 <nav id="nav"></nav>
-<main id="view"></main>
+<main id="view"><p>Loading... if this stays here, game.js did not load. Check the file name is exactly game.js.</p></main>
 <footer id="log"></footer>
-<script src="game.js"></script>
+<script>window.onerror=function(m,s,l){document.getElementById('view').innerHTML='<p style="color:#ff4d8d">Error: '+m+' (line '+l+')</p>'}</script>
+<script src="game.js?v=2"></script>
 </body>
 </html>
