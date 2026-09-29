@@ -124,7 +124,7 @@ const V = {
   rivals: () => `<h2>Rivals <small class="dim">(8 turns)</small></h2><p class="dim">Your spy rating (${S.spy}) must be at least half their sentry to see their cash.</p>` +
     S.rivals.map((r, i) => `<div class="card"><span><b>${r.n}</b><small>Sentry ${r.sen} | Cash ${S.spy*2>=r.sen ? '$'+fmt(r.cash) : '???'}</small></span>${btn('rob',i,'Rob','red',S.turns<8)}</div>`).join(''),
   market() {
-    const row = (k, T) => T.map((t, i) => `<div class="card"><span><b>${t[0]}</b><small>${k==='wpn'?'Damage':'Armor'} ${t[k==='wpn'?1:1]}</small></span>${i<=S[k] ? `<small>${i===S[k]?'Equipped':'Owned'}</small>` : btn('buy',k+':'+i,'$'+fmt(t[2]),'',S.cash<t[2])}</div>`).join('');
+    const row = (k, T) => T.map((t, i) => `<div class="card"><span><b>${t[0]}</b><small>${k==='wpn'?'Damage':'Armor'} ${t[1]}</small></span>${i<=S[k] ? `<small>${i===S[k]?'Equipped':'Owned'}</small>` : btn('buy',k+':'+i,'$'+fmt(t[2]),'',S.cash<t[2])}</div>`).join('');
     const hc = fl(1000*1.25**S.cdL), rc = fl(500*1.2**S.payL);
     return `<h2>Weapons</h2>${row('wpn',WPN)}<h2>Armor</h2>${row('arm',ARM)}<h2>Black market</h2>
     <div class="card"><span><b>Hack timer (-10s)</b><small>Cooldown ${S.cd}s</small></span>${btn('hack',0,'$'+fmt(hc),'',S.cash<hc||S.cd<=30)}</div>
