@@ -1,319 +1,167 @@
-// STORAGE
-const USERS_KEY = "thebox_users";
-const SESSION_KEY = "thebox_session";
+'use strict';
+// MinibossX - fusion of Bots4 (combat), Kings of Chaos (turns, vault, spy/sentry),
+// Bootleggers (ranks, risk) and CIFI (loop reset prestige). Saves to localStorage.
+const KEY = 'minibossx_v1', TURN_SEC = 20, CAP = 250;
+const $ = s => document.querySelector(s), fl = Math.floor, rnd = Math.random;
+const WPN = [['Fists',5,0],['Lead Pipe',12,500],['Crab Whistler',28,5000],['Maul',60,40000],['Scarab Blade',120,300000],['Doom Cannon',260,2e6]];
+const ARM = [['Rags',0,0],['Leather',30,400],['Kevlar',120,4000],['Iron Pelt',400,35000],['Spirit Forge',1200,300000],['Titan Plate',3500,2e6]];
+// [name, str, dex, con, weaponDmg, armor, unlockLevel]
+const BOTS = [['Trainmate',10,10,10,3,0,1],['T101',18,15,10,6,10,3],['Terminatrix',70,50,50,20,112,6],
+  ['X-Machine',130,85,85,45,245,10],['X-Terminator',300,280,200,110,435,15],['Cyborg LX',1000,800,800,270,640,20]];
+const NAMES = ['Vinnie','Knuckles','Big Sal','Lady Cass','Mr. Bones'];
+const DEF = {cash:200,bank:0,turns:50,cd:300,pay:1000,cdL:0,payL:0,str:5,dex:5,con:5,int:5,spy:1,sen:1,
+  xp:0,lvl:1,pts:0,wpn:0,arm:0,earned:0,mp:0,resets:0,rt:0,day:'',streak:0,boxAt:0};
+let S, tab = 'box';
 
-// UPGRADE COSTS Arrays (Escalating prices)
-const TIMER_COSTS = [1000, 3000, 9000, 27000, 81000, 243000]; // 6 upgrades = 60s off
-const LOOT_COSTS = [500, 10000, 50000, 150000, 500000, 1000000]; // Multiplies loot range
+const fmt = n => n >= 1e9 ? (n/1e9).toFixed(2)+'B' : n >= 1e6 ? (n/1e6).toFixed(2)+'M' : n >= 1e4 ? (n/1e3).toFixed(1)+'K' : fl(n);
+const mult = () => 1 + 0.1 * S.mp;
+const me = () => ({str:S.str, dex:S.dex, con:S.con, wd:WPN[S.wpn][1], arm:ARM[S.arm][1]});
 
-let currentUser = null;
-let timerInterval = null;
-
-// DOM Elements
-const loginScreen = document.getElementById("loginScreen");
-const registerScreen = document.getElementById("registerScreen");
-const gameScreen = document.getElementById("gameScreen");
-
-const cashSpan = document.getElementById("cashVal");
-const rollsSpan = document.getElementById("rollsVal");
-const timerSpan = document.getElementById("timerVal");
-const gameMsgDiv = document.getElementById("gameMsg");
-const boxButton = document.getElementById("boxBtn");
-
-// DOM: Nav
-const navBoxBtn = document.getElementById("navBoxBtn");
-const navUpgBtn = document.getElementById("navUpgBtn");
-const boxView = document.getElementById("boxView");
-const upgView = document.getElementById("upgView");
-
-// DOM: Upgrades
-const cdDisplay = document.getElementById("currentCdDisplay");
-const upgTimerCost = document.getElementById("upgTimerCost");
-const buyTimerBtn = document.getElementById("buyTimerBtn");
-
-const maxDisplay = document.getElementById("currentMaxDisplay");
-const upgLootCost = document.getElementById("upgLootCost");
-const buyLootBtn = document.getElementById("buyLootBtn");
-
-// Auth & Setup
-function getUsers() {
-  const raw = localStorage.getItem(USERS_KEY);
-  return raw ? JSON.parse(raw) : {};
+function mkRivals() {
+  return NAMES.map((n, i) => {
+    const k = 0.6 + i * 0.2, L = S.lvl;
+    return {n, str:Math.round(5+L*4*k), dex:Math.round(5+L*3*k), con:Math.round(5+L*3*k),
+      wd:Math.round(8+L*7*k), arm:Math.round(L*14*(0.5+i*0.3)), sen:1+Math.round(L*1.5*(i+1)), cash:1000*(i+1)};
+  });
 }
-
-function saveUsers(users) {
-  localStorage.setItem(USERS_KEY, JSON.stringify(users));
-}
-
-function checkSession() {
-  const saved = localStorage.getItem(SESSION_KEY);
-  if (!saved) return false;
-  const users = getUsers();
-  if (users[saved]) {
-    currentUser = { ...users[saved] };
-    migrateUser(currentUser);
-    return true;
-  }
-  return false;
-}
-
-function saveSession() {
-  if (currentUser) {
-    localStorage.setItem(SESSION_KEY, currentUser.username);
-    const users = getUsers();
-    users[currentUser.username] = { ...currentUser };
-    saveUsers(users);
+function load() {
+  try { S = Object.assign({}, DEF, JSON.parse(localStorage.getItem(KEY))); } catch (e) { S = Object.assign({}, DEF); }
+  S.log = S.log || []; S.t = S.t || Date.now(); if (!S.rivals) S.rivals = mkRivals();
+  const today = new Date().toDateString();
+  if (S.day !== today) {
+    S.streak = S.day === new Date(Date.now() - 864e5).toDateString() ? S.streak + 1 : 1; S.day = today;
+    const b = 20 * Math.min(S.streak, 7); S.turns = Math.min(CAP, S.turns + b);
+    log(`Day ${S.streak} login bonus: +${b} turns`);
   }
 }
-
-// Ensures old accounts don't break with new stats
-function migrateUser(user) {
-  if (user.rolls === undefined) user.rolls = 0;
-  if (user.timerUpg === undefined) user.timerUpg = 0;
-  if (user.lootUpg === undefined) user.lootUpg = 0;
+const save = () => localStorage.setItem(KEY, JSON.stringify(S));
+function log(m, c) { S.log.unshift(`<div class="${c||''}">${m}</div>`); S.log.length = Math.min(S.log.length, 30); }
+const earn = n => { S.cash += n; S.earned += n; };
+function gainXp(x) {
+  S.xp += x;
+  while (S.xp >= S.lvl * 100) { S.xp -= S.lvl * 100; S.lvl++; S.pts += 3; log(`LEVEL UP! You are level ${S.lvl}. +3 stat points`, 'win'); }
 }
 
-// GUI Updates
-function updateStats() {
-  cashSpan.innerText = currentUser.balance.toFixed(2);
-  rollsSpan.innerText = currentUser.rolls;
-  updateUpgradesUI();
-}
-
-function setGameMessage(txt, isError = false) {
-  gameMsgDiv.innerHTML = txt;
-  gameMsgDiv.style.color = isError ? "#cc6666" : "#cc8888";
-  gameMsgDiv.style.display = "block";
-  setTimeout(() => {
-    if (currentUser) gameMsgDiv.innerHTML = "Awaiting interaction...";
-  }, 3000);
-}
-
-// TIMER LOGIC
-function getRemaining() {
-  if (!currentUser || !currentUser.lastClick) return 0;
-  const elapsed = Math.floor((Date.now() - currentUser.lastClick) / 1000);
-  const baseTime = 300; 
-  const deduction = currentUser.timerUpg * 10; // -10s per upgrade
-  const maxTimer = baseTime - deduction;
-  
-  const left = maxTimer - elapsed;
-  return left > 0 ? left : 0;
-}
-
-function updateTimer() {
-  if (!currentUser) return;
-  const left = getRemaining();
-  if (left <= 0) {
-    timerSpan.innerText = "READY";
-    timerSpan.style.color = "#ffffff";
-    if (boxButton) boxButton.style.opacity = "1";
-  } else {
-    const mins = Math.floor(left / 60);
-    const secs = left % 60;
-    timerSpan.innerText = `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-    timerSpan.style.color = "#cc5555";
-    if (boxButton) boxButton.style.opacity = "0.4";
+// Bots4-style combat: hit chance = atk/(atk+def), absorb = 2*sqrt(armor)%, damage scales with STR
+function duel(a, b) {
+  let ha = a.con*10+50, hb = b.con*10+50, dealt = 0, r = 0;
+  const swing = (x, y) => {
+    const atk = Math.max(x.dex*2-8, 1), df = y.dex/2;
+    if (rnd() > Math.min(.95, Math.max(.05, atk/(atk+df)))) return 0;
+    const d = x.wd * (1 + x.str/100) * (.5 + rnd()*.5), ab = Math.min(.9, 2*Math.sqrt(y.arm)/100);
+    return Math.max(1, d * (1 - ab));
+  };
+  while (ha > 0 && hb > 0 && r++ < 60) {
+    const d1 = swing(a, b); hb -= d1; dealt += d1;
+    if (hb <= 0) break;
+    ha -= swing(b, a);
   }
+  return {win: hb <= 0 || (ha > 0 && hb < ha), dealt};
 }
 
-function startTimerLoop() {
-  if (timerInterval) clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    if (currentUser) updateTimer();
-  }, 200);
+// Kings-of-Chaos-style NPC raiders: they hit your pocket, never your bank
+function raid() {
+  if (S.cash < 10) return;
+  const pct = .3 * 100 / (100 + S.sen*8 + ARM[S.arm][1]/5 + S.con), lost = fl(S.cash * pct);
+  S.cash -= lost; log(`A raider hit you for $${fmt(lost)}. Bank your cash!`, 'lose');
+}
+function tick() {
+  const now = Date.now(), dt = Math.min((now - S.t) / 1000, 864000); S.t = now;
+  S.turns = Math.min(CAP, S.turns + dt / TURN_SEC * (1 + .05 * S.mp));
+  S.bank *= Math.pow(.99, dt / 3600); // 1% vault tax per hour
+  S.rivals.forEach((r, i) => r.cash += dt * 4 * (i + 1));
+  S.rt += dt; let n = 0;
+  while (S.rt >= 120 && n < 5) { S.rt -= 120; n++; if (rnd() < .6) raid(); }
+  if (S.rt > 120) S.rt = 0;
 }
 
-// LOOT GENERATION (Scales with Loot Upgrade Tier)
-function getReward() {
-  const r = Math.random() * 100;
-  let baseReward = 0;
-  
-  if (r < 50) baseReward = Math.floor(Math.random() * 100) + 1;
-  else if (r < 75) baseReward = Math.floor(Math.random() * 200) + 101;
-  else if (r < 90) baseReward = Math.floor(Math.random() * 200) + 301;
-  else if (r < 97) baseReward = Math.floor(Math.random() * 300) + 501;
-  else if (r < 99.5) baseReward = Math.floor(Math.random() * 199) + 801;
-  else baseReward = 1000;
-
-  // Multiply based on upgrade tier (Tier 0 = 1x, Tier 1 = 2x, etc.)
-  const multiplier = currentUser.lootUpg + 1; 
-  return baseReward * multiplier;
-}
-
-// INTERACTIONS
-function onBoxClick() {
-  if (!currentUser) return;
-  const left = getRemaining();
-  if (left > 0) {
-    const mins = Math.floor(left / 60);
-    const secs = left % 60;
-    setGameMessage(`COOLDOWN ACTIVE: ${mins}m ${secs}s`, true);
-    return;
+const A = {
+  box() {
+    if (Date.now() < S.boxAt) return;
+    let v = fl((S.pay*.1 + rnd()*S.pay*.9) * mult()), jp = rnd() < .05;
+    if (jp) v *= 5; earn(v); S.boxAt = Date.now() + S.cd*1000;
+    log(`${jp ? 'JACKPOT! ' : ''}The box paid $${fmt(v)}`, 'win');
+  },
+  stat(k) { if (S.pts > 0) { S.pts--; S[k]++; } },
+  train(i) {
+    const b = BOTS[i]; if (S.turns < 2 || S.lvl < b[6]) return; S.turns -= 2;
+    const r = duel(me(), {str:b[1], dex:b[2], con:b[3], wd:b[4], arm:b[5]}), t = i + 1;
+    if (r.win) { const c = fl(t*60*mult()); earn(c); gainXp(t*12*(1+S.int/40)); log(`Beat ${b[0]}: +$${fmt(c)}`, 'win'); }
+    else { gainXp(t*3); log(`${b[0]} beat you.`, 'lose'); }
+  },
+  rob(i) {
+    const r = S.rivals[i]; if (S.turns < 8) return; S.turns -= 8;
+    if (duel(me(), r).win) {
+      const s = fl(r.cash * (.5 + rnd()*.2)); r.cash -= s; earn(s); gainXp((i+1)*20*(1+S.int/40));
+      log(`Robbed ${r.n} for $${fmt(s)}!`, 'win');
+    } else { const l = fl(S.cash*.1); S.cash -= l; log(`${r.n} beat you. Medical bill: $${fmt(l)}`, 'lose'); }
+  },
+  buy(x) { // "wpn:3" or "arm:2"
+    const [k, i] = x.split(':'), T = k === 'wpn' ? WPN : ARM, c = T[i][2];
+    if (+i > S[k] && S.cash >= c) { S.cash -= c; S[k] = +i; log(`Bought ${T[i][0]}`); }
+  },
+  covert(k) { const c = fl(200 * 1.35 ** S[k]); if (S.cash >= c) { S.cash -= c; S[k]++; } },
+  hack() { const c = fl(1000 * 1.25 ** S.cdL); if (S.cash >= c && S.cd > 30) { S.cash -= c; S.cd -= 10; S.cdL++; } },
+  rng() { const c = fl(500 * 1.2 ** S.payL); if (S.cash >= c) { S.cash -= c; S.pay += 250; S.payL++; } },
+  dep(f) { const n = fl(S.cash * f); S.cash -= n; S.bank += n; },
+  wd(f) { const n = fl(S.bank * f); S.bank -= n; S.cash += n; },
+  loop() {
+    const g = fl(Math.sqrt(S.earned / 5000)); if (S.earned < 50000 || g < 1) return;
+    const keep = {mp:S.mp+g, resets:S.resets+1, day:S.day, streak:S.streak, log:S.log};
+    S = Object.assign({}, DEF, keep, {t:Date.now()}); S.rivals = mkRivals();
+    log(`LOOP RESET! +${g} Mod Points. All payouts +${g*10}%`, 'win');
   }
+};
 
-  const reward = getReward();
-  currentUser.balance += reward;
-  currentUser.rolls += 1;
-  currentUser.lastClick = Date.now();
-  
-  saveSession();
-  updateStats();
-  updateTimer();
-  setGameMessage(`+ $${reward.toFixed(2)} EXTRACTED`, false);
-}
-
-// UPGRADES SYSTEM
-function updateUpgradesUI() {
-  if (!currentUser) return;
-
-  // Timer Upgrade
-  const tLvl = currentUser.timerUpg;
-  cdDisplay.innerText = `${300 - (tLvl * 10)}s`;
-  
-  if (tLvl < TIMER_COSTS.length) {
-    const cost = TIMER_COSTS[tLvl];
-    upgTimerCost.innerText = "$" + cost.toLocaleString();
-    buyTimerBtn.disabled = currentUser.balance < cost;
-  } else {
-    upgTimerCost.innerText = "MAX";
-    buyTimerBtn.disabled = true;
+const btn = (a, i, txt, cls = '', dis = false) => `<button class="act ${cls}" data-a="${a}" data-i="${i}" ${dis ? 'disabled' : ''}>${txt}</button>`;
+const V = {
+  box: () => `<h2>The Box</h2><button id="boxbtn" class="big" data-a="box">OPEN THE BOX</button><div id="bt"></div>
+    <p class="dim">Pays up to $${fmt(S.pay*mult())}. 5% chance of a 5x jackpot. Cash lands in your pocket, where raiders can take it.</p>`,
+  train: () => `<h2>Stats <small class="dim">(${S.pts} points)</small></h2>` +
+    ['str','dex','con','int'].map(k => `<div class="card"><span><b>${k.toUpperCase()} ${S[k]}</b><small>${{str:'Hit harder',dex:'Hit more, dodge more',con:'HP = CON x10 + 50',int:'More XP per win'}[k]}</small></span>${btn('stat',k,'+1','teal',S.pts<1)}</div>`).join('') +
+    `<h2>Training bots <small class="dim">(2 turns)</small></h2>` +
+    BOTS.map((b, i) => `<div class="card"><span><b>${b[0]}</b><small>Unlocks at level ${b[6]}</small></span>${btn('train',i,'Fight','',S.turns<2||S.lvl<b[6])}</div>`).join(''),
+  rivals: () => `<h2>Rivals <small class="dim">(8 turns)</small></h2><p class="dim">Your spy rating (${S.spy}) must be at least half their sentry to see their cash.</p>` +
+    S.rivals.map((r, i) => `<div class="card"><span><b>${r.n}</b><small>Sentry ${r.sen} | Cash ${S.spy*2>=r.sen ? '$'+fmt(r.cash) : '???'}</small></span>${btn('rob',i,'Rob','red',S.turns<8)}</div>`).join(''),
+  market() {
+    const row = (k, T) => T.map((t, i) => `<div class="card"><span><b>${t[0]}</b><small>${k==='wpn'?'Damage':'Armor'} ${t[k==='wpn'?1:1]}</small></span>${i<=S[k] ? `<small>${i===S[k]?'Equipped':'Owned'}</small>` : btn('buy',k+':'+i,'$'+fmt(t[2]),'',S.cash<t[2])}</div>`).join('');
+    const hc = fl(1000*1.25**S.cdL), rc = fl(500*1.2**S.payL);
+    return `<h2>Weapons</h2>${row('wpn',WPN)}<h2>Armor</h2>${row('arm',ARM)}<h2>Black market</h2>
+    <div class="card"><span><b>Hack timer (-10s)</b><small>Cooldown ${S.cd}s</small></span>${btn('hack',0,'$'+fmt(hc),'',S.cash<hc||S.cd<=30)}</div>
+    <div class="card"><span><b>Corrupt RNG (+$250 max)</b><small>Max payout $${fmt(S.pay)}</small></span>${btn('rng',0,'$'+fmt(rc),'',S.cash<rc)}</div>
+    <div class="card"><span><b>Train spies</b><small>Spy rating ${S.spy}</small></span>${btn('covert','spy','$'+fmt(200*1.35**S.spy),'',S.cash<200*1.35**S.spy)}</div>
+    <div class="card"><span><b>Train sentries</b><small>Sentry rating ${S.sen} (blocks raiders)</small></span>${btn('covert','sen','$'+fmt(200*1.35**S.sen),'',S.cash<200*1.35**S.sen)}</div>`;
+  },
+  bank() {
+    const g = fl(Math.sqrt(S.earned / 5000));
+    return `<h2>Bank</h2><p class="dim">Banked cash can't be raided or robbed, but the vault takes 1% per hour.</p>
+    <div class="card"><span><b>Pocket $${fmt(S.cash)}</b><small>Exposed to raiders</small></span>${btn('dep',1,'Bank all','teal',S.cash<1)}</div>
+    <div class="card"><span><b>Bank $${fmt(S.bank)}</b><small>Safe</small></span>${btn('wd',1,'Withdraw all','',S.bank<1)}</div>
+    <h2>Loop reset</h2><p class="dim">Wipe your run for permanent Mod Points (+10% cash and +5% turn speed each). Needs $50K earned this run.</p>
+    <div class="card"><span><b>Mod Points ${S.mp}</b><small>Resets ${S.resets} | Reset now for +${S.earned>=50000?g:0}</small></span>${btn('loop',0,'Loop reset','red',S.earned<50000||g<1)}</div>`;
   }
+};
+const TABS = {box:'Box', train:'Train', rivals:'Rivals', market:'Market', bank:'Bank'};
 
-  // Loot Upgrade
-  const lLvl = currentUser.lootUpg;
-  maxDisplay.innerText = (1000 * (lLvl + 1)).toLocaleString();
-
-  if (lLvl < LOOT_COSTS.length) {
-    const cost = LOOT_COSTS[lLvl];
-    upgLootCost.innerText = "$" + cost.toLocaleString();
-    buyLootBtn.disabled = currentUser.balance < cost;
-  } else {
-    upgLootCost.innerText = "MAX";
-    buyLootBtn.disabled = true;
-  }
+function hud() {
+  $('#hud').innerHTML = `<span class="c">$${fmt(S.cash)}</span><span class="b">Bank $${fmt(S.bank)}</span><span>Turns ${fl(S.turns)}/${CAP}</span>
+    <span>Lv ${S.lvl} (${fl(S.xp)}/${S.lvl*100} xp)</span>${S.mp ? `<span>MP ${S.mp}</span>` : ''}`;
 }
-
-buyTimerBtn.addEventListener("click", () => {
-  const tLvl = currentUser.timerUpg;
-  if (tLvl >= TIMER_COSTS.length) return;
-  const cost = TIMER_COSTS[tLvl];
-  
-  if (currentUser.balance >= cost) {
-    currentUser.balance -= cost;
-    currentUser.timerUpg += 1;
-    saveSession();
-    updateStats();
-  }
-});
-
-buyLootBtn.addEventListener("click", () => {
-  const lLvl = currentUser.lootUpg;
-  if (lLvl >= LOOT_COSTS.length) return;
-  const cost = LOOT_COSTS[lLvl];
-  
-  if (currentUser.balance >= cost) {
-    currentUser.balance -= cost;
-    currentUser.lootUpg += 1;
-    saveSession();
-    updateStats();
-  }
-});
-
-// NAVIGATION
-navBoxBtn.addEventListener("click", () => {
-  navBoxBtn.classList.add("active-tab");
-  navUpgBtn.classList.remove("active-tab");
-  boxView.style.display = "flex";
-  upgView.style.display = "none";
-});
-
-navUpgBtn.addEventListener("click", () => {
-  navUpgBtn.classList.add("active-tab");
-  navBoxBtn.classList.remove("active-tab");
-  upgView.style.display = "flex";
-  boxView.style.display = "none";
-  updateUpgradesUI();
-});
-
-// AUTHENTICATION LOGIC
-function showAuthError(msgId, text) {
-  const el = document.getElementById(msgId);
-  el.innerText = text;
-  el.style.display = "block";
+function boxTimer() {
+  const b = $('#boxbtn'); if (!b) return;
+  const left = Math.max(0, S.boxAt - Date.now()), s = Math.ceil(left / 1000);
+  b.disabled = left > 0; $('#bt').textContent = left ? `${fl(s/60)}:${String(s%60).padStart(2,'0')}` : 'Ready';
 }
-
-document.getElementById("doLoginBtn").addEventListener("click", () => {
-  const u = document.getElementById("loginName").value.trim();
-  const p = document.getElementById("loginPass").value;
-  if (!u || !p) return showAuthError("loginMsg", "Enter username and password");
-  
-  const users = getUsers();
-  const user = users[u];
-  if (!user || user.password !== p) return showAuthError("loginMsg", "Invalid credentials");
-  
-  currentUser = { ...user };
-  migrateUser(currentUser);
-  saveSession();
-  loadGame();
-});
-
-document.getElementById("doRegBtn").addEventListener("click", () => {
-  const u = document.getElementById("regName").value.trim();
-  const p = document.getElementById("regPass").value;
-  if (!u || !p) return showAuthError("regMsg", "Fill both fields");
-  if (p.length < 3) return showAuthError("regMsg", "Password too short");
-  
-  const users = getUsers();
-  if (users[u]) return showAuthError("regMsg", "Username taken");
-  
-  const newUser = { username: u, password: p, balance: 250.00, lastClick: null, rolls: 0, timerUpg: 0, lootUpg: 0 };
-  users[u] = newUser;
-  saveUsers(users);
-  
-  currentUser = { ...newUser };
-  saveSession();
-  loadGame();
-});
-
-document.getElementById("gotoReg").addEventListener("click", () => {
-  loginScreen.style.display = "none";
-  registerScreen.style.display = "block";
-  document.getElementById("loginMsg").style.display = "none";
-});
-
-document.getElementById("gotoLog").addEventListener("click", () => {
-  registerScreen.style.display = "none";
-  loginScreen.style.display = "block";
-  document.getElementById("regMsg").style.display = "none";
-});
-
-document.getElementById("logoutBtn").addEventListener("click", () => {
-  if (timerInterval) clearInterval(timerInterval);
-  currentUser = null;
-  localStorage.removeItem(SESSION_KEY);
-  gameScreen.style.display = "none";
-  loginScreen.style.display = "block";
-});
-
-boxButton.addEventListener("click", onBoxClick);
-
-function loadGame() {
-  loginScreen.style.display = "none";
-  registerScreen.style.display = "none";
-  gameScreen.style.display = "flex";
-  
-  // Force back to Box tab on login
-  navBoxBtn.click();
-  
-  updateStats();
-  updateTimer();
-  startTimerLoop();
+function render() {
+  $('#nav').innerHTML = Object.entries(TABS).map(([k, v]) => `<button data-t="${k}" class="${k===tab?'on':''}">${v}</button>`).join('');
+  $('#view').innerHTML = V[tab](); $('#log').innerHTML = S.log.slice(0, 5).join(''); hud(); boxTimer();
 }
-
-// INIT
-if (checkSession() && currentUser) {
-  loadGame();
-} else {
-  loginScreen.style.display = "block";
-}
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-t]'); if (t) { tab = t.dataset.t; render(); return; }
+  const b = e.target.closest('[data-a]'); if (!b || b.disabled) return;
+  const a = b.dataset.a, i = ['train','rob','dep','wd'].includes(a) ? +b.dataset.i : b.dataset.i;
+  A[a](i); tick(); save(); render();
+});
+load(); tick(); render();
+setInterval(() => { tick(); hud(); boxTimer(); }, 1000);
+setInterval(save, 5000);
