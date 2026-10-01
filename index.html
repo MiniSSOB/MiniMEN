@@ -8,205 +8,181 @@
 <style>
 :root{--bg:#1a1626;--panel:#262038;--line:#3a3054;--txt:#efe9ff;--dim:#9a8fb8;--cash:#ffb020;--bad:#ff4d8d;--safe:#3ddcc4}
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--txt);font-family:'Chakra Petch',system-ui,sans-serif;font-size:16px}
-body{max-width:640px;margin:0 auto;padding:0 12px 120px}
-header{padding:14px 0 8px}
-h1{font-family:'Bungee',Impact,sans-serif;font-size:28px;margin:0 0 8px;letter-spacing:1px}
-h2{font-family:'Bungee',Impact,sans-serif;font-size:18px;margin:16px 0 8px;font-weight:400}
-#hud{display:flex;flex-wrap:wrap;gap:6px 14px;font-weight:600;font-size:14px}
+html,body{margin:0;background:var(--bg);color:var(--txt);font-family:'Chakra Petch',system-ui,sans-serif;font-size:13px}
+body{max-width:600px;margin:0 auto;padding:0 8px 100px}
+header{padding:8px 0 4px}
+h1{font-family:'Bungee',Impact,sans-serif;font-size:20px;margin:0 0 4px;letter-spacing:1px}
+h2{font-family:'Bungee',Impact,sans-serif;font-size:12px;margin:10px 0 4px;font-weight:400;color:var(--cash)}
+#hud{display:flex;flex-wrap:wrap;gap:2px 10px;font-weight:600;font-size:11px;color:var(--dim)}
 #hud .c{color:var(--cash)}#hud .b{color:var(--safe)}
-nav{display:flex;gap:4px;overflow-x:auto;padding:6px 0;position:sticky;top:0;background:var(--bg);z-index:2}
-nav button{flex:1;min-width:70px;background:var(--panel);color:var(--dim);border:1px solid var(--line);padding:9px 6px;font:inherit;cursor:pointer;border-radius:6px}
+#top{position:sticky;top:0;background:var(--bg);z-index:5;padding:6px 0 2px;border-bottom:1px solid var(--line)}
+#gold{font-family:Bungee,Impact,sans-serif;font-size:20px;color:var(--cash);display:flex;justify-content:space-between;align-items:baseline}
+#xpb{position:relative;height:13px;background:var(--panel);border:1px solid var(--line);border-radius:7px;margin:4px 0 2px;overflow:hidden}
+#xpb i{display:block;height:100%;background:#2a8f7f;width:0}
+#xpb span{position:absolute;left:0;right:0;top:0;text-align:center;font-size:10px;line-height:13px;color:#fff;font-weight:600}
+#gold small{font-size:12px;color:var(--safe);font-family:inherit}
+#app{display:flex;gap:6px;margin-top:6px;align-items:flex-start}
+nav{display:flex;flex-direction:column;gap:3px;width:60px;flex:none;position:sticky;top:var(--th,70px)}
+#view{flex:1;min-width:0}
+.card>span:last-child{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+nav button{background:var(--panel);color:var(--dim);border:1px solid var(--line);padding:9px 2px;font:inherit;font-size:11px;border-radius:5px;text-align:center}
 nav button.on{color:var(--bg);background:var(--cash);border-color:var(--cash);font-weight:600}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px;margin:8px 0;display:flex;justify-content:space-between;align-items:center;gap:10px}
-.card small,.dim{color:var(--dim)}
-.card b{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 8px;margin:4px 0;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.card small,.dim{color:var(--dim);font-size:11px}
+.card b{display:block;font-size:13px}
 button{font:inherit;cursor:pointer}
-.act{background:var(--cash);color:#1a1626;border:0;border-radius:6px;padding:9px 14px;font-weight:600;white-space:nowrap}
-.act.red{background:var(--bad);color:#fff}
-.act.teal{background:var(--safe)}
-.act:disabled{opacity:.35;cursor:not-allowed}
-.big{display:block;width:100%;padding:38px 10px;margin:14px 0 6px;font-family:'Bungee',Impact,sans-serif;font-size:26px;background:var(--cash);color:#1a1626;border:0;border-radius:14px;box-shadow:0 6px 0 #a86f00}
-.big:active:not(:disabled){transform:translateY(4px);box-shadow:0 2px 0 #a86f00}
+.act{background:var(--cash);color:#1a1626;border:0;border-radius:5px;padding:5px 10px;font-weight:600;font-size:12px;white-space:nowrap}
+.act.red{background:var(--bad);color:#fff}.act.teal{background:var(--safe)}
+.act:disabled{opacity:.35}
+.big{display:block;width:100%;padding:22px 8px;margin:8px 0 4px;font-family:'Bungee',Impact,sans-serif;font-size:18px;background:var(--cash);color:#1a1626;border:0;border-radius:10px;box-shadow:0 4px 0 #a86f00}
+.big:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 #a86f00}
 .big:disabled{background:var(--line);color:var(--dim);box-shadow:none}
-#bt{text-align:center;font-size:22px;margin:8px 0;color:var(--safe)}
-footer{position:fixed;left:0;right:0;bottom:0;background:#120f1c;border-top:1px solid var(--line);padding:8px 14px;font-size:13px;color:var(--dim);max-height:110px;overflow:hidden}
+#bt{text-align:center;font-size:18px;margin:4px 0;color:var(--safe)}
+.c2{color:var(--cash)}.tag{color:var(--bad);font-weight:600}.e{color:var(--safe)}.h{color:var(--bad)}
+footer{position:fixed;left:0;right:0;bottom:0;background:#120f1c;border-top:1px solid var(--line);padding:5px 10px;font-size:11px;color:var(--dim);max-height:80px;overflow:hidden}
 footer div:first-child{color:var(--txt)}
 .win{color:var(--safe)}.lose{color:var(--bad)}
+#top{position:sticky;top:0;background:var(--bg);z-index:5;padding-bottom:2px;border-bottom:1px solid var(--line)}
+nav{position:static!important}
+#hud .c{font-size:20px;font-family:Bungee,Impact,sans-serif}#hud .b{font-size:14px}#hud .r{flex-basis:100%;color:var(--dim);font-size:11px}
 </style>
 </head>
 <body>
-<header>
-  <h1>MiniBOSS</h1>
-  <div id="hud"></div>
-</header>
-<nav id="nav"></nav>
-<main id="view"><p>Loading...</p></main>
+<div id="top"><div id="top"><div id="gold"></div><div id="hud"></div><div id="xpb"><i></i><span></span></div></div></div>
+<div id="app"><nav id="nav"></nav><main id="view"><p>Loading...</p></main></div>
 <footer id="log"></footer>
 <script>
 window.onerror=function(m,s,l){document.getElementById('view').innerHTML='<p style="color:#ff4d8d">Error: '+m+' (line '+l+')</p>'};
-'use strict';
-const KEY = 'minibossx_v1', TURN_SEC = 20, CAP = 250;
-const $ = s => document.querySelector(s), fl = Math.floor, rnd = Math.random;
-const WPN = [['Fists',5,0],['Lead Pipe',12,500],['Crab Whistler',28,5000],['Maul',60,40000],['Scarab Blade',120,300000],['Doom Cannon',260,2e6]];
-const ARM = [['Rags',0,0],['Leather',30,400],['Kevlar',120,4000],['Iron Pelt',400,35000],['Spirit Forge',1200,300000],['Titan Plate',3500,2e6]];
-const BOTS = [['Trainmate',10,10,10,3,0,1],['T101',18,15,10,6,10,3],['Terminatrix',70,50,50,20,112,6],
-  ['X-Machine',130,85,85,45,245,10],['X-Terminator',300,280,200,110,435,15],['Cyborg LX',1000,800,800,270,640,20]];
-const NAMES = ['Vinnie','Knuckles','Big Sal','Lady Cass','Mr. Bones'];
-const DEF = {cash:200,bank:0,turns:50,cd:300,pay:1000,cdL:0,payL:0,str:5,dex:5,con:5,int:5,spy:1,sen:1,
-  xp:0,lvl:1,pts:0,wpn:0,arm:0,earned:0,mp:0,resets:0,rt:0,day:'',streak:0,boxAt:0};
-let S, tab = 'box';
-
-const fmt = n => n >= 1e9 ? (n/1e9).toFixed(2)+'B' : n >= 1e6 ? (n/1e6).toFixed(2)+'M' : n >= 1e4 ? (n/1e3).toFixed(1)+'K' : fl(n);
-const mult = () => 1 + 0.1 * S.mp;
-const me = () => ({str:S.str, dex:S.dex, con:S.con, wd:WPN[S.wpn][1], arm:ARM[S.arm][1]});
-
-function mkRivals() {
-  return NAMES.map((n, i) => {
-    const k = 0.6 + i * 0.2, L = S.lvl;
-    return {n, str:Math.round(5+L*4*k), dex:Math.round(5+L*3*k), con:Math.round(5+L*3*k),
-      wd:Math.round(8+L*7*k), arm:Math.round(L*14*(0.5+i*0.3)), sen:1+Math.round(L*1.5*(i+1)), cash:1000*(i+1)};
-  });
+const KEY='minibossx_v3',TURN_SEC=20,CAP=250,UC=50,SPY_MAX=50,BOT=1e6;
+const $=s=>document.querySelector(s),fl=Math.floor,rnd=Math.random;
+const K=['Attack','Defense','Spy','Sentry'];
+const PERK=[['Attack','+5% attack rating'],['Defense','+5% defense rating'],['Spy','+5% spy rating'],['Sentry','+5% sentry rating'],['Health','-4% cash lost to raiders and failed attacks'],['Luck','+0.5% jackpot and whale chance'],['Box Boss','+8% box payout'],['Stamina','+6% turn regeneration']];
+const NAMES=['Vinnie','Knuckles','Big Sal','Lady Cass','Mr. Bones','Tony','Rocco','Duke','Mad Dog','Slim','Ghost','Nico'];
+const RK=[['Newsstand',200,2000],['Speakeasy',1500,15000],['Casino',10000,100000]];
+const RANKS=['Scum','Thug','Hustler','Enforcer','Capo','Underboss','Don','Legend'];
+const DEF={cash:1000,bank:0,turns:50,cd:300,pay:1000,cdL:0,payL:0,earned:0,mp:0,resets:0,rt:0,day:'',streak:0,boxAt:0,w:0,l:0,rob:0,box:0,best:0,spyD:'',spyN:0,lvl:1,xp:0,pts:0,bot:0};
+const BOTS=[['Rusty Drone',1,12,10,40],['Scrap Bot',2,45,22,150],['Guard Bot',3,160,45,500],['Enforcer Bot',5,600,90,1800],['Hunter Bot',7,2000,180,6000],['War Bot',9,6000,350,20000],['Siege Bot',12,18000,700,60000],['Titan Bot',15,50000,1400,180000],['Reaper Bot',19,150000,2800,550000],['Omega Bot',24,450000,5500,1.6e6],['Overlord Bot',30,1.5e6,11000,5e6]];
+let S,tab='box';
+const fmt=n=>n>=1e9?(n/1e9).toFixed(2)+'B':n>=1e6?(n/1e6).toFixed(2)+'M':n>=1e4?(n/1e3).toFixed(1)+'K':fl(n);
+const mult=()=>1+.1*S.mp,luck=()=>S.pk[5]*.005,bmult=()=>mult()*(1+.08*S.pk[6]),hp=()=>Math.min(.8,.04*S.pk[4]);
+const rate=k=>S.p[k]*(1+.05*S.pk[k]);
+const need=()=>fl(60*1.35**(S.lvl-1)),xpm=()=>1+S.lvl*.4;
+const rank=()=>RANKS[Math.min(7,fl(S.lvl/4))];
+const income=()=>RK.reduce((a,r,i)=>a+r[1]*S.R[i],0);
+const resetIn=()=>{const m=new Date();m.setHours(24,0,0,0);const x=fl((m-Date.now())/6e4);return fl(x/60)+'h '+x%60+'m'};
+const spyLeft=()=>SPY_MAX-S.spyN;
+function mkT(){
+  const b=Math.max(20,(rate(0)+rate(1))/2),r=()=>fl(b*(.02+rnd()**2*3)),w=rnd()<.08+luck(),m=rnd()<.01+S.pk[5]*.001;
+  return{n:NAMES[fl(rnd()*12)]+' '+fl(rnd()*90+10),atk:r(),def:r(),spy:r(),sen:r(),cash:m?fl(1e5+rnd()*4e5):fl((200+rnd()**2*b*30)*(w?6:1)),w:w||m,m,seen:0,tw:fl(rnd()*120),tl:fl(rnd()*120)+1};
 }
-function load() {
-  try { S = Object.assign({}, DEF, JSON.parse(localStorage.getItem(KEY))); } catch (e) { S = Object.assign({}, DEF); }
-  S.log = S.log || []; S.t = S.t || Date.now(); if (!S.rivals) S.rivals = mkRivals();
-  const today = new Date().toDateString();
-  if (S.day !== today) {
-    S.streak = S.day === new Date(Date.now() - 864e5).toDateString() ? S.streak + 1 : 1; S.day = today;
-    const b = 20 * Math.min(S.streak, 7); S.turns = Math.min(CAP, S.turns + b);
-    log(`Day ${S.streak} login bonus: +${b} turns`);
-  }
+const newT=()=>[0,1,2,3,4,5,6,7,8,9].map(mkT);
+function fresh(){S.p=[10,10,5,5];S.pk=[0,0,0,0,0,0,0,0];S.R=[0,0,0];S.targets=newT()}
+function load(){
+  try{S=Object.assign({},DEF,JSON.parse(localStorage.getItem(KEY)))}catch(e){S=Object.assign({},DEF)}
+  S.log=S.log||[];S.t=S.t||Date.now();if(!S.p)fresh();if(!S.targets||S.targets.length<10||S.targets[0].tw===undefined)S.targets=newT();
+  const today=new Date().toDateString();
+  if(S.spyD!==today){S.spyD=today;S.spyN=0}
+  if(S.day!==today){S.streak=S.day===new Date(Date.now()-864e5).toDateString()?S.streak+1:1;S.day=today;const b=20*Math.min(S.streak,7);S.turns=Math.min(CAP,S.turns+b);log(`Day ${S.streak} login bonus: +${b} turns`)}
 }
-const save = () => localStorage.setItem(KEY, JSON.stringify(S));
-function log(m, c) { S.log.unshift(`<div class="${c||''}">${m}</div>`); S.log.length = Math.min(S.log.length, 30); }
-const earn = n => { S.cash += n; S.earned += n; };
-function gainXp(x) {
-  S.xp += x;
-  while (S.xp >= S.lvl * 100) { S.xp -= S.lvl * 100; S.lvl++; S.pts += 3; log(`LEVEL UP! You are level ${S.lvl}. +3 stat points`, 'win'); }
+const save=()=>localStorage.setItem(KEY,JSON.stringify(S));
+function log(m,c){S.log.unshift(`<div class="${c||''}">${m}</div>`);S.log.length=Math.min(S.log.length,30)}
+const earn=n=>{S.cash+=n;S.earned+=n;S.best=Math.max(S.best,n)};
+function gainXp(x){S.xp+=x;while(S.xp>=need()){S.xp-=need();S.lvl++;S.pts+=4;log(`LEVEL UP! Level ${S.lvl} (${rank()}). +4 perk points`,'win')}}
+function payBox(){let v=fl((S.pay*.1+rnd()*S.pay*.9)*bmult()),jp=rnd()<Math.min(.3,.05+luck());if(jp)v*=5;earn(v);S.box++;gainXp(fl(15*xpm()));return[v,jp]}
+function raid(){
+  if(S.cash<10)return;
+  const R=200+S.earned*.02,lost=fl(S.cash*.3*R/(R+rate(1)+rate(3))*(1-hp()));
+  S.cash-=lost;log(`A raider hit you for $${fmt(lost)}. Bank your cash!`,'lose');
 }
-
-function duel(a, b) {
-  let ha = a.con*10+50, hb = b.con*10+50, dealt = 0, r = 0;
-  const swing = (x, y) => {
-    const atk = Math.max(x.dex*2-8, 1), df = y.dex/2;
-    if (rnd() > Math.min(.95, Math.max(.05, atk/(atk+df)))) return 0;
-    const d = x.wd * (1 + x.str/100) * (.5 + rnd()*.5), ab = Math.min(.9, 2*Math.sqrt(y.arm)/100);
-    return Math.max(1, d * (1 - ab));
-  };
-  while (ha > 0 && hb > 0 && r++ < 60) {
-    const d1 = swing(a, b); hb -= d1; dealt += d1;
-    if (hb <= 0) break;
-    ha -= swing(b, a);
-  }
-  return {win: hb <= 0 || (ha > 0 && hb < ha), dealt};
+function tick(){
+  const td=new Date().toDateString();if(S.spyD!==td){S.spyD=td;S.spyN=0}
+  const now=Date.now(),dt=Math.min((now-S.t)/1000,864000);S.t=now;
+  S.turns=Math.min(CAP,S.turns+dt/TURN_SEC*(1+.05*S.mp+.06*S.pk[7]));
+  S.bank*=Math.pow(.99,dt/3600);earn(income()*dt/3600*mult());
+  if(S.bot&&now>=S.boxAt){const n=Math.min(288,fl((now-S.boxAt)/(S.cd*1000))+1);let t=0;for(let i=0;i<n;i++)t+=payBox()[0];S.boxAt=Math.max(now,S.boxAt+n*S.cd*1000);log(`Bot opened the box ${n}x: +$${fmt(t)}`,'win')}
+  S.rt+=dt;let n=0;
+  while(S.rt>=120&&n<5){S.rt-=120;n++;if(rnd()<.6)raid()}
+  if(S.rt>120)S.rt=0;
 }
-
-function raid() {
-  if (S.cash < 10) return;
-  const pct = .3 * 100 / (100 + S.sen*8 + ARM[S.arm][1]/5 + S.con), lost = fl(S.cash * pct);
-  S.cash -= lost; log(`A raider hit you for $${fmt(lost)}. Bank your cash!`, 'lose');
-}
-function tick() {
-  const now = Date.now(), dt = Math.min((now - S.t) / 1000, 864000); S.t = now;
-  S.turns = Math.min(CAP, S.turns + dt / TURN_SEC * (1 + .05 * S.mp));
-  S.bank *= Math.pow(.99, dt / 3600);
-  S.rivals.forEach((r, i) => r.cash += dt * 4 * (i + 1));
-  S.rt += dt; let n = 0;
-  while (S.rt >= 120 && n < 5) { S.rt -= 120; n++; if (rnd() < .6) raid(); }
-  if (S.rt > 120) S.rt = 0;
-}
-
-const A = {
-  box() {
-    if (Date.now() < S.boxAt) return;
-    let v = fl((S.pay*.1 + rnd()*S.pay*.9) * mult()), jp = rnd() < .05;
-    if (jp) v *= 5; earn(v); S.boxAt = Date.now() + S.cd*1000;
-    log(`${jp ? 'JACKPOT! ' : ''}The box paid $${fmt(v)}`, 'win');
-  },
-  stat(k) { if (S.pts > 0) { S.pts--; S[k]++; } },
-  train(i) {
-    const b = BOTS[i]; if (S.turns < 2 || S.lvl < b[6]) return; S.turns -= 2;
-    const r = duel(me(), {str:b[1], dex:b[2], con:b[3], wd:b[4], arm:b[5]}), t = i + 1;
-    if (r.win) { const c = fl(t*60*mult()); earn(c); gainXp(t*12*(1+S.int/40)); log(`Beat ${b[0]}: +$${fmt(c)}`, 'win'); }
-    else { gainXp(t*3); log(`${b[0]} beat you.`, 'lose'); }
-  },
-  rob(i) {
-    const r = S.rivals[i]; if (S.turns < 8) return; S.turns -= 8;
-    if (duel(me(), r).win) {
-      const s = fl(r.cash * (.5 + rnd()*.2)); r.cash -= s; earn(s); gainXp((i+1)*20*(1+S.int/40));
-      log(`Robbed ${r.n} for $${fmt(s)}!`, 'win');
-    } else { const l = fl(S.cash*.1); S.cash -= l; log(`${r.n} beat you. Medical bill: $${fmt(l)}`, 'lose'); }
-  },
-  buy(x) {
-    const [k, i] = x.split(':'), T = k === 'wpn' ? WPN : ARM, c = T[i][2];
-    if (+i > S[k] && S.cash >= c) { S.cash -= c; S[k] = +i; log(`Bought ${T[i][0]}`); }
-  },
-  covert(k) { const c = fl(200 * 1.35 ** S[k]); if (S.cash >= c) { S.cash -= c; S[k]++; } },
-  hack() { const c = fl(1000 * 1.25 ** S.cdL); if (S.cash >= c && S.cd > 30) { S.cash -= c; S.cd -= 10; S.cdL++; } },
-  rng() { const c = fl(500 * 1.2 ** S.payL); if (S.cash >= c) { S.cash -= c; S.pay += 250; S.payL++; } },
-  dep(f) { const n = fl(S.cash * f); S.cash -= n; S.bank += n; },
-  wd(f) { const n = fl(S.bank * f); S.bank -= n; S.cash += n; },
-  loop() {
-    const g = fl(Math.sqrt(S.earned / 5000)); if (S.earned < 50000 || g < 1) return;
-    const keep = {mp:S.mp+g, resets:S.resets+1, day:S.day, streak:S.streak, log:S.log};
-    S = Object.assign({}, DEF, keep, {t:Date.now()}); S.rivals = mkRivals();
-    log(`LOOP RESET! +${g} Mod Points. All payouts +${g*10}%`, 'win');
-  }
+const A={
+  box(){if(Date.now()<S.boxAt)return;const[v,jp]=payBox();S.boxAt=Date.now()+S.cd*1000;log(`${jp?'JACKPOT! ':''}The box paid $${fmt(v)}`,'win')},
+  buy(x){const[k,q]=x.split(':'),m=fl(S.cash/UC),n=q==='max'?m:Math.min(+q,m);
+    if(n<1)return;S.cash-=n*UC;S.p[k]+=n;log(`Bought ${n} ${K[k]}`)},
+  perk(k){if(S.pts>0){S.pts--;S.pk[k]++}},
+  recon(i){if(spyLeft()<1){log('No recon attempts left. Resets in '+resetIn(),'lose');return}
+    S.spyN++;const t=S.targets[i];
+    if(rate(2)>=.5*t.sen){t.seen=1;gainXp(fl(10*xpm()));log(`Recon on ${t.n} succeeded`,'win')}
+    else log(`Recon on ${t.n} failed: their sentries are too strong`,'lose')},
+  rob(i){const t=S.targets[i];if(S.turns<8)return;S.turns-=8;
+    if(rate(0)>t.def){const p=.5+rnd()*.5,s=fl(t.cash*p),x=fl((20+30*Math.min(3,t.tw/t.tl))*xpm()*(t.w?1.5:1));earn(s);S.w++;S.rob+=s;gainXp(x);log(`Robbed ${t.n}: +$${fmt(s)} (${fl(p*100)}% of their cash), +${x} XP${t.m?' MEGA WHALE!':t.w?' WHALE!':''}`,'win');S.targets[i]=mkT()}
+    else{S.l++;gainXp(5);const l=Math.min(S.p[0]-1,fl(S.p[0]*.05*(1-hp())));S.p[0]-=l;log(`Attack on ${t.n} failed. +5 XP. You lost ${l} attack points.`,'lose')}},
+  train(i){const b=BOTS[i];if(S.turns<2||S.lvl<b[1])return;S.turns-=2;
+    if(rate(0)>b[2]){const g=fl(b[4]*mult());earn(g);S.w++;gainXp(b[3]);log(`Beat ${b[0]}: +$${fmt(g)}, +${b[3]} XP`,'win')}
+    else{S.l++;gainXp(3);log(`${b[0]} was too strong. Buy more attack.`,'lose')}},
+  ref(){if(S.turns<2)return;S.turns-=2;S.targets=newT();log('Scouted new targets')},
+  bot(){if(!S.bot&&S.cash>=BOT){S.cash-=BOT;S.bot=1;S.boxAt=Math.max(S.boxAt,Date.now());log('Auto-Box Bot online. It opens the box for you.','win')}},
+  rk(i){const c=fl(RK[i][2]*1.6**S.R[i]);if(S.cash>=c){S.cash-=c;S.R[i]++;log(`Upgraded ${RK[i][0]}`)}},
+  hack(){const c=fl(1000*1.25**S.cdL);if(S.cash>=c&&S.cd>30){S.cash-=c;S.cd-=10;S.cdL++}},
+  rng(){const c=fl(500*1.2**S.payL);if(S.cash>=c){S.cash-=c;S.pay+=250;S.payL++}},
+  dep(f){const n=fl(S.cash*f);S.cash-=n;S.bank+=n},
+  wd(f){const n=fl(S.bank*f);S.bank-=n;S.cash+=n},
+  loop(){const g=fl(Math.sqrt(S.earned/5000));if(S.earned<50000||g<1)return;
+    const k={mp:S.mp+g,resets:S.resets+1,day:S.day,streak:S.streak,log:S.log,w:S.w,l:S.l,rob:S.rob,box:S.box,best:S.best,spyD:S.spyD,spyN:S.spyN,bot:S.bot};
+    S=Object.assign({},DEF,k,{t:Date.now()});fresh();log(`LOOP RESET! +${g} Mod Points. Payouts +${g*10}%`,'win')}
 };
-
-const btn = (a, i, txt, cls = '', dis = false) => `<button class="act ${cls}" data-a="${a}" data-i="${i}" ${dis ? 'disabled' : ''}>${txt}</button>`;
-const V = {
-  box: () => `<h2>The Box</h2><button id="boxbtn" class="big" data-a="box">OPEN THE BOX</button><div id="bt"></div>
-    <p class="dim">Pays up to $${fmt(S.pay*mult())}. 5% chance of a 5x jackpot. Cash lands in your pocket, where raiders can take it.</p>`,
-  train: () => `<h2>Stats <small class="dim">(${S.pts} points)</small></h2>` +
-    ['str','dex','con','int'].map(k => `<div class="card"><span><b>${k.toUpperCase()} ${S[k]}</b><small>${{str:'Hit harder',dex:'Hit more, dodge more',con:'HP = CON x10 + 50',int:'More XP per win'}[k]}</small></span>${btn('stat',k,'+1','teal',S.pts<1)}</div>`).join('') +
-    `<h2>Training bots <small class="dim">(2 turns)</small></h2>` +
-    BOTS.map((b, i) => `<div class="card"><span><b>${b[0]}</b><small>Unlocks at level ${b[6]}</small></span>${btn('train',i,'Fight','',S.turns<2||S.lvl<b[6])}</div>`).join(''),
-  rivals: () => `<h2>Rivals <small class="dim">(8 turns)</small></h2><p class="dim">Your spy rating (${S.spy}) must be at least half their sentry to see their cash.</p>` +
-    S.rivals.map((r, i) => `<div class="card"><span><b>${r.n}</b><small>Sentry ${r.sen} | Cash ${S.spy*2>=r.sen ? '$'+fmt(r.cash) : '???'}</small></span>${btn('rob',i,'Rob','red',S.turns<8)}</div>`).join(''),
-  market() {
-    const row = (k, T) => T.map((t, i) => `<div class="card"><span><b>${t[0]}</b><small>${k==='wpn'?'Damage':'Armor'} ${t[1]}</small></span>${i<=S[k] ? `<small>${i===S[k]?'Equipped':'Owned'}</small>` : btn('buy',k+':'+i,'$'+fmt(t[2]),'',S.cash<t[2])}</div>`).join('');
-    const hc = fl(1000*1.25**S.cdL), rc = fl(500*1.2**S.payL);
-    return `<h2>Weapons</h2>${row('wpn',WPN)}<h2>Armor</h2>${row('arm',ARM)}<h2>Black market</h2>
-    <div class="card"><span><b>Hack timer (-10s)</b><small>Cooldown ${S.cd}s</small></span>${btn('hack',0,'$'+fmt(hc),'',S.cash<hc||S.cd<=30)}</div>
-    <div class="card"><span><b>Corrupt RNG (+$250 max)</b><small>Max payout $${fmt(S.pay)}</small></span>${btn('rng',0,'$'+fmt(rc),'',S.cash<rc)}</div>
-    <div class="card"><span><b>Train spies</b><small>Spy rating ${S.spy}</small></span>${btn('covert','spy','$'+fmt(200*1.35**S.spy),'',S.cash<200*1.35**S.spy)}</div>
-    <div class="card"><span><b>Train sentries</b><small>Sentry rating ${S.sen} (blocks raiders)</small></span>${btn('covert','sen','$'+fmt(200*1.35**S.sen),'',S.cash<200*1.35**S.sen)}</div>`;
-  },
-  bank() {
-    const g = fl(Math.sqrt(S.earned / 5000));
-    return `<h2>Bank</h2><p class="dim">Banked cash can't be raided or robbed, but the vault takes 1% per hour.</p>
-    <div class="card"><span><b>Pocket $${fmt(S.cash)}</b><small>Exposed to raiders</small></span>${btn('dep',1,'Bank all','teal',S.cash<1)}</div>
-    <div class="card"><span><b>Bank $${fmt(S.bank)}</b><small>Safe</small></span>${btn('wd',1,'Withdraw all','',S.bank<1)}</div>
-    <h2>Loop reset</h2><p class="dim">Wipe your run for permanent Mod Points (+10% cash and +5% turn speed each). Needs $50K earned this run.</p>
-    <div class="card"><span><b>Mod Points ${S.mp}</b><small>Resets ${S.resets} | Reset now for +${S.earned>=50000?g:0}</small></span>${btn('loop',0,'Loop reset','red',S.earned<50000||g<1)}</div>`;
-  }
+const btn=(a,i,t,c='',d=false)=>`<button class="act ${c}" data-a="${a}" data-i="${i}" ${d?'disabled':''}>${t}</button>`;
+const card=(t,s,b)=>`<div class="card"><span><b>${t}</b><small>${s}</small></span><span>${b}</span></div>`;
+const V={
+  box:()=>`<h2>The Box</h2>`+(S.bot?`<p class="e">Auto-Box Bot is online. It opens the box for you, even while you're away (up to 24h).</p>`:'')+
+    `<button id="boxbtn" class="big" data-a="box">OPEN THE BOX</button><div id="bt"></div>
+    <p class="dim">Pays up to $${fmt(S.pay*bmult())}. Jackpot (x5) chance ${(Math.min(.3,.05+luck())*100).toFixed(1)}%. Cash lands in your pocket where raiders can take it.</p>`,
+  buy:()=>{const m=fl(S.cash/UC);return `<h2>Buy stats ($${UC} per point)</h2><p class="dim">You can afford <b class="c2">${fmt(m)}</b> points right now.</p>`+
+    K.map((n,k)=>card(`${n}: ${fmt(rate(k))}`,`${fmt(S.p[k])} bought, +${S.pk[k]*5}% from perks`,
+      btn('buy',k+':1','+1','teal',m<1)+' '+btn('buy',k+':10','+10','teal',m<10)+' '+btn('buy',k+':100','+100','teal',m<100)+' '+btn('buy',k+':max','Max '+fmt(m),'',m<1))).join('')},
+  targets:()=>`<h2>Targets</h2><div class="card"><span class="dim">Spy >= 2x their sentry shows their cash. Spy >= 0.5x their sentry lets you recon their stats.<br>Spy attempts left today: ${spyLeft()}/${SPY_MAX}${spyLeft()<1?' (resets in '+resetIn()+')':''}. Rob costs 8 turns. You win if your attack beats their defense, and take 50-100% of their cash. XP rises with their win/loss record.</span>${btn('ref',0,'Refresh (2)','teal',S.turns<2)}</div>`+
+    S.targets.map((t,i)=>{
+      const cv=t.seen||rate(2)>=2*t.sen,cash=cv?'$'+fmt(t.cash):'???';
+      const info=t.seen?`ATK ${fmt(t.atk)} | <span class="${rate(0)>t.def?'e':'h'}">DEF ${fmt(t.def)}</span> | SPY ${fmt(t.spy)} | SEN ${fmt(t.sen)}<br>Cash ${cash} | W/L ${t.tw}/${t.tl}`:`Stats hidden. Recon to see them.<br>Cash ${cash}`;
+      return card((t.w&&cv?'<span class="tag">'+(t.m?'MEGA ':'')+'WHALE </span>':'')+t.n,info,(t.seen?'':btn('recon',i,'Recon','teal',spyLeft()<1)+' ')+btn('rob',i,'Rob','red',S.turns<8||(t.seen&&rate(0)<=t.def)))}).join(''),
+  train:()=>`<h2>Training bots (2 turns)</h2><p class="dim">Set XP and gold every win. You win if your attack beats the bot's defense. Your attack: <b class="c2">${fmt(rate(0))}</b></p>`+
+    BOTS.map((b,i)=>card(b[0],`Needs level ${b[1]} | DEF ${fmt(b[2])} | +${b[3]} XP, +$${fmt(b[4]*mult())}`,btn('train',i,'Fight','',S.turns<2||S.lvl<b[1]||false))).join(''),
+  level(){const g=S.w+S.l,row=(a,b)=>card(a,'',`<b>${b}</b>`);
+    return `<h2>Level ${S.lvl} - ${rank()}</h2><p class="dim">XP ${fl(S.xp)}/${need()}. Earn XP from the box, recon and robbing. Each level gives 4 perk points.</p><p><b class="c2">${S.pts}</b> perk points to spend</p>`+
+    PERK.map((p,k)=>card(`${p[0]} (rank ${S.pk[k]})`,p[1],btn('perk',k,'+1','teal',S.pts<1))).join('')+`<h2>Lifetime</h2>`+
+    row('Fights won / lost',`${S.w} / ${S.l}`)+row('Win rate',g?fl(S.w/g*100)+'%':'-')+row('Boxes opened',S.box)+row('Stolen from targets','$'+fmt(S.rob))+row('Biggest payout','$'+fmt(S.best))+
+    row('Racket income','$'+fmt(income()*mult())+'/hr')+row('Earned this run','$'+fmt(S.earned))+row('Mod Points / resets',`${S.mp} / ${S.resets}`)+row('Login streak',S.streak+' days')},
+  shop(){
+    const hc=fl(1000*1.25**S.cdL),rc=fl(500*1.2**S.payL);
+    return `<h2>Upgrades</h2>`+card('Auto-Box Bot',S.bot?'Owned. It opens the box whenever it is ready.':'Opens the box for you every time it is ready, even offline',S.bot?'<small>Owned</small>':btn('bot',0,'$'+fmt(BOT),'',S.cash<BOT))+
+    card('Hack timer (-10s)',`Cooldown ${S.cd}s`,btn('hack',0,'$'+fmt(hc),'',S.cash<hc||S.cd<=30))+card('Corrupt RNG (+$250)',`Max payout $${fmt(S.pay)}`,btn('rng',0,'$'+fmt(rc),'',S.cash<rc))+
+    `<h2>Rackets (pay per hour)</h2>`+RK.map((r,i)=>{const p=fl(r[2]*1.6**S.R[i]);return card(`${r[0]} Lv ${S.R[i]}`,`$${fmt(r[1])}/hr per level`,btn('rk',i,'$'+fmt(p),'',S.cash<p))}).join('')},
+  bank(){const g=fl(Math.sqrt(S.earned/5000));
+    return `<h2>Bank</h2><p class="dim">Banked cash is safe from raiders, but the vault takes 1% per hour.</p>`+
+    card('Pocket $'+fmt(S.cash),'Exposed to raiders',btn('dep',1,'Bank all','teal',S.cash<1))+card('Bank $'+fmt(S.bank),'Safe',btn('wd',1,'Withdraw all','',S.bank<1))+
+    `<h2>Loop reset</h2><p class="dim">Wipe your run for permanent Mod Points (+10% cash, +5% turn speed each). Needs $50K earned this run.</p>`+
+    card('Mod Points '+S.mp,`Reset now for +${S.earned>=50000?g:0}`,btn('loop',0,'Loop reset','red',S.earned<50000||g<1))}
 };
-const TABS = {box:'Box', train:'Train', rivals:'Rivals', market:'Market', bank:'Bank'};
-
-function hud() {
-  $('#hud').innerHTML = `<span class="c">$${fmt(S.cash)}</span><span class="b">Bank $${fmt(S.bank)}</span><span>Turns ${fl(S.turns)}/${CAP}</span>
-    <span>Lv ${S.lvl} (${fl(S.xp)}/${S.lvl*100} xp)</span>${S.mp ? `<span>MP ${S.mp}</span>` : ''}`;
+const TABS={box:'Box',buy:'Buy',targets:'Targets',train:'Train',level:'Level',shop:'Shop',bank:'Bank'};
+function hud(){
+  $('#gold').innerHTML=`<span>$${fmt(S.cash)}</span><small>Bank $${fmt(S.bank)}</small>`;
+  $('#xpb i').style.width=Math.min(100,S.xp/need()*100)+'%';$('#xpb span').textContent=`Level ${S.lvl}: ${fmt(S.xp)} / ${fmt(need())} XP`;
+  $('#hud').innerHTML=`<span>Turns ${fl(S.turns)}/${CAP}</span><span>Recon ${spyLeft()}/${SPY_MAX}</span><span>Lv ${S.lvl}${S.pts?` (${S.pts} pts!)`:''}</span><span>ATK ${fmt(rate(0))}</span><span>DEF ${fmt(rate(1))}</span><span>SPY ${fmt(rate(2))}</span><span>SEN ${fmt(rate(3))}</span>${S.mp?`<span>MP ${S.mp}</span>`:''}`}
+function boxTimer(){const b=$('#boxbtn');if(!b)return;const left=Math.max(0,S.boxAt-Date.now()),s=Math.ceil(left/1000);
+  b.disabled=left>0;$('#bt').textContent=left?`${fl(s/60)}:${String(s%60).padStart(2,'0')}`:(S.bot?'Bot is collecting':'Ready')}
+function render(){
+  $('#nav').innerHTML=Object.entries(TABS).map(([k,v])=>`<button data-t="${k}" class="${k===tab?'on':''}">${v}</button>`).join('');
+  $('#view').innerHTML=V[tab]();$('#log').innerHTML=S.log.slice(0,4).join('');hud();boxTimer();
+  const d=document.documentElement;if(d)d.style.setProperty('--th',($('#top').offsetHeight||70)+'px');
 }
-function boxTimer() {
-  const b = $('#boxbtn'); if (!b) return;
-  const left = Math.max(0, S.boxAt - Date.now()), s = Math.ceil(left / 1000);
-  b.disabled = left > 0; $('#bt').textContent = left ? `${fl(s/60)}:${String(s%60).padStart(2,'0')}` : 'Ready';
-}
-function render() {
-  $('#nav').innerHTML = Object.entries(TABS).map(([k, v]) => `<button data-t="${k}" class="${k===tab?'on':''}">${v}</button>`).join('');
-  $('#view').innerHTML = V[tab](); $('#log').innerHTML = S.log.slice(0, 5).join(''); hud(); boxTimer();
-}
-document.addEventListener('click', e => {
-  const t = e.target.closest('[data-t]'); if (t) { tab = t.dataset.t; render(); return; }
-  const b = e.target.closest('[data-a]'); if (!b || b.disabled) return;
-  const a = b.dataset.a, i = ['train','rob','dep','wd'].includes(a) ? +b.dataset.i : b.dataset.i;
-  A[a](i); tick(); save(); render();
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-t]');if(t){tab=t.dataset.t;render();return}
+  const b=e.target.closest('[data-a]');if(!b||b.disabled)return;
+  const a=b.dataset.a,i=['rob','recon','dep','wd','rk','perk','train'].includes(a)?+b.dataset.i:b.dataset.i;
+  A[a](i);tick();save();render();
 });
-load(); tick(); render();
-setInterval(() => { tick(); hud(); boxTimer(); }, 1000);
-setInterval(save, 5000);
+load();tick();render();
+setInterval(()=>{tick();hud();boxTimer()},1000);
+setInterval(save,5000);
 </script>
 </body>
 </html>
