@@ -82,7 +82,7 @@ footer div:first-child{color:var(--t)}
 <script>
 window.onerror=function(m,s,l){document.getElementById('view').innerHTML='<p style="color:#ff4d8d">Error: '+m+' (line '+l+')</p>'};
 // AUTO_RESET: while true, every new version wipes your progress (for balance testing). Set to false to keep saves.
-const AUTO_RESET=true,VER=21;
+const AUTO_RESET=true,VER=22;
 const WD=3e5,KEY='minibossx_v3',BOT=1e6,BOT_LVL=10,W=5000,RG=1.07,LIM=30;
 const $=s=>document.querySelector(s),fl=Math.floor,rnd=Math.random;
 const K=['Attack Weapon','Defense Weapon','Spy Weapon','Sentry Weapon'];
@@ -177,7 +177,7 @@ function load(){
   try{S=Object.assign({},DEF,JSON.parse(localStorage.getItem(KEY)))}catch(e){S=Object.assign({},DEF)}
   const rs=AUTO_RESET&&S.ver!==VER;if(rs)S=Object.assign({},DEF);S.ver=VER;
   ['targets','turns','rc','spyD','spyN','cd','pay'].forEach(k=>delete S[k]);
-  S.log=S.log||[];S.alog=S.alog||[];S.rl=S.rl||0;S.rlost=S.rlost||0;S.name=S.name||'You';S.t=S.t||Date.now();S.born=S.born||Date.now();S.seen=S.seen||{};S.ac=S.ac||{};S.rcn=S.rcn||{};S.rb=S.rb||{};S.met=S.met||{};
+  S.log=S.log||[];S.alog=S.alog||[];S.hb=S.hb||{};S.rl=S.rl||0;S.rlost=S.rlost||0;S.name=S.name||'You';S.t=S.t||Date.now();S.born=S.born||Date.now();S.seen=S.seen||{};S.ac=S.ac||{};S.rcn=S.rcn||{};S.rb=S.rb||{};S.met=S.met||{};
   if(!S.p)fresh();
   if(!S.up)S.up=[0,0,0,0,0,0,0,0,0,0,0,0];
   while(S.up.length<12)S.up.push(0);
@@ -196,11 +196,13 @@ const earn=(n,k)=>{let b=0;if(k){b=Math.max(0,Math.min(fl(n*Math.min(.9,T(k)+T('
 function gainXp(x){x=fl(x*(1+.05*S.mp)*(1+.06*S.up[3]+T('xp')));S.xp+=x;while(S.xp>=need()){S.xp-=need();S.lvl++;S.pts++;log(`LEVEL UP! Level ${S.lvl} (${rank()}). +1 talent point`,'win')}return x}
 function payBox(){let v=fl((pay()*.1+rnd()*pay()*.9)*bmult()),jp=rnd()<Math.min(.5,.05+luck()),pp=0,at=0;if(jp)v*=5+.5*S.up[10]+T('jpm');if(rnd()<T('dbox'))v*=2;earn(v,'abox');S.box++;
   if(rnd()<.04+T('bpt')){S.pts++;pp=1}if(rnd()<.12+T('bat')){at=10+fl(rnd()*15);S.at=Math.min(acap(),S.at+at)}return[v,jp,pp,at]}
-const alog=o=>{S.alog.unshift(Object.assign({t:Date.now()},o));S.alog.length=Math.min(S.alog.length,300)};
+const hb=(k,c)=>{const h=fl(Date.now()/36e5),b=S.hb[h]=S.hb[h]||{g:0,gn:0,l:0,ln:0};if(k==='g'){b.g+=c;b.gn++}else{b.l+=c;b.ln++}for(const x in S.hb)if(x<h-24)delete S.hb[x]},
+hb24=()=>{const h=fl(Date.now()/36e5),r={g:0,gn:0,l:0,ln:0};for(const x in S.hb)if(x>h-24)for(const k in r)r[k]+=S.hb[x][k];return r},
+alog=o=>{S.alog.unshift(Object.assign({t:Date.now()},o));S.alog.length=Math.min(S.alog.length,300)};
 function raid(){
   if(S.cash<10)return;
   const R=200+S.earned*.02,lost=fl(S.cash*.3*R/(R+rate(1)+rate(3))*(1-hp()));
-  S.cash-=lost;S.rl++;S.rlost+=lost;alog({k:'raid',n:'A raider',c:lost});log(`A raider hit you for $${fmt(lost)}. Bank your cash!`,'lose');
+  S.cash-=lost;S.rl++;S.rlost+=lost;hb('l',lost);alog({k:'raid',n:'A raider',c:lost});log(`A raider hit you for $${fmt(lost)}. Bank your cash!`,'lose');
 }
 function tick(){
   const now=Date.now(),dt=Math.min((now-S.t)/1000,864000);S.t=now;S.at=Math.min(acap(),S.at+dt/60*(1+T('regen')));
@@ -232,7 +234,7 @@ const A={
   ai(i){const t=S.ai[i];if(!t||S.at<1)return;if(rnd()>=Math.min(.5,T('free')))S.at-=1;
     if(rate(0)<=t.d||t.c<1){S.l++;alog({k:'fail',n:t.n,why:t.c<1?'nothing left to take':'defense too high'});log(`Attack on ${t.n} failed: ${t.c<1?'nothing left to take':'their defense was too high'}`,'lose');return}
     const ma=rate(0),q=t.d/ma,pc=rnd()<Math.min(.5,T('luck'))?1:.5+rnd()*.5,s=fl(t.c*pc*(1+.04*S.up[2]+T('loot')+(q>.5?T('bh'):0))*mult());
-    earn(s,'arob');t.c-=fl(t.c*pc);S.w++;S.rob+=s;const x=gainXp((15+85*q)*xpm());let sx='',sw='';
+    earn(s,'arob');t.c-=fl(t.c*pc);S.w++;S.rob+=s;const x=gainXp(s);hb('g',s);let sx='',sw='';
     K.forEach((nm_,k)=>{const g=T('stl'+k),n=fl(s*g/sprice(S.p[k]));if(g>0&&n>0){S.p[k]+=n;sx+=`, +${fmt(n)} ${nm_}${n>1?'s':''}`;sw+=`${sw?', ':''}+${fmt(n)} ${nm_}${n>1?'s':''}`}});alog({k:'hit',n:t.n,c:s,x,w:sw,p:fl(pc*100)});
     log(`Robbed ${t.n}: +$${fmt(s)} (${fl(pc*100)}% of their cash), +${x} XP${sx}`,'win')},
   name(){const n=prompt('Your name',S.name);if(n&&n.trim())S.name=n.trim().slice(0,16)},
@@ -242,7 +244,7 @@ const A={
   dep(f){const n=Math.min(fl(S.cash*f),bankCap()-S.bank);if(n<1)return;S.cash-=n;S.bank+=n},
   wd(f){const n=fl(S.bank*f);S.bank-=n;S.cash+=n},
   loop(){const g=mpg();if(S.earned<50000||g<1)return;
-    const k={alog:S.alog,rl:S.rl,rlost:S.rlost,name:S.name,tt:S.tt,pts:S.pts,mp:S.mp+g,resets:S.resets+1,day:S.day,streak:S.streak,log:S.log,w:S.w,l:S.l,rob:S.rob,box:S.box,best:S.best,bot:S.bot,qty:S.qty,met:S.met,list:S.list};
+    const k={hb:S.hb,alog:S.alog,rl:S.rl,rlost:S.rlost,name:S.name,tt:S.tt,pts:S.pts,mp:S.mp+g,resets:S.resets+1,day:S.day,streak:S.streak,log:S.log,w:S.w,l:S.l,rob:S.rob,box:S.box,best:S.best,bot:S.bot,qty:S.qty,met:S.met,list:S.list};
     S=Object.assign({},DEF,k,{t:Date.now()});fresh();S.seen={};S.rb={};S.ac={};S.rcn={};S.born=Date.now();aiGen();log(`LOOP RESET! +${g} Mod Points. Cash +${g*10}%, XP +${g*5}%`,'win')}
 };
 const btn=(a,i,t,c='',d=false)=>`<button class="act ${c}" data-a="${a}" data-i="${i}" ${d?'disabled':''}>${t}</button>`;
@@ -279,18 +281,20 @@ const V={
   ranks:()=>{const me={n:S.name,lv:S.lvl,nw:worth()+S.cash+S.bank,a:rate(0)},B=[me].sort((a,b)=>b.nw-a.nw).slice(0,100);
     return `<h2>Leaderboard <span>top 100 by net worth</span> ${btn('name',0,'Rename','teal')}</h2>`+
     B.map((p,i)=>card(`#${i+1} ${p.n}`,`Level ${p.lv} | Attack ${fmt(p.a)}`,`<b>$${fmt(p.nw)}</b>`)).join('')},
-  alog:()=>{const h=n=>new Date(n).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),tm=e=>`${h(e.t)} (${ago(e.t)} ago)`,L=S.alog.filter(e=>e.k!=='raid');
-    return `<h2>Attack Log <span>${S.w} wins / ${S.l} misses</span></h2>`+(L.length?L.map(e=>e.k==='hit'?
-      card(`<span class="win">${e.n}</span>`,`${tm(e)}<br>stole $${fmt(e.c)} (${e.p}% of their cash), +${e.x} XP${e.w?'<br>weapons: '+e.w:''}`,''):
-      card(`<span class="lose">${e.n}</span>`,`${tm(e)}<br>${e.why}, wasted an attack`,'')).join(''):card('No attacks yet','',''))},
-  hlog:()=>{const h=n=>new Date(n).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),L=S.alog.filter(e=>e.k==='raid');
-    return `<h2>Been Hit <span>${S.rl} times (-$${fmt(S.rlost)})</span></h2>`+(L.length?L.map(e=>card(`<span class="lose">${S.name}</span>`,`${h(e.t)} (${ago(e.t)} ago)<br>lost $${fmt(e.c)} to a raider`,'')).join(''):card('Nobody has hit you yet','',''))},
+  alog:()=>{const h=n=>new Date(n).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),tm=e=>`${h(e.t)} (${ago(e.t)} ago)`,t=hb24(),
+      A_=S.alog.filter(e=>e.k!=='raid').slice(0,40),B_=S.alog.filter(e=>e.k==='raid').slice(0,40);
+    return `<h2>Last 24 hours</h2>`+card(`<span class="win">Taken $${fmt(t.g)}</span>`,`${t.gn} successful hits`,'')+card(`<span class="lose">Lost $${fmt(t.l)}</span>`,`hit by raiders ${t.ln} times`,'')+
+      card(`Net $${fmt(Math.abs(t.g-t.l))}`,t.g>=t.l?'you are ahead':'you are behind','')+
+      `<h2>Your attacks <span>${S.w} wins / ${S.l} misses</span></h2>`+(A_.length?A_.map(e=>e.k==='hit'?
+      card(`<span class="win">${e.n}</span>`,`${tm(e)}<br>stole $${fmt(e.c)} (${e.p}% of their cash), +${fmt(e.x)} XP${e.w?'<br>weapons: '+e.w:''}`,''):
+      card(`<span class="lose">${e.n}</span>`,`${tm(e)}<br>${e.why}, wasted an attack`,'')).join(''):card('No attacks yet','',''))+
+      `<h2>Been hit <span>${S.rl} times (-$${fmt(S.rlost)} total)</span></h2>`+(B_.length?B_.map(e=>card(`<span class="lose">${S.name}</span>`,`${tm(e)}<br>lost $${fmt(e.c)} to a raider`,'')).join(''):card('Nobody has hit you yet','',''))},
   bank(){const g=mpg();
     return `<h2>Bank <span>holds up to $${fmt(bankCap())}</span></h2>`+
     card('Pocket $'+fmt(S.cash),'raiders can take this',btn('dep',1,'Bank all','teal',S.cash<1||S.bank>=bankCap()))+card('Bank $'+fmt(S.bank),'safe from raiders',btn('wd',1,'Withdraw all','',S.bank<1))+
     `<h2>Loop reset</h2>`+card('Mod points '+S.mp,`needs $50K earned | +${S.earned>=50000?g:0} now | +10% cash, +5% XP each`,btn('loop',0,'Reset','red',S.earned<50000||g<1))}
 };
-const TABS={box:'Box',buy:'Armory',targets:'Targets',ai:'AI Fights',level:'Talents',shop:'Shop',bank:'Bank',ranks:'Ranks',alog:'Attack Log',hlog:'Been Hit'};
+const TABS={box:'Box',buy:'Armory',targets:'Targets',ai:'AI Fights',level:'Talents',shop:'Shop',bank:'Bank',ranks:'Ranks',alog:'Attack Log'};
 function hud(){
   $('#log').innerHTML=S.log.slice(0,3).join('')||'<div>No activity yet</div>';
   $('#gold').innerHTML=`<span>$${fmt(S.cash)}</span><small>Bank $${fmt(S.bank)}</small>`;
