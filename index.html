@@ -79,6 +79,20 @@ h2 .act{padding:7px 16px;font-size:12px}
 .nd.op{filter:none;border-color:#9bd}.nd.on{filter:none;border-color:#f2c230;box-shadow:0 0 10px #f2c230}.nd.max{border-color:#3d6;box-shadow:0 0 10px #3d6}
 .nd.ok{border-color:#fff;box-shadow:0 0 12px #6cf}.nd.sel{outline:3px solid #fff;outline-offset:3px}
 #tinfo{padding:8px;border:1px solid var(--l);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+
+.qb{display:flex;align-items:center;gap:3px;padding:4px 6px;border:1px solid var(--l);border-top:0;background:#121623}
+.qb b{color:var(--d);font-size:10px;margin-right:2px}.qb .act{flex:1;padding:7px 0;min-width:0;font-size:11px}
+.lk{border-left:3px solid var(--rc)}.lk>span:first-child b,.lk .rl{color:var(--rc)}.rl{font-style:normal;font-weight:bold;margin-right:4px}
+.r0{--rc:#aab3c9}.r1{--rc:#5fd49a}.r2{--rc:#5fb0ff}.r3{--rc:#c06bff}.r4{--rc:#ffb52e;box-shadow:inset 0 0 14px rgba(255,181,46,.2)}
+.card.gone{opacity:.35}
+body{background:#080a10 repeating-linear-gradient(45deg,rgba(255,255,255,.018) 0 2px,transparent 2px 4px)}
+#top{border-bottom:2px solid #8a6a12;box-shadow:0 2px 6px #000}
+h2{background:linear-gradient(#3a4670,#1a2036 55%,#121626);border-bottom:1px solid #000;box-shadow:inset 0 1px 0 #5a6aa0;letter-spacing:.4px;text-transform:uppercase;font-size:10.5px}
+h2 span,h2 b{text-transform:none}
+.card{background:linear-gradient(#161b2c,#10141f);box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+.card:nth-child(even){background:linear-gradient(#1b2134,#141829)}
+.act{border-radius:2px;box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 1px 2px #000}
+nav button{border-radius:2px;box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 1px 2px #000}
 </style>
 </head>
 <body>
@@ -88,8 +102,8 @@ h2 .act{padding:7px 16px;font-size:12px}
 <script>
 window.onerror=function(m,s,l){document.getElementById('view').innerHTML='<p style="color:#ff4d8d">Error: '+m+' (line '+l+')</p>'};
 // AUTO_RESET: while true, every new version wipes your progress (for balance testing). Set to false to keep saves.
-const AUTO_RESET=true,VER=30;
-const WD=3e5,KEY='minibossx_v3',BOT=1e9,BOT_LVL=10,W=5000,RG=1.07,LIM=30;
+const AUTO_RESET=true,VER=31;
+const WD=3e5,KEY='minibossx_v3',W=5000,RG=1.07,LIM=30;
 const $=s=>document.querySelector(s),fl=Math.floor,rnd=Math.random;
 const K=['Attack Weapon','Defense Weapon','Spy Weapon','Sentry Weapon'];
 // every weapon has fixed power and always costs WC gold per point of power
@@ -97,19 +111,19 @@ const WN=[[['Rock',1],['Shovel',5],['Gun',20],['AK',50]],[['Trash Lid',1],['Wood
 // [name, desc per level, effect key, per level, max level, parents (names), tier, cost step]
 const TT=[
 ['Plunderer','+1% chance on a hit to also steal 1-3% of their weapons','plunder',.01,100,[],1,20,1],['Treasure Hunter','Jackpot targets show up 1% sooner','hunt',.01,50,[],1,10,1],
-['Box Master','+4% box payout','box',.04,50,['Cash Flow'],2],['Racketeer','+3% racket income','rack',.03,50,['Cash Flow'],2],['Pickpocket','+3% cash from robbing','loot',.03,40,['Cash Flow'],2],
+['Racketeer','+3% racket income','rack',.03,50,['Cash Flow'],2],['Pickpocket','+3% cash from robbing','loot',.03,40,['Cash Flow'],2],
 ['Warlord','+10% attack rating (2 points a level after level 25)','atk',.1,50,[],2,25,1],['Bulwark','+10% defense rating (2 points a level after level 25)','def',.1,50,[],2,25,1],
-['Quick Hands','-5s box cooldown','bcd',5,24,['Box Master'],3],['Corrupt RNG','+20% max box payout (stacks)','bpay',1,60,[],3],['Lucky Streak','+0.3% jackpot chance','jp',.003,40,['Box Master'],3],['Twin Box','+1% chance the box pays double','dbox',.01,30,['Box Master'],3],
+
 ['Foreman','+2% all cash income','cash',.02,40,['Racketeer'],3],['Builder','-1% racket prices','rcost',.01,30,['Racketeer'],3],['Night Shift','+4% racket income while you are away','off',.04,40,['Racketeer'],3],
 ['Second Wind','+1% chance an attack costs nothing','free',.01,30,['Warlord'],3],['Scholar','+4% XP','xp',.04,50,['Pickpocket'],3],['Iron Wall','-3% cash lost to raiders','raid',.03,30,['Bulwark'],3],
-['Box Banker','+5% of box winnings go straight to the bank','abox',.05,10,['Twin Box'],4],['Stash','+5% of robbed cash goes straight to the bank','arob',.05,10,['Scholar'],4],['Skimmer','+5% of racket income goes straight to the bank','arack',.05,10,['Night Shift'],4],
+['Stash','+5% of robbed cash goes straight to the bank','arob',.05,10,['Scholar'],4],['Skimmer','+5% of racket income goes straight to the bank','arack',.05,10,['Night Shift'],4],
 ['Offshore','+2% of ALL income goes straight to the bank','aall',.02,25,['Twin Box','Night Shift'],4],['Vault Expansion','x10 bank capacity (starts at $10M)','bcap',1,12,['Iron Wall'],4,1],
-['Big Fish','+0.1x jackpot multiplier','jpm',.1,30,['Lucky Streak'],4],['Stockpile','+10 max attacks','apool',10,50,['Second Wind'],4],['Stamina','+3% attack regeneration','regen',.03,50,['Second Wind'],4],
+['Stockpile','+10 max attacks','apool',10,50,['Second Wind'],4],['Stamina','+3% attack regeneration','regen',.03,50,['Second Wind'],4],
 ['Thrifty','-1% stat prices','scheap',.01,30,['Warlord','Bulwark'],4],['Tight Grip II','+1% minimum steal','minsteal',.01,10,[],5],['Refresher II','+300 AI refreshes per day','rfl',300,10,[],4],
 ['Gold Rush','+3% all cash income','cash',.03,40,['Box Banker','Skimmer'],5],['Loot Lord','+4% cash from robbing','loot',.04,40,['Stash'],5],['Bounty Hunter','+5% cash from tough targets (defense over half your attack)','bh',.05,30,['Stamina'],5],
-['Mugger','+1% chance to take all their cash','luck',.01,30,['Stash'],5],['Prodigy','+0.2% chance the box gives a talent point','bpt',.002,30,['Twin Box'],5],
-['Diversify','+0.3% racket income per racket type owned','div',.003,20,['Offshore'],5],['Ammo Box','+0.4% chance the box gives attacks','bat',.004,30,['Stockpile'],5],
-['Tycoon','+5% all cash income','cash',.05,40,['Gold Rush','Diversify'],6],['Grand Stats','+3% all stats','stat',.03,40,['Stockpile','Thrifty'],6],['Fortune','+6% box payout','box',.06,40,['Big Fish','Ammo Box'],6],
+['Mugger','+1% chance to take all their cash','luck',.01,30,['Stash'],5],
+['Diversify','+0.3% racket income per racket type owned','div',.003,20,['Offshore'],5],
+['Tycoon','+5% all cash income','cash',.05,40,['Gold Rush','Diversify'],6],['Grand Stats','+3% all stats','stat',.03,40,['Stockpile','Thrifty'],6],
 ['Login Boss','+10% daily login bonus','login',.1,30,[],6],['Endless Pool','+20 max attacks','apool',20,30,['Stockpile'],6],['Legend Hunter','+5% XP','xp',.05,30,['Loot Lord'],6],
 ['Ascension','+5% all cash and all stats','asc',.05,20,[],7],['Overlord','+3% all cash income','cash',.03,30,[],7],
 ['Cash Flow','+2% all cash income','cash',.02,50,[],3],['Iron Body','+2% all stats','stat',.02,50,[],3],
@@ -139,18 +153,18 @@ const LAST='Moretti Falcone Rossi Bianchi Conte Gallo Russo Costa Greco Bruno Ri
 const RK=[['Newsstand',250,2000,1],['Speakeasy',2000,15000,5],['Casino',12500,1e5,10],['Smuggling Ring',75000,6e5,16],['Syndicate',6e5,5e6,22],['Empire',6e6,5e7,30],['Oil Fields',6e7,5e8,38],['Space Port',6e8,5e9,46],
 ['Black Market',6.25e9,5e10,60],['Shipping Fleet',7.5e10,6e11,80],['Private Bank',1e12,8e12,100],['Media Empire',1.25e13,1e14,125],['Weapons Cartel',1.9e14,1.5e15,150],['Casino Chain',2.5e15,2e16,180],['Mining Syndicate',3.75e16,3e17,210],['Moon Base',5e17,4e18,240],['Mars Colony',7.5e18,6e19,270],['Galactic Bank',1.25e20,1e21,300]];
 const RANKS=['Scum','Thug','Hustler','Enforcer','Capo','Underboss','Don','Legend'];
-const DEF={cash:1000,bank:0,earned:0,mp:0,resets:0,rt:0,day:'',streak:0,boxAt:0,w:0,l:0,rob:0,box:0,best:0,lvl:1,xp:0,pts:0,bot:0,qty:1,at:200,sf:1,sfT:0};
-let S,tab='box',tsel=0,tsc=[0,0,0];
+const DEF={cash:1000,bank:0,earned:0,mp:0,resets:0,rt:0,day:'',streak:0,bt:0,w:0,l:0,rob:0,best:0,lvl:1,xp:0,pts:0,qty:1,at:200,sf:1,sfT:0};
+let S,tab='lucky',tsel=0,tsc=[0,0,0];
 const SUF=['','K','M','B','T','Qa','Qi','Sx','Sp','Oc','No','Dc'];
 const fmt=n=>{if(!isFinite(n))return'inf';if(n<1e4)return''+fl(n);if(n>=1e36)return n.toExponential(1).replace('+','');const e=Math.min(fl(Math.log10(n)/3),11),v=n/1e3**e;let r=v.toFixed(e===1||v>=100?0:v>=10?1:2);if(r.includes('.'))r=r.replace(/\.?0+$/,'');return r+(e?`<span class="sx">${SUF[e]}</span>`:'')},
 fmtG=n=>{if(!isFinite(n))return'inf';if(n<1e4)return''+fl(n);if(n>=1e36)return n.toExponential(1).replace('+','');const e=Math.min(fl(Math.log10(n)/3),11),v=n/1e3**e;let r=v.toFixed(e===1||v>=10?0:1);if(r.includes('.'))r=r.replace(/\.?0+$/,'');return r+`<span class="sx">${SUF[e]}</span>`};
 const fq=q=>q>=1000?q/1000+'K':q;
 const mult=()=>1+T('cash')+T('asc'),hp=()=>Math.min(.9,T('raid'));
-const luck=()=>T('jp'),bmult=()=>mult()*(1+T('box'));
-const cd=()=>Math.max(30,300-T('bcd')),pay=()=>fl(1000*1.2**T('bpay'));
+const bf=k=>!!(S.bf&&S.bf[k]>Date.now());
+
 const reqF=()=>.5;
 const wprice=(k,j)=>fl(WN[k][j][1]*WC*(1-Math.min(.5,T('scheap')))),power=k=>S.inv[k].reduce((a,n,j)=>a+n*WN[k][j][1],0),wvalue=k=>S.inv[k].reduce((a,n,j)=>a+n*WN[k][j][1]*WC,0);
-const rateU=k=>power(k)*(1+T('stat')+T('asc')+T(['atk','def','spy','sen'][k])),rate=k=>rateU(k)*(1-(k<2&&S.dm?S.dm[k]||0:0));
+const rateU=k=>power(k)*(1+T('stat')+T('asc')+T(['atk','def','spy','sen'][k])),rate=k=>rateU(k)*(1-(k<2&&S.dm?S.dm[k]||0:0))*(bf(['ba','bd','bs'][k])?3:1);
 const rfLimit=()=>1000+T('rfl'),rfUsed=()=>{const r=S.rf;return r&&Date.now()-r.t<864e5?r.n:0},rfLeft=()=>rfLimit()-rfUsed(),sp=(k,c)=>{S.tot[k]=(S.tot[k]||0)+c};
 const dmg=(k,m)=>{S.dm[k]=Math.min(.75,(S.dm[k]||0)+.0025*m*(1-Math.min(.8,T('sturdy'))))},rcostK=k=>fl((S.dm[k]||0)*wvalue(k)*.15*(1-Math.min(.8,T('rpc'))));
 const acap=()=>Math.min(1000+T('apool'),200+T('apool'));
@@ -160,7 +174,7 @@ const need=()=>fl(60*1.25**(S.lvl-1)),xpm=()=>1+S.lvl*.4;
 const rank=()=>RANKS[Math.min(7,fl(S.lvl/4))];
 const rinc=i=>RK[i][1]*S.R[i]*(1+S.R[i]/40);
 const income=()=>RK.reduce((a,r,i)=>a+rinc(i),0)*(1+T('rack')+T('div')*S.R.filter(x=>x>0).length);
-const incPM=()=>income()*mult()/60;
+const incPM=()=>income()*mult()/60*(bf('bi')?2:1);
 const bc=(b,r,L,n)=>fl(b*r**L*(r**n-1)/(r-1));
 function bmax(b,r,L,cash,cap){let n=fl(Math.log(1+cash*(r-1)/(b*r**L))/Math.log(r));n=Math.max(0,Math.min(n,cap-L));while(n>0&&bc(b,r,L,n)>cash)n--;return n}
 const ago=t=>{const m=fl((Date.now()-t)/6e4);return m<60?m+'m':m<1440?fl(m/60)+'h':fl(m/1440)+'d'};
@@ -174,7 +188,7 @@ function P(id){let p=PC.get(id);if(p)return p;
 const wf=()=>Math.max(1,income()/WD),Mx=p=>fl(Math.min(p.M*wf(),Math.max(p.M,income()*.1)));
 function cur(p){const m=Math.min(3,(1+p.g)**fl((Date.now()-S.born)/864e5))*S.sf;return{a:fl(p.a*m),d:fl(p.d*m),s:fl(p.s*m),e:fl(p.e*m)}}
 function cashOf(p){const r=S.rb[p.id],M=Mx(p);return r?Math.min(M,r.c+(Date.now()-r.t)/1000*M/3600):M}
-const invested=()=>Math.max(0,K.reduce((a,_,k)=>a+wvalue(k),0)-WSTART)+RK.reduce((a,r,i)=>a+bc(r[2],RG,0,S.R[i]),0)+UP.reduce((a,u,i)=>a+bc(u[2],u[3],0,S.up[i]),0)+(S.bot?BOT:0),worth=()=>invested()+S.cash+S.bank;
+const invested=()=>Math.max(0,K.reduce((a,_,k)=>a+wvalue(k),0)-WSTART)+RK.reduce((a,r,i)=>a+bc(r[2],RG,0,S.R[i]),0)+UP.reduce((a,u,i)=>a+bc(u[2],u[3],0,S.up[i]),0),worth=()=>invested()+S.cash+S.bank;
 function aiGen(){const ma=Math.max(10,rateU(0)),w=worth(),L=[];
   // cash is a share of everything you have invested (weapons, rackets, upgrades): mostly small, sometimes big, very rarely huge (and then heavily defended)
   const now=Date.now(),slot=now>=(S.bigT||0)&&rnd()<.35?fl(rnd()*18):-1;
@@ -190,7 +204,7 @@ function load(){
   try{S=Object.assign({},DEF,JSON.parse(localStorage.getItem(KEY)))}catch(e){S=Object.assign({},DEF)}
   const rs=AUTO_RESET&&S.ver!==VER;if(rs)S=Object.assign({},DEF);S.ver=VER;
   ['targets','turns','rc','spyD','spyN','cd','pay'].forEach(k=>delete S[k]);
-  S.log=S.log||[];S.alog=S.alog||[];S.tot=S.tot||{};S.first=S.first||Date.now();['boxM','boxB','jps','rcc','stolenW','bestHit'].forEach(k=>S[k]=S[k]||0);S.hb=S.hb||{};S.rl=S.rl||0;S.rlost=S.rlost||0;S.name=S.name||'You';S.t=S.t||Date.now();S.born=S.born||Date.now();S.seen=S.seen||{};S.ac=S.ac||{};S.rcn=S.rcn||{};S.rb=S.rb||{};S.met=S.met||{};
+  S.log=S.log||[];S.alog=S.alog||[];S.tot=S.tot||{};S.first=S.first||Date.now();['rcc','stolenW','bestHit','lkn'].forEach(k=>S[k]=S[k]||0);S.hb=S.hb||{};S.rl=S.rl||0;S.rlost=S.rlost||0;S.name=S.name||'You';S.t=S.t||Date.now();S.bt=S.bt||Date.now();S.born=S.born||Date.now();S.seen=S.seen||{};S.ac=S.ac||{};S.rcn=S.rcn||{};S.rb=S.rb||{};S.met=S.met||{};
   if(!S.inv)fresh();S.clan=S.clan||null;
   S.up=[];if(!S.dm)S.dm=[0,0];
   while(S.R.length<RK.length)S.R.push(0);
@@ -204,10 +218,28 @@ function load(){
 let noSave=false;
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));noSave=false}catch(e){noSave=true}};
 function log(m,c){S.log.unshift(`<div class="${c||''}">${m}</div>`);S.log.length=Math.min(S.log.length,30)}
-const earn=(n,k)=>{sp({abox:'box',arob:'rob',arack:'rack'}[k]||'oth',n);let b=0;if(k){b=Math.max(0,Math.min(fl(n*Math.min(.9,T(k)+T('aall'))),bankCap()-S.bank))}S.cash+=n-b;S.bank+=b;S.earned+=n;S.best=Math.max(S.best,n)};
-function gainXp(x){x=fl(x*(1+T('xp')));S.xp+=x;while(S.xp>=need()){S.xp-=need();S.lvl++;S.pts++;log(`LEVEL UP! Level ${S.lvl} (${rank()}). +1 talent point`,'win')}return x}
-function payBox(){let v=fl((pay()*.1+rnd()*pay()*.9)*bmult()),jp=rnd()<Math.min(.5,.05+luck()),pp=0,at=0;if(jp){v*=5+T('jpm');S.jps++}if(rnd()<T('dbox'))v*=2;earn(v,'abox');S.box++;
-  if(rnd()<.04+T('bpt')){S.pts++;pp=1}if(rnd()<.12+T('bat')){at=10+fl(rnd()*15);S.at=Math.min(acap(),S.at+at)}return[v,jp,pp,at]}
+const earn=(n,k)=>{sp({arob:'rob',arack:'rack'}[k]||'oth',n);let b=0;if(k){b=Math.max(0,Math.min(fl(n*Math.min(.9,T(k)+T('aall'))),bankCap()-S.bank))}S.cash+=n-b;S.bank+=b;S.earned+=n;S.best=Math.max(S.best,n)};
+function gainXp(x){x=fl(x*(1+T('xp'))*(bf('bx')?2:1));S.xp+=x;while(S.xp>=need()){S.xp-=need();S.lvl++;S.pts++;log(`LEVEL UP! Level ${S.lvl} (${rank()}). +1 talent point`,'win')}return x}
+
+// ---- Lucky: random stock, new every 5 minutes, each item can be bought once (shared with everyone once there is a server) ----
+const RAR=[['Common',55],['Uncommon',28],['Rare',12],['Epic',4],['Legendary',1]],lkSlot=()=>fl(Date.now()/3e5),lkLeft=()=>3e5-Date.now()%3e5,pk=a=>a[fl(rnd()*a.length)];
+const LKT=[['cash','wpn','atk'],['cash','wpn','atk','ref','bi','bx'],['cash','wpn','atk','ref','ba','bs','bd','bi','bx'],['wpn','ba','bs','bd','tp','cash'],['lvl','lvl','tp','wpn','ba','bs','bd','cash']],BN={ba:'x3 Attack',bd:'x3 Defense',bs:'x3 Spy',bi:'x2 Racket income',bx:'x2 XP'};
+let lkFresh=false;
+function lkGen(){const B=Math.max(2000,income()*mult()),L=[];
+  for(let i=0;i<8;i++){const u=rnd()*100;let r=4,a=0;for(let k=0;k<5;k++){a+=RAR[k][1];if(u<a){r=k;break}}
+    const x=rnd(),f=x<.45?.5+.35*rnd():x<.8?.85+.35*rnd():1.2+rnd()*rnd()*3.8,t=pk(LKT[r]),hv=[.06,.12,.25,.5,1][r]*B,it={r,t};
+    if(t==='cash'){it.a=fl(hv*(.7+rnd()*.6));it.p=it.a*f}
+    else if(t==='wpn'){it.k=fl(rnd()*4);it.j=pk([[0,1],[1,2],[2],[3],[3]][r]);const pw=WN[it.k][it.j][1];it.a=Math.max(1,fl(hv*(.7+rnd()*.6)/(pw*WC)));it.p=it.a*pw*WC*f}
+    else if(t==='atk'){it.a=fl((5+rnd()*10)*(1+r*1.5));it.p=it.a*Math.max(100,B/100)*f}
+    else if(t==='ref'){it.a=fl((20+rnd()*60)*(1+r));it.p=it.a*Math.max(50,B/200)*f}
+    else if(t==='tp')it.p=Math.max(5000,B)*f;
+    else if(t==='lvl')it.p=Math.max(10000,B*2)*f;
+    else{it.a=(30+r*15)*6e4;it.p=Math.max(1500,B*(.1+.1*r))*f}
+    it.p=Math.max(1,fl(it.p));L.push(it)}
+  L.sort((a,b)=>b.r-a.r);S.lk={s:lkSlot(),items:L,g:[]};lkFresh=true}
+const lkChk=()=>{if(!S.lk||S.lk.s!==lkSlot())lkGen()};
+const lkInfo=it=>it.t==='cash'?['Cash bag','$'+fmtG(it.a)]:it.t==='wpn'?[`${fmt(it.a)} ${WN[it.k][it.j][0]}${it.a>1?'s':''}`,K[it.k]+'s']:it.t==='atk'?[`+${it.a} attacks`,'']:it.t==='ref'?[`+${it.a} AI refreshes`,'']:it.t==='tp'?['Talent point','']:it.t==='lvl'?['Free level','+1 talent point']:[BN[it.t],`${it.a/6e4} minutes`];
+const bfs=()=>Object.keys(BN).filter(bf).map(k=>`<span class="c2">${BN[k]} ${Math.ceil((S.bf[k]-Date.now())/6e4)}m</span>`).join('');
 const hb=(k,c)=>{const h=fl(Date.now()/36e5),b=S.hb[h]=S.hb[h]||{g:0,gn:0,l:0,ln:0};if(k==='g'){b.g+=c;b.gn++}else{b.l+=c;b.ln++}for(const x in S.hb)if(x<h-24)delete S.hb[x]},
 hb24=()=>{const h=fl(Date.now()/36e5),r={g:0,gn:0,l:0,ln:0};for(const x in S.hb)if(x>h-24)for(const k in r)r[k]+=S.hb[x][k];return r},
 alog=o=>{S.alog.unshift(Object.assign({t:Date.now()},o));S.alog.length=Math.min(S.alog.length,1000)};
@@ -217,17 +249,20 @@ function raid(){
   S.cash-=lost;dmg(1,8);S.rl++;S.rlost+=lost;hb('l',lost);alog({k:'raid',n:'A raider',c:lost});log(`A raider hit you for $${fmtG(lost)}. Bank your cash!`,'lose');
 }
 function tick(){
-  const now=Date.now(),dt=Math.min((now-S.t)/1000,864000);S.t=now;S.at=Math.min(acap(),S.at+dt/60*(1+T('regen')));
+  lkChk();const now=Date.now(),dt=Math.min((now-S.t)/1000,864000);S.t=now;S.at=Math.min(acap(),S.at+dt/60*(1+T('regen')));
   if(now-S.sfT>=864e5){const my=(rate(0)+rate(1))/2;S.sf=Math.max(S.sf,Math.min(Math.max(1,(my/150)**.8),S.sf*2));S.sfT=now}
-  earn(income()*dt/3600*mult()*(1+(dt>300?T('off'):0)),'arack');
-  if(S.bot&&now>=S.boxAt){const n=Math.min(288,fl((now-S.boxAt)/(cd()*1000))+1);let t=0,pp=0,at=0;for(let i=0;i<n;i++){const b=payBox();t+=b[0];pp+=b[2];at+=b[3]}S.boxB+=n;S.boxAt=Math.max(now,S.boxAt+n*cd()*1000);log(`Bot opened the box ${n}x: +$${fmtG(t)}${pp?', +'+pp+' perk pts':''}${at?', +'+at+' attacks':''}`,'win')}
+  const ov=S.bf&&S.bf.bi?Math.max(0,Math.min(now,S.bf.bi)-(now-dt*1000))/1000:0;
+  earn(income()*(dt+ov)/3600*mult()*(1+(dt>300?T('off'):0)),'arack');
+  if(S.bank<=0)S.bt=now;else if(now-S.bt>=6048e5){const b=S.bank;S.cash+=b;S.bank=0;S.bt=now;log(`7 days with no bank activity: $${fmtG(b)} came out of your bank`,'lose')}
   S.rt+=dt;let n=0;
   S.rt=0;
   if(S.rt>120)S.rt=0;
 }
 const A={
-  box(){if(Date.now()<S.boxAt)return;const[v,jp,pp,at]=payBox();S.boxM++;S.boxAt=Date.now()+cd()*1000;log(`${jp?'JACKPOT! ':''}The box paid $${fmtG(v)}${pp?' + 1 TALENT POINT!':''}${at?' + '+at+' attacks':''}`,'win')},
   qty(q){S.qty=q},
+  lk(x){lkChk();const[sl,i]=x.split(':'),L=S.lk,it=L.items[i];if(+sl!==L.s||!it||L.g.includes(+i)||S.cash<it.p)return;S.cash-=it.p;sp('lk',it.p);L.g.push(+i);S.lkn++;const o=lkInfo(it);
+    if(it.t==='cash')earn(it.a);else if(it.t==='wpn')S.inv[it.k][it.j]+=it.a;else if(it.t==='atk')S.at=Math.min(acap(),S.at+it.a);else if(it.t==='ref'){let r=S.rf;if(!r||Date.now()-r.t>=864e5)r=S.rf={n:0,t:Date.now()};r.n-=it.a}else if(it.t==='tp')S.pts++;else if(it.t==='lvl'){S.lvl++;S.pts++;log(`LEVEL UP! Level ${S.lvl} (${rank()}). +1 talent point`,'win')}else{S.bf=S.bf||{};S.bf[it.t]=Math.max(Date.now(),S.bf[it.t]||0)+it.a}
+    log(`Lucky: bought ${o[0]} for $${fmtG(it.p)}`,'win')},
   buy(x){const[k,j,q]=x.split(':'),pr=wprice(k,j),n=q==='max'?fl(S.cash/pr):+q,c=pr*n;if(n<1||c>S.cash)return;S.cash-=c;sp('wsp',c);S.inv[k][j]+=n;log(`Bought ${fmt(n)} ${WN[k][j][0]}${n>1?'s':''} for $${fmtG(c)}`)},
   up(x){const[i,q]=x.split(':'),u=UP[i],L=S.up[i],n=q==='max'?bmax(UB(u),u[3],L,S.cash,u[4]):Math.min(+q,u[4]-L),c=bc(UB(u),u[3],L,n);
     if(S.lvl<u[5]||n<1||c>S.cash)return;S.cash-=c;S.up[i]+=n;log(`${u[0]} +${n} (level ${S.up[i]})`)},
@@ -257,13 +292,12 @@ const A={
   fix(k){const ks=k==='all'?[0,1]:[+k],c=ks.reduce((a,x)=>a+rcostK(x),0);if(c<1||c>S.cash)return;S.cash-=c;sp('rep',c);ks.forEach(x=>S.dm[x]=0);log(`Repaired weapons for $${fmtG(c)}`)},
   aref(){if(rfLeft()<1)return;let r=S.rf;if(!r||Date.now()-r.t>=864e5)r=S.rf={n:0,t:Date.now()};r.n++;aiGen()},
   ref(){newList();log('Refreshed the battlefield')},
-  bot(){if(!S.bot&&S.lvl>=BOT_LVL&&S.cash>=BOT){S.cash-=BOT;S.bot=1;S.boxAt=Math.max(S.boxAt,Date.now());log('Auto-Box Bot online.','win')}},
-  dep(f){const n=Math.min(fl(S.cash*f),bankCap()-S.bank);if(n<1)return;S.cash-=n;S.bank+=n},
-  wd(f){const n=fl(S.bank*f);S.bank-=n;S.cash+=n},
+  dep(f){const n=Math.min(fl(S.cash*f),bankCap()-S.bank);if(n<1)return;S.cash-=n;S.bank+=n;S.bt=Date.now()},
+  wd(f){const n=fl(S.bank*f);S.bank-=n;S.cash+=n;S.bt=Date.now()},
 };
 const btn=(a,i,t,c='',d=false)=>`<button class="act ${c}" data-a="${a}" data-i="${i}" ${d?'disabled':''}>${t}</button>`;
 const card=(t,s,b,c='')=>`<div class="card ${c}"><span><b>${t}</b><small>${s}</small></span><span>${b}</span></div>`;
-const qtyBar=()=>`<div class="card"><span>Buy amount</span><span>${[1,10,100,1e3,1e4].map(q=>btn('qty',q,fq(q),S.qty===q?'gold':'')).join('')}</span></div>`;
+const qtyBar=()=>`<div class="qb"><b>Buy</b>${[1,10,100,1e3,1e4].map(q=>btn('qty',q,fq(q),S.qty===q?'gold':'')).join('')}</div>`;
 const buyBtns=(a,i,base,r,L,cap)=>{const q=Math.min(S.qty,cap-L),c=bc(base,r,L,q),m=bmax(base,r,L,S.cash,cap);
   return L>=cap?btn(a,i+':1','Max','',true):btn(a,i+':'+S.qty,`x${fq(q)} $${fmtG(c)}`,'teal',c>S.cash)+btn(a,i+':max',`Max${m?' '+fq(m):''}`,'',m<1)};
 function rows(ids){
@@ -274,7 +308,7 @@ function rows(ids){
     const rl=left(S.rcn,id),al=left(S.ac,id);
     return `<div class="tr"><div class="info"><div class="l1"><b>${p.n}</b><span class="cs">${cash}</span></div><div class="l2">${st}</div></div><div class="bt">${btn('recon',id,`Recon<small>${rl}</small>`,'teal',rl<1)}${btn('rob',id,`Rob<small>${al}</small>`,'red',S.at<1||al<1||(sn&&rate(0)<=sn.d))}</div></div>`}).join('')+`</div>`}
 const V={
-  box:()=>`<h2>The Box</h2><button id="boxbtn" class="big" data-a="box">OPEN THE BOX</button><div id="bt"></div><div class="card"><span>Max payout $${fmtG(pay()*bmult())} | Jackpot ${(Math.min(.5,.05+luck())*100).toFixed(1)}%${S.bot?' | Bot ON':''}</span></div>`,
+  lucky:()=>{lkChk();const L=S.lk;return `<h2>Lucky <span>new stock in <b id="lkt"></b></span></h2>`+L.items.map((it,i)=>{const o=lkInfo(it),gone=L.g.includes(i);return `<div class="card lk r${it.r}${gone?' gone':''}"><span><b>${o[0]}</b><small><i class="rl">${RAR[it.r][0]}</i> ${o[1]}</small></span><span>${gone?'<small>SOLD</small>':btn('lk',L.s+':'+i,'$'+fmtG(it.p),'teal',S.cash<it.p)}</span></div>`}).join('')},
   buy:()=>`<h2>Armory <span>inventory $${fmtG(K.reduce((a,_,k)=>a+wvalue(k),0))}</span></h2>`+[0,1].map(k=>card(`${K[k]}s ${(100-100*S.dm[k]).toFixed(1)}%`,`repair cost $${fmtG(rcostK(k))}`,btn('fix',k,'Repair','teal',rcostK(k)<1||rcostK(k)>S.cash))).join('')+qtyBar()+
     K.map((n,k)=>`<h2>${n}s <span>power ${fmt(power(k))} | rating ${fmt(rate(k))}</span></h2>`+WN[k].map(([nm,pw],j)=>{const pr=wprice(k,j),m=fl(S.cash/pr);return card(`${nm} x${fmt(S.inv[k][j])}`,`${pw} power | $${fmtG(pr)}`,btn('buy',`${k}:${j}:${S.qty}`,`x${fq(S.qty)} $${fmtG(pr*S.qty)}`,'teal',pr*S.qty>S.cash)+btn('buy',`${k}:${j}:max`,`Max${m?' '+fmt(m):''}`,'',m<1))}).join('')).join(''),
   targets:()=>`<h2>Battlefield</h2>`+card('No players here yet','Real players will show up here when the server goes live',''),
@@ -286,20 +320,18 @@ const V={
     const U=[1,2,3,4,5,6,7].filter(t=>t<2||above(t)>=GT[t-2]).pop(),lab=LAY.lab.map(o=>`<div class="tlab" style="top:${o.y}px">Tier ${o.t}${o.t===U+1?' (locked: spend '+GT[o.t-2]+' points in the tiers above, now '+above(o.t)+')':o.t>U+1?' ???':''}</div>`).join('');
     const nodes=TT.map((t,k)=>{const l=tl(k),o=tOpen(k),m=l>=t[4];return `<button class="nd ${t[6]>U+1?'blk':''} ${m?'max':l?'on':o?'op':''} ${o&&!m&&S.pts>=tcost(k)?'ok':''} ${k===tsel?'sel':''}" style="left:${LAY.pos[k].x}px;top:${LAY.pos[k].y}px" data-a="sel" data-i="${k}">${t[6]>U+1?'?':(IC[t[2]]||'*')}<i>${l}</i></button>`}).join('');
     return `<h2>Talents <span>${S.pts} points (1 per level)</span></h2>${info}<div id="tree"><div class="cv" style="width:${LAY.W}px;height:${LAY.H}px">${lab}${nodes}</div></div><h2>Lifetime</h2>`+
-    row('Rank',`Level ${S.lvl} ${rank()}`)+row('Won / lost',`${S.w} / ${S.l}`)+row('Players met / scouted',`${Object.keys(S.met).length} / ${Object.keys(S.seen).length}`)+row('Boxes opened',S.box)+row('Stolen','$'+fmtG(S.rob))+row('Biggest payout','$'+fmtG(S.best))+
+    row('Rank',`Level ${S.lvl} ${rank()}`)+row('Won / lost',`${S.w} / ${S.l}`)+row('Players met / scouted',`${Object.keys(S.met).length} / ${Object.keys(S.seen).length}`)+row('Stolen','$'+fmtG(S.rob))+row('Biggest payout','$'+fmtG(S.best))+
     row('Earned','$'+fmtG(S.earned))+row('Login streak',S.streak+' days')},
   shop(){
-    return `<h2>Shop</h2>`+qtyBar()+card('Auto-Box Bot',S.bot?'owned':'opens the box for you, even offline',S.bot?'<small>Owned</small>':S.lvl<BOT_LVL?`<small>Needs level ${BOT_LVL}</small>`:btn('bot',0,'$'+fmtG(BOT),'',S.cash<BOT))+
-    `<h2>Rackets <span>$${fmtG(income()*mult())}/hr total</span></h2>`+
+    return qtyBar()+`<h2>Rackets <span>$${fmtG(income()*mult())}/hr total</span></h2>`+
     RK.map((r,i)=>card(`${r[0]} Lv${S.R[i]}`,`$${fmtG(r[1]*mult())}/hr base, grows with level | $${fmtG(rinc(i)*mult())}/hr`,S.lvl<r[3]?`<small>Needs level ${r[3]}</small>`:buyBtns('rk',i,r[2]*(1-Math.min(.3,T('rcost'))),RG,S.R[i],9999))).join('')},
   bonus:()=>{const p=v=>+(v*100).toFixed(1)+'%',r=(a,b)=>card(a,'',`<b>${b}</b>`),owned=S.R.filter(x=>x>0).length,ms=Math.min(1,.5+T('minsteal')),
       rb=k=>p(Math.min(.9,T(k)+T('aall')));
     return `<h2>Cash</h2>`+r('All cash income',p(mult()-1))+r('Racket income',p(T('rack')+T('div')*owned))+r('Racket income while away',p(T('off')))+r('Racket prices','-'+p(Math.min(.3,T('rcost'))))+r('Racket income now','$'+fmtG(income()*mult())+'/hr')+
-    `<h2>Box</h2>`+r('Max payout','$'+fmtG(pay()*bmult()))+r('Payout bonus',p(T('box')))+r('Cooldown',cd()+'s')+r('Jackpot chance',p(Math.min(.5,.05+luck())))+r('Jackpot multiplier','x'+(5+T('jpm')).toFixed(1))+r('Pays double',p(T('dbox')))+r('Talent point chance',p(.04+T('bpt')))+r('Attacks chance',p(.12+T('bat')))+
     `<h2>Fighting</h2>`+r('Attack rating',fmt(rate(0))+' ('+p(T('stat')+T('asc')+T('atk'))+' bonus)')+r('Defense rating',fmt(rate(1))+' ('+p(T('stat')+T('asc')+T('def'))+' bonus)')+r('Spy rating',fmt(rate(2))+' ('+p(T('stat')+T('asc')+T('spy'))+' bonus)')+r('Sentry rating',fmt(rate(3))+' ('+p(T('stat')+T('asc')+T('sen'))+' bonus)')+
     r('Cash from robbing',p(T('loot')))+r('Extra on tough targets',p(T('bh')))+r('Steal range',p(ms)+' - 100%')+r('Chance to take all cash',p(Math.min(.5,T('luck'))))+r('Chance to steal weapons',p(Math.min(1,T('plunder'))))+r('Free attack chance',p(Math.min(.5,T('free'))))+r('Max attacks',acap())+r('Attack regeneration','+'+p(T('regen')))+r('XP bonus',p(T('xp')))+
     `<h2>Defense and gear</h2>`+r('Cash lost to raiders','-'+p(Math.min(.9,T('raid'))))+r('Weapon damage','-'+p(Math.min(.8,T('sturdy'))))+r('Repair cost','-'+p(Math.min(.8,T('rpc'))))+r('Weapon prices','-'+p(Math.min(.5,T('scheap'))))+
-    `<h2>Bank</h2>`+r('Capacity','$'+fmtG(bankCap()))+r('Box winnings banked',rb('abox'))+r('Robbed cash banked',rb('arob'))+r('Racket income banked',rb('arack'))+
+    `<h2>Bank</h2>`+r('Capacity','$'+fmtG(bankCap()))+r('Robbed cash banked',rb('arob'))+r('Racket income banked',rb('arack'))+
     `<h2>Other</h2>`+r('AI refreshes per day',fmt(rfLimit()))+r('Jackpot target wait','-'+p(Math.min(.5,T('hunt'))))+r('Login bonus',p(T('login')))},
   clan:()=>{if(!S.clan)return `<h2>Clan</h2>`+card('You are not in a clan','',btn('clanNew',0,'Create clan','teal'));const c=S.clan;
     return `<h2>[${c.t}] ${c.n} <span>${c.members.length} member${c.members.length>1?'s':''}</span></h2>`+card('Clan net worth','',`<b>$${fmt(worth())}</b>`)+
@@ -309,12 +341,12 @@ const V={
   players:()=>{const q=(S.q||'').trim().toLowerCase(),all=[{n:S.name,lv:S.lvl,nw:worth(),a:rate(0),t:S.clan?S.clan.t:''}],res=q?all.filter(p=>p.n.toLowerCase().includes(q)):[];
     return `<h2>Find a player</h2><div class="card"><span style="flex:1"><input id="pq" value="${(S.q||'').replace(/"/g,'')}" placeholder="Player name" maxlength="16"></span><span>${btn('psearch',0,'Search','teal')}</span></div>`+
     (q?(res.length?res.map(p=>card(`${p.t?'['+p.t+'] ':''}${p.n}`,`Level ${p.lv} | Attack ${fmt(p.a)}`,`<b>$${fmt(p.nw)}</b>`)).join(''):card('No players found','','')):'')},
-  stats:()=>{const r=(a,b)=>card(a,'',`<b>${b}</b>`),tm=ms=>{const m=fl(ms/6e4);return fl(m/60)+'h '+m%60+'m'},T_=S.tot,E=['box','rob','rack','oth'].reduce((a,k)=>a+(T_[k]||0),0),
+  stats:()=>{const r=(a,b)=>card(a,'',`<b>${b}</b>`),tm=ms=>{const m=fl(ms/6e4);return fl(m/60)+'h '+m%60+'m'},T_=S.tot,E=['rob','rack','oth'].reduce((a,k)=>a+(T_[k]||0),0),
       tp=TT.reduce((a,_,i)=>a+spent(i),0),rr=S.rf&&Date.now()-S.rf.t<864e5?S.rf.t+864e5-Date.now():0;
     return `<h2>Refreshes</h2>`+r('AI refreshes left today',`${fmt(rfLeft())} / ${fmt(rfLimit())}`)+r('Resets in',rr?tm(rr):'starts on your next refresh')+
-    `<h2>Box</h2>`+r('Opened by you',fmt(S.boxM))+r('Opened by the bot',fmt(S.boxB))+r('Total boxes',fmt(S.box))+r('Jackpots',fmt(S.jps))+
+    `<h2>Lucky</h2>`+r('Items bought',fmt(S.lkn))+r('Spent in Lucky','$'+fmtG(T_.lk||0))+
     `<h2>Fights</h2>`+r('Attacks made',fmt(S.w+S.l))+r('Wins / misses',`${fmt(S.w)} / ${fmt(S.l)}`)+r('Win rate',S.w+S.l?(100*S.w/(S.w+S.l)).toFixed(1)+'%':'-')+r('Recons done',fmt(S.rcc))+r('Biggest hit','$'+fmtG(S.bestHit))+r('Weapons stolen',fmt(S.stolenW))+r('Times raided',fmt(S.rl))+r('Lost to raiders','$'+fmtG(S.rlost))+
-    `<h2>Money (all time)</h2>`+r('Total earned','$'+fmtG(E))+r('From the box','$'+fmtG(T_.box||0))+r('From robbing','$'+fmtG(T_.rob||0))+r('From rackets','$'+fmtG(T_.rack||0))+r('Other','$'+fmtG(T_.oth||0))+r('Spent on weapons','$'+fmtG(T_.wsp||0))+r('Spent on rackets','$'+fmtG(T_.rsp||0))+r('Spent on repairs','$'+fmtG(T_.rep||0))+
+    `<h2>Money (all time)</h2>`+r('Total earned','$'+fmtG(E))+r('From robbing','$'+fmtG(T_.rob||0))+r('From rackets','$'+fmtG(T_.rack||0))+r('Other','$'+fmtG(T_.oth||0))+r('Spent on weapons','$'+fmtG(T_.wsp||0))+r('Spent on rackets','$'+fmtG(T_.rsp||0))+r('Spent on repairs','$'+fmtG(T_.rep||0))+
     `<h2>Account</h2>`+r('Net worth','$'+fmtG(worth()))+r('Level',S.lvl)+r('Talent points spent / unspent',`${tp} / ${S.pts}`)+r('Login streak',S.streak+' days')+r('Time played',tm(Date.now()-S.first))},
   ranks:()=>{const me={n:S.name,lv:S.lvl,nw:worth(),a:rate(0)},B=[me].sort((a,b)=>b.nw-a.nw).slice(0,100);
     return `<h2>Leaderboard <span>top 100 by net worth</span> ${btn('name',0,'Rename','teal')}</h2>`+
@@ -329,18 +361,17 @@ const V={
       `<h2>Been hit <span>${S.rl} times (-$${fmtG(S.rlost)} total)</span></h2>`+(B_.length?`<div class="scr">`+B_.map(e=>card(`<span class="lose">${S.name}</span>`,`${tm(e)}<br>lost $${fmtG(e.c)} to a raider`,'')).join('')+`</div>`:card('Nobody has hit you yet','',''))},
   bank(){
     return `<h2>Bank <span>holds up to $${fmtG(bankCap())}</span></h2>`+
-    card('Pocket $'+fmt(S.cash),'raiders can take this',btn('dep',1,'Bank all','teal',S.cash<1||S.bank>=bankCap()))+card('Bank $'+fmt(S.bank),'safe from raiders',btn('wd',1,'Withdraw all','',S.bank<1))}
+    card('Pocket $'+fmtG(S.cash),'raiders can take this',btn('dep',1,'Bank all','teal',S.cash<1||S.bank>=bankCap()))+card('Bank $'+fmtG(S.bank),'safe from raiders',btn('wd',1,'Withdraw all','',S.bank<1))+(()=>{const m=Math.max(0,6048e5-(Date.now()-S.bt));return card(S.bank>0?`Releases in ${fl(m/864e5)}d ${fl(m/36e5)%24}h`:'Bank is empty','no deposit or withdrawal','')})()}
 };
-const TABS={box:'Box',buy:'Armory',targets:'Targets',ai:'AI Fights',level:'Talents',shop:'Shop',bank:'Bank',ranks:'Ranks',alog:'Attack Log',stats:'Stats',bonus:'Bonuses',clan:'Clan',players:'Players'};
+const TABS={lucky:'Lucky',buy:'Armory',targets:'Targets',ai:'AI Fights',level:'Talents',shop:'Rackets',bank:'Bank',ranks:'Ranks',alog:'Attack Log',stats:'Stats',bonus:'Bonuses',clan:'Clan',players:'Players'};
 function hud(){
   $('#log').innerHTML=S.log.slice(0,3).join('')||'<div>No activity yet</div>';
   $('#gold').innerHTML=`<span>$${fmtG(S.cash)}</span><small>Bank $${fmtG(S.bank)}</small>`;
   $('#inc').innerHTML=`Income $${fmtG(incPM())}/min ($${fmtG(incPM()*60)}/hr)`;
   $('#xpb i').style.width=Math.min(100,S.xp/need()*100)+'%';$('#xpb span').innerHTML=`Level ${S.lvl}: ${fmt(S.xp)} / ${fmt(need())} XP`;
-  $('#hud').innerHTML=(noSave?'<span style="color:#ff7a75">SAVING BLOCKED: progress will be lost when you close this tab</span>':'')+`<span>Lv ${S.lvl}${S.pts?` (${S.pts} talent pts!)`:''}</span><span>Attacks ${fl(S.at)}/${acap()}</span><span>ATK ${fmt(rate(0))}</span><span>DEF ${fmt(rate(1))}</span><span>SPY ${fmt(rate(2))}</span><span>SEN ${fmt(rate(3))}</span>`}
+  $('#hud').innerHTML=(noSave?'<span style="color:#ff7a75">SAVING BLOCKED: progress will be lost when you close this tab</span>':'')+`<span>Lv ${S.lvl}${S.pts?` (${S.pts} talent pts!)`:''}</span><span>Attacks ${fl(S.at)}/${acap()}</span><span>ATK ${fmt(rate(0))}</span><span>DEF ${fmt(rate(1))}</span><span>SPY ${fmt(rate(2))}</span><span>SEN ${fmt(rate(3))}</span>`+bfs()}
 function boxTimer(){const rt=$('#rft');if(rt){const r=S.rf,m=r&&Date.now()-r.t<864e5?r.t+864e5-Date.now():0,z=fl(m/1e3);rt.textContent=m?`${fl(z/3600)}:${String(fl(z/60)%60).padStart(2,'0')}:${String(z%60).padStart(2,'0')}`:''}
-  const b=$('#boxbtn');if(!b)return;const left=Math.max(0,S.boxAt-Date.now()),s=Math.ceil(left/1000);
-  b.disabled=left>0;$('#bt').textContent=left?`${fl(s/60)}:${String(s%60).padStart(2,'0')}`:(S.bot?'Bot is collecting':'Ready')}
+  const lt=$('#lkt');if(lt){const z=fl(lkLeft()/1e3);lt.textContent=fl(z/60)+':'+String(z%60).padStart(2,'0')}}
 function render(){
   $('#nav').innerHTML=Object.entries(TABS).map(([k,v])=>`<button data-t="${k}" class="${k===tab?'on':''}">${v}</button>`).join('');
   const tr=$('#tree');if(tr&&tr.scrollTop!==undefined&&tab==='level')tsc=[tr.scrollLeft,tr.scrollTop,1];
@@ -360,7 +391,7 @@ load();
 save();render();
 document.addEventListener('visibilitychange',()=>{tick();if(document.hidden)save();else render()});
 window.addEventListener('pagehide',()=>{tick();save()});
-setInterval(()=>{tick();hud();boxTimer()},1000);
+setInterval(()=>{tick();if(lkFresh){lkFresh=false;if(tab==='lucky')render()}hud();boxTimer()},1000);
 setInterval(save,5000);
 </script>
 </body>
